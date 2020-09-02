@@ -29,35 +29,35 @@ public interface MessageInterface<T> {
      * Returns the origin module ID for the message
      * @return the origin module ID
      */
-    public String getOriginID();
+    String getOriginID();
 
     /**
      * Returns the destination module ID for the message
      * @return the destination module ID
      */
-    public String getDestinationID();
+    String getDestinationID();
 
     /**
      * Returns the time the message was created
      * @return the time the message was created
      */
-    public Date getCreationTime();
+    Date getCreationTime();
 
     /**
      * Returns the priority of the message
      * @return the message priority
      */
-    public String getPriority();
+    String getPriority();
 
     /**
      * Returns the class for the message contents
      * @return the class of the contents
      */
-    public Class<?> getType();
+    Class<?> getType();
 
     /**
      * Returns the actual contents of the message
      * @return the contents of the message
      */
-    public T getMessageContents();
+    T getMessageContents();
 }

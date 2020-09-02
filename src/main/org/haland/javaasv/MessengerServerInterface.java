@@ -27,11 +27,11 @@ public interface MessengerServerInterface<E extends MessageInterface> {
      * @param clientID the name of the module to register
      * @param clientModule the module to register
      */
-    public void registerClientModule(String clientID, MessengerClientInterface<? extends E> clientModule);
+    void registerClientModule(String clientID, MessengerClientInterface<? extends E> clientModule);
 
     /**
      * Dispatches a message to the destination module
      * @param message the message being dispatched
      */
-    public void dispatch(E message);
+    void dispatch(E message);
 }

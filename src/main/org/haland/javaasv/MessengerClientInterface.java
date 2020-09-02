@@ -28,5 +28,5 @@ public interface MessengerClientInterface<E extends MessageInterface> {
      * Executes when receiving message from server
      * @param message the message
      */
-    public void dispatch(E message);
+    void dispatch(E message);
 }
