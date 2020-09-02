@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv;
+package org.haland.javaasv.helm;
 
 /**
  * Defines the interface between the navigation system and the helm controls.

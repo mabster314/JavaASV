@@ -16,45 +16,22 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv;
+package org.haland.javaasv.message;
 
-import java.util.Date;
+import org.haland.javaasv.message.MessageInterface;
+import org.haland.javaasv.message.MessengerClientInterface;
 
-public class MessageTest implements MessageInterface<Integer> {
-    private Integer contents = 42;
-    private String destination;
-
-    public MessageTest(String destination) {
-        this.destination = destination;
-    }
-
+/**
+ * Prints message contents to console
+ */
+public class MessengerClientTest implements MessengerClientInterface {
+    /**
+     * Prints received message contents to console
+     * @param message the message
+     */
     @Override
-    public String getOriginID() {
-        return null;
-    }
-
-    @Override
-    public String getDestinationID() {
-        return this.destination;
-    }
-
-    @Override
-    public Date getCreationTime() {
-        return null;
-    }
-
-    @Override
-    public String getPriority() {
-        return null;
-    }
-
-    @Override
-    public Class<?> getType() {
-        return this.contents.getClass();
-    }
-
-    @Override
-    public Integer getMessageContents() {
-        return this.contents;
+    public void dispatch(MessageInterface message) {
+        System.out.println(message.getType());
+        System.out.println(message.getMessageContents());
     }
 }

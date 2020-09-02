@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv;
+package org.haland.javaasv.message;
 
 public class MessageServerTest {
     public static void main(String[] args){

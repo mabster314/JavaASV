@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv;
+package org.haland.javaasv.message;
 
 import java.util.HashMap;
 import java.util.Map;

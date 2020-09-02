@@ -16,10 +16,10 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv;
+package org.haland.javaasv.util;
 
 /**
- * Implements a basic PID controller
+ * Implements a basic PID controller.
  */
 public class PIDController {
     /**
@@ -35,9 +35,6 @@ public class PIDController {
     // default minimum and maximum integral
     private double minimumIntegral = -1.0;
     private double maximumIntegral = 1.0;
-
-    private double minimumInput;
-    private double maximumInput;
 
     private double positionError;
     private double velocityError;

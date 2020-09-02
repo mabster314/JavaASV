@@ -16,19 +16,22 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv;
+package org.haland.javaasv.message;
 
 /**
- * Prints message contents to console
+ * Defines the messaging interface for server modules
  */
-public class MessengerClientTest implements MessengerClientInterface{
+public interface MessengerServerInterface<E extends MessageInterface> {
     /**
-     * Prints received message contents to console
-     * @param message the message
+     * Registers a client module to the server
+     * @param clientID the name of the module to register
+     * @param clientModule the module to register
      */
-    @Override
-    public void dispatch(MessageInterface message) {
-        System.out.println(message.getType());
-        System.out.println(message.getMessageContents());
-    }
+    void registerClientModule(String clientID, MessengerClientInterface<? extends E> clientModule);
+
+    /**
+     * Dispatches a message to the destination module
+     * @param message the message being dispatched
+     */
+    void dispatch(E message);
 }
