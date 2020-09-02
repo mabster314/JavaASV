@@ -18,10 +18,15 @@
 
 package org.haland.javaasv.message;
 
-public class MessageServerTest {
-    public static void main(String[] args){
-        MessengerServer server = MessengerServer.getInstance();
-        server.registerClientModule("testID", new MessengerClientTest());
-        server.dispatch(new MessageTest("testID"));
+public class MessageFactory {
+    private final String originID;
+
+    public MessageFactory(String originID) {
+        this.originID = originID;
+    }
+
+
+    public <T> MessageInterface createMessage(String destinationID, String priority, T contents) {
+        return new SimpleMessage(originID, destinationID, System.currentTimeMillis(), priority, contents);
     }
 }

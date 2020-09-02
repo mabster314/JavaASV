@@ -18,20 +18,8 @@
 
 package org.haland.javaasv.message;
 
-import org.haland.javaasv.message.MessageInterface;
-import org.haland.javaasv.message.MessengerClientInterface;
-
-/**
- * Prints message contents to console
- */
-public class MessengerClientTest implements MessengerClientInterface {
-    /**
-     * Prints received message contents to console
-     * @param message the message
-     */
-    @Override
-    public void dispatch(MessageInterface message) {
-        System.out.println(message.getType());
-        System.out.println(message.getMessageContents());
+public class DuplicateKeyException extends Exception {
+    public DuplicateKeyException(String errorMessage) {
+        super(errorMessage);
     }
 }

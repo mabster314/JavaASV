@@ -27,7 +27,7 @@ public interface MessengerServerInterface<E extends MessageInterface> {
      * @param clientID the name of the module to register
      * @param clientModule the module to register
      */
-    void registerClientModule(String clientID, MessengerClientInterface<? extends E> clientModule);
+    void registerClientModule(String clientID, MessengerClientInterface<? extends E> clientModule) throws DuplicateKeyException;
 
     /**
      * Dispatches a message to the destination module

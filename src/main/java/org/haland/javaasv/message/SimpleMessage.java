@@ -18,45 +18,50 @@
 
 package org.haland.javaasv.message;
 
-import org.haland.javaasv.message.MessageInterface;
-
 import java.util.Date;
 
-public class MessageTest implements MessageInterface<Integer> {
-    private Integer contents = 42;
-    private String destination;
+public class SimpleMessage<T> implements MessageInterface<T> {
+    private final String originID;
+    private final String destinationID;
+    private final long creationTime;
+    private final String priority;
+    private final T messageContents;
 
-    public MessageTest(String destination) {
-        this.destination = destination;
+    public SimpleMessage(String originID, String destinationID, long creationTime, String priority, T messageContents) {
+        this.originID = originID;
+        this.destinationID = destinationID;
+        this.creationTime = creationTime;
+        this.priority = priority;
+        this.messageContents = messageContents;
     }
 
     @Override
     public String getOriginID() {
-        return null;
+        return this.originID;
     }
 
     @Override
     public String getDestinationID() {
-        return this.destination;
+        return this.destinationID;
     }
 
     @Override
-    public Date getCreationTime() {
-        return null;
+    public long getCreationTime() {
+        return this.creationTime;
     }
 
     @Override
     public String getPriority() {
-        return null;
+        return this.priority;
     }
 
     @Override
     public Class<?> getType() {
-        return this.contents.getClass();
+        return messageContents.getClass();
     }
 
     @Override
-    public Integer getMessageContents() {
-        return this.contents;
+    public T getMessageContents() {
+        return messageContents;
     }
 }

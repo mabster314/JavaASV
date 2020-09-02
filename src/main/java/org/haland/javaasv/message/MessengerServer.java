@@ -29,6 +29,11 @@ public class MessengerServer implements MessengerServerInterface {
     private static MessengerServer messengerServerInstance = null;
 
     /**
+     * Map representing registered client modules
+     */
+    private Map<String, MessengerClientInterface> clients;
+
+    /**
      * Creates a new instance of the server
      */
     private MessengerServer(){
@@ -49,18 +54,16 @@ public class MessengerServer implements MessengerServerInterface {
     }
 
     /**
-     * Map representing registered client modules
-     */
-    private Map<String, MessengerClientInterface> clients;
-
-    /**
      * Adds a module to the registry
      * @param clientID the name of the module to register
      * @param clientModule the module to register
      */
     @Override
-    public void registerClientModule(String clientID, MessengerClientInterface clientModule) {
-        clients.put(clientID, clientModule);
+    public void registerClientModule(String clientID, MessengerClientInterface clientModule)
+            throws DuplicateKeyException {
+        if (clients.putIfAbsent(clientID, clientModule) != null){
+                throw new DuplicateKeyException("Duplicate client registered to server: " + clientModule.getClientID());
+        }
     }
 
     /**
@@ -72,4 +75,5 @@ public class MessengerServer implements MessengerServerInterface {
     public void dispatch(MessageInterface message) {
         clients.get(message.getDestinationID()).dispatch(message);
     }
+
 }

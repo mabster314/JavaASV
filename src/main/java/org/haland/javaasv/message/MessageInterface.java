@@ -18,8 +18,6 @@
 
 package org.haland.javaasv.message;
 
-import java.util.Date;
-
 /**
  * Defines the required structure of an ASV message
  * @param <T> the data type of the contents of the message
@@ -41,7 +39,7 @@ public interface MessageInterface<T> {
      * Returns the time the message was created
      * @return the time the message was created
      */
-    Date getCreationTime();
+    long getCreationTime();
 
     /**
      * Returns the priority of the message

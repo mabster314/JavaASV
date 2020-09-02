@@ -29,4 +29,10 @@ public interface MessengerClientInterface<E extends MessageInterface> {
      * @param message the message
      */
     void dispatch(E message);
+
+    /**
+     * Returns the ID of the messenger client
+     * @return the ID
+     */
+    String getClientID();
 }
