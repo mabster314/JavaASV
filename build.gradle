@@ -26,13 +26,28 @@ version 'a-0.1'
 repositories {
     mavenCentral()
 }
+
 sourceSets {
     main {
         java {
-            srcDirs = ['src']
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
         }
     }
 }
+
+
 
 test {
     useJUnitPlatform()
