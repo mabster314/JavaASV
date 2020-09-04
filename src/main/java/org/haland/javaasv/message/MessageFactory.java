@@ -25,8 +25,7 @@ public class MessageFactory {
         this.originID = originID;
     }
 
-
-    public <T> MessageInterface createMessage(String destinationID, String priority, T contents) {
+    public <T> MessageInterface createMessage(String destinationID, MessageInterface.MessagePriority priority, T contents) {
         return new SimpleMessage(originID, destinationID, System.currentTimeMillis(), priority, contents);
     }
 }

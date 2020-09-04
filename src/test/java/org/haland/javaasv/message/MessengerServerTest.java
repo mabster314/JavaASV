@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MessengerServerTest {
     // Test constants
     private static final String originID = "testID";
-    private static final String priority = "test";
+    private static final MessageInterface.MessagePriority priority = MessageInterface.MessagePriority.NORMAL;
 
     private static final String stringMessageContents = "foo";
     private static final Integer integerMessageContents = 5;

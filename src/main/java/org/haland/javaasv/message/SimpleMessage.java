@@ -24,10 +24,10 @@ public class SimpleMessage<T> implements MessageInterface<T> {
     private final String originID;
     private final String destinationID;
     private final long creationTime;
-    private final String priority;
+    private final MessagePriority priority;
     private final T messageContents;
 
-    public SimpleMessage(String originID, String destinationID, long creationTime, String priority, T messageContents) {
+    public SimpleMessage(String originID, String destinationID, long creationTime, MessagePriority priority, T messageContents) {
         this.originID = originID;
         this.destinationID = destinationID;
         this.creationTime = creationTime;
@@ -51,7 +51,7 @@ public class SimpleMessage<T> implements MessageInterface<T> {
     }
 
     @Override
-    public String getPriority() {
+    public MessagePriority getPriority() {
         return this.priority;
     }
 

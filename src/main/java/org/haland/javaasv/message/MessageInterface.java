@@ -45,7 +45,7 @@ public interface MessageInterface<T> {
      * Returns the priority of the message
      * @return the message priority
      */
-    String getPriority();
+    MessagePriority getPriority();
 
     /**
      * Returns the class for the message contents
@@ -58,4 +58,11 @@ public interface MessageInterface<T> {
      * @return the contents of the message
      */
     T getMessageContents();
+
+    /**
+     * Enum defining available message priorities. Priorities should be listed in order of severity.
+     */
+    enum MessagePriority {
+        LOW, NORMAL, HIGH, CRITICAL
+    }
 }
