@@ -25,6 +25,7 @@ version 'a-0.1'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 sourceSets {
@@ -53,6 +54,7 @@ test {
 
 dependencies {
     compile 'com.fazecast:jSerialComm:[2.0.0,3.0.0)'
+    testCompile "org.mockito:mockito-core:2.+"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
