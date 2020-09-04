@@ -53,6 +53,7 @@ sourceSets {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 dependencies {
@@ -64,6 +65,7 @@ dependencies {
 }
 
 jacocoTestReport {
+    dependsOn test
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
