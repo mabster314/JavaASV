@@ -85,7 +85,7 @@ public class PIDController {
     }
 
     /**
-     * Calculates the next output for the controll variable. This must be called at the period of the controller
+     * Calculates the next output for the control variable. This must be called at the period of the controller
      * @param processVariable the current measurement of the monitored process variable
      * @return the next output for the controller
      */

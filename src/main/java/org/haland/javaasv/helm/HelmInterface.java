@@ -18,44 +18,12 @@
 
 package org.haland.javaasv.helm;
 
+import org.haland.javaasv.message.MessengerClientInterface;
+
 /**
- * Defines the interface between the navigation system and the helm controls.
- * The helm has two requirements: control the rudder and control the throttle.
+ * Defines the interface between the navigation system and the helm controls. The helm has two requirements: control the
+ * rudder and control the throttle. Received messages must be of the type {@link HelmMessage}.
  */
-public interface HelmInterface {
-    /**
-     * Gets the current throttle position
-     * @return the current throttle position
-     */
-    double getThrottlePosition();
+public interface HelmInterface extends MessengerClientInterface<HelmMessage> {
 
-    /**
-     * Gets the current throttle setpoint
-     * @return the current throttle setpoint
-     */
-    double getThrottleSetpoint();
-
-    /**
-     * Sets a new throttle setpoint
-     * @param newSetpoint the new throttle setpoint
-     */
-    void setThrottleSetpoint(double newSetpoint);
-
-    /**
-     * Gets the current rudder position
-     * @return the current rudder position
-     */
-    double getRudderPosition();
-
-    /**
-     * Gets the current rudder setpoint
-     * @return the current rudder setpoint
-     */
-    double getRudderSetpoint();
-
-    /**
-     * Sets a new rudder setpoint
-     * @param newSetpoint the new rudder setpoint
-     */
-    void setRudderSetpoint(double newSetpoint);
 }
