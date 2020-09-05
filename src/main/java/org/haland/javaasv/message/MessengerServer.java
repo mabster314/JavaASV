@@ -32,7 +32,7 @@ public class MessengerServer implements MessengerServerInterface {
     /**
      * Stack representing messages to handle
      */
-    private Stack<MessageInterface<?>> messageStack;
+    private Stack<MessageInterface> messageStack;
 
     /**
      * Map representing registered client modules
@@ -44,7 +44,7 @@ public class MessengerServer implements MessengerServerInterface {
      */
     private MessengerServer(){
         clients = new HashMap<String, MessengerClientInterface>();
-        messageStack = new Stack<MessageInterface<?>>();
+        messageStack = new Stack<MessageInterface>();
     }
 
     /**
@@ -79,7 +79,7 @@ public class MessengerServer implements MessengerServerInterface {
      * @param message the message being dispatched
      */
     @Override
-    public void dispatch(MessageInterface<?> message) {
+    public void dispatch(MessageInterface message) {
         messageStack.push(message);
     }
 
@@ -90,8 +90,14 @@ public class MessengerServer implements MessengerServerInterface {
     @Override
     public void run() {
         while (!messageStack.empty()) {
-            MessageInterface<?> message = messageStack.pop();
-            clients.get(message.getDestinationID()).dispatch(message);
+            MessageInterface message = messageStack.pop();
+            MessengerClientInterface client = clients.get(message.getDestinationID());
+
+            if(message.getType() == client.getClientType()) {
+                client.dispatch(message);
+            } else {
+                // TODO do something
+            }
         }
     }
 }

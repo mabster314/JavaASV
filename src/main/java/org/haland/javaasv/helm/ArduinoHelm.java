@@ -18,10 +18,7 @@
 
 package org.haland.javaasv.helm;
 
-import org.haland.javaasv.message.MessageInterface;
-import org.haland.javaasv.message.MessengerClientInterface;
-import org.haland.javaasv.message.MessengerServer;
-import org.haland.javaasv.message.SimpleMessage;
+import org.haland.javaasv.message.*;
 import org.haland.javaasv.util.PIDController;
 import org.haland.javaasv.util.SerialArduino;
 
@@ -32,7 +29,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Controls helm by interfacing with an Arduino. This is a singleton class, and only one should be run.
  */
-public class ArduinoHelm implements MessengerClientInterface<String> {
+public class ArduinoHelm implements MessengerClientInterface {
     /**
      * The client ID for an ArduinoHelm
      */
@@ -73,16 +70,24 @@ public class ArduinoHelm implements MessengerClientInterface<String> {
      * @param message {@link MessageInterface} containing new throttle and rudder data
      */
     @Override
-    public void dispatch(MessageInterface<String> message) {
-        helmArduino.sendSerialData(message.getMessageContents().getBytes(StandardCharsets.US_ASCII));
-
+    public void dispatch(MessageInterface message) {
+        if (message.getType() == getClientType()) {
+            try {
+                helmArduino.sendSerialData(message.getMessageContents().getHelmMessage()
+                        .getBytes(StandardCharsets.US_ASCII));
+            } catch (MessageTypeException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // TODO do something
+        }
         // Initialize our message factory with the correct pilot client ID
         if (messageFactory == null) messageFactory = new ArduinoHelmMessageFactory(clientID, message.getOriginID());
 
         // Send a return message with the actual state of the controls
         try {
             server.dispatch(messageFactory.createMessage(helmArduino.getHelmState()));
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException | MessageTypeException e) {
             e.printStackTrace();
         }
     }
@@ -90,5 +95,10 @@ public class ArduinoHelm implements MessengerClientInterface<String> {
     @Override
     public String getClientID() {
         return clientID;
+    }
+
+    @Override
+    public MessageInterface.MessageType getClientType() {
+        return MessageInterface.MessageType.HELM;
     }
 }

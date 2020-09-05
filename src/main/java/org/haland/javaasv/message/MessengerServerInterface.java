@@ -30,8 +30,10 @@ public interface MessengerServerInterface extends Runnable {
     void registerClientModule(String clientID, MessengerClientInterface clientModule) throws DuplicateKeyException;
 
     /**
-     * Dispatches a message to the destination module
+     * Dispatches a message to the destination module. The server should check that the client is able to receive
+     * messages of that type.
+     *
      * @param message the message being dispatched
      */
-    void dispatch(MessageInterface<?> message);
+    void dispatch(MessageInterface message);
 }

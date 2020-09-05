@@ -1,7 +1,6 @@
 package org.haland.javaasv.helm;
 
-import org.haland.javaasv.message.MessageInterface;
-import org.haland.javaasv.message.SimpleMessage;
+import org.haland.javaasv.message.*;
 import org.haland.javaasv.util.SerialUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -36,13 +35,9 @@ public class ArduinoHelmMessageFactory {
      * @param rudderSetpoint the new rudder setpoint to use
      * @return a message representing the new helm instructions
      */
-    public SimpleMessage<String> createMessage(double throttleSetpoint, double rudderSetpoint) {
-        String messageContents = null;
-        messageContents = SerialUtil.START_MESSAGE_CHAR.concat(String.valueOf(throttleSetpoint)).concat(",")
-                .concat(String.valueOf(rudderSetpoint)).concat(SerialUtil.END_MESSAGE_CHAR);
-
-        return new SimpleMessage<String>(originID, destinationID, System.currentTimeMillis(),
-                MessageInterface.MessagePriority.NORMAL, messageContents);
+    public MessageInterface createMessage(double throttleSetpoint, double rudderSetpoint) throws MessageTypeException {
+        return new HelmMessage(originID, destinationID, System.currentTimeMillis(),
+                MessageInterface.MessagePriority.NORMAL, throttleSetpoint, rudderSetpoint);
     }
 
     /**
@@ -51,8 +46,8 @@ public class ArduinoHelmMessageFactory {
      * @param actualState string representing arduino state, generated with {@link HelmArduino#getHelmState()}
      * @return a message representing the helm state
      */
-    public SimpleMessage<String> createMessage(String actualState) {
-        return new SimpleMessage<String>(originID, destinationID, System.currentTimeMillis(),
+    public MessageInterface createMessage(String actualState) throws MessageTypeException {
+        return new HelmMessage(originID, destinationID, System.currentTimeMillis(),
                 MessageInterface.MessagePriority.NORMAL, actualState);
     }
 }

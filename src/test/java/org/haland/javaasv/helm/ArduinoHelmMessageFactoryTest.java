@@ -1,5 +1,6 @@
 package org.haland.javaasv.helm;
 
+import org.haland.javaasv.message.MessageTypeException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,14 +17,14 @@ class ArduinoHelmMessageFactoryTest {
     private ArduinoHelmMessageFactory testFactory = new ArduinoHelmMessageFactory(ORIGIN_ID, DESTINATION_ID);
 
     @Test
-    void testCreateMessage() {
+    void testCreateMessage() throws MessageTypeException {
         assertEquals(EXPECTED_CONTENTS, testFactory.createMessage(THROTTLE_SETPOINT, RUDDER_SETPOINT)
-                .getMessageContents());
+                .getMessageContents().getHelmMessage());
     }
 
     @Test
-    void testCreateMessageNegative() {
+    void testCreateMessageNegative() throws MessageTypeException {
         assertEquals(NEGATIVE_EXPECTED_CONTENTS, testFactory.createMessage(-1 * THROTTLE_SETPOINT, -1 * RUDDER_SETPOINT)
-                .getMessageContents());
+                .getMessageContents().getHelmMessage());
     }
 }
