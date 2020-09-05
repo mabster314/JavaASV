@@ -20,6 +20,7 @@ package org.haland.javaasv.message;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * Handles message passing for the system. Only one should exist
@@ -27,6 +28,11 @@ import java.util.Map;
 public class MessengerServer implements MessengerServerInterface {
     // Our instance of the server
     private static MessengerServer messengerServerInstance = null;
+
+    /**
+     * Stack representing messages to handle
+     */
+    private Stack<MessageInterface<?>> messageStack;
 
     /**
      * Map representing registered client modules
@@ -38,6 +44,7 @@ public class MessengerServer implements MessengerServerInterface {
      */
     private MessengerServer(){
         clients = new HashMap<String, MessengerClientInterface>();
+        messageStack = new Stack<MessageInterface<?>>();
     }
 
     /**
@@ -67,13 +74,24 @@ public class MessengerServer implements MessengerServerInterface {
     }
 
     /**
-     * Dispatches a message to a client by calling the {@link MessengerClientInterface#dispatch(MessageInterface)}
-     * method of the destination module
+     * Dispatches a message to the stack
+     *
      * @param message the message being dispatched
      */
     @Override
-    public void dispatch(MessageInterface message) {
-        clients.get(message.getDestinationID()).dispatch(message);
+    public void dispatch(MessageInterface<?> message) {
+        messageStack.push(message);
     }
 
+    /**
+     * Calls the {@link MessengerClientInterface#dispatch(MessageInterface)} method of the destination client for each
+     * message in the stack
+     */
+    @Override
+    public void run() {
+        while (!messageStack.empty()) {
+            MessageInterface<?> message = messageStack.pop();
+            clients.get(message.getDestinationID()).dispatch(message);
+        }
+    }
 }

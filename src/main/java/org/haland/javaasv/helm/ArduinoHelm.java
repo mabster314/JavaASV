@@ -21,6 +21,7 @@ package org.haland.javaasv.helm;
 import org.haland.javaasv.message.MessageInterface;
 import org.haland.javaasv.message.MessengerClientInterface;
 import org.haland.javaasv.message.MessengerServer;
+import org.haland.javaasv.message.SimpleMessage;
 import org.haland.javaasv.util.PIDController;
 import org.haland.javaasv.util.SerialArduino;
 
@@ -31,7 +32,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Controls helm by interfacing with an Arduino. This is a singleton class, and only one should be run.
  */
-public class ArduinoHelm implements HelmInterface {
+public class ArduinoHelm implements MessengerClientInterface<String> {
     /**
      * The client ID for an ArduinoHelm
      */
@@ -67,12 +68,12 @@ public class ArduinoHelm implements HelmInterface {
     }
 
     /**
-     * Dispatches a {@link HelmMessage} by sending its contents to the arduino and sending a return message with the
+     * Dispatches a {@link MessageInterface} by sending its contents to the arduino and sending a return message with the
      * actual rudder and
-     * @param message {@link HelmMessage} containing new throttle and rudder data
+     * @param message {@link MessageInterface} containing new throttle and rudder data
      */
     @Override
-    public void dispatch(HelmMessage message) {
+    public void dispatch(MessageInterface<String> message) {
         helmArduino.sendSerialData(message.getMessageContents().getBytes(StandardCharsets.US_ASCII));
 
         // Initialize our message factory with the correct pilot client ID
