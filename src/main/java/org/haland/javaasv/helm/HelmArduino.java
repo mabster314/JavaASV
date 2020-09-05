@@ -29,6 +29,15 @@ public class HelmArduino implements SerialArduinoInterface {
     }
 
     /**
+     * Constructs a new {@link HelmArduino} with a new {@link SerialArduino} on a specified port
+     * 
+     * @param port Serial port to connect over
+     */
+    public HelmArduino(String port) {
+        this(new SerialArduino(port));
+    }
+
+    /**
      * Gives the helm state
      * @return the state as a String in the form "&lt;throttleState,rudderState&gt;"
      */
