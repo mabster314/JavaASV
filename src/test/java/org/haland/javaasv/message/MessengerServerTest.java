@@ -21,56 +21,74 @@ package org.haland.javaasv.message;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
+import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MessengerServerTest {
     // Test constants
-    private static final String originID = "testID";
-    private static final MessageInterface.MessagePriority priority = MessageInterface.MessagePriority.NORMAL;
+    private static final String TEST_CLIENT_ID = "testID";
+    private static final String MESSAGE_CONTENTS = "foo";
 
-    private static final String stringMessageContents = "foo";
-    private static final Integer integerMessageContents = 5;
 
-    private final MessageFactory testFactory;
-    private final MessengerTestClient testClient1;
-    private final MessengerTestClient testClient2;
-    private final MessageInterface testMessage1;
-    private final MessageInterface testMessage2;
+    private MessengerClientInterface client = new MessengerClientInterface() {
+        @Override
+        public void dispatch(MessageInterface message) {
+
+        }
+
+        @Override
+        public String getClientID() {
+            return null;
+        }
+    };
+
+    private MessageInterface message = new MessageInterface() {
+        @Override
+        public String getOriginID() {
+            return null;
+        }
+
+        @Override
+        public String getDestinationID() {
+            return null;
+        }
+
+        @Override
+        public long getCreationTime() {
+            return 0;
+        }
+
+        @Override
+        public MessagePriority getPriority() {
+            return null;
+        }
+
+        @Override
+        public Class<?> getType() {
+            return null;
+        }
+
+        @Override
+        public Object getMessageContents() {
+            return null;
+        }
+    };
 
     // The server is spawned for testing
-    private MessengerServer testServer;
+    private MessengerServer testServer = MessengerServer.getInstance();
 
-    // Register the clients to the server
-    private MessengerServerTest() throws DuplicateKeyException {
-        // Make our messages and clients
-        this.testFactory = new MessageFactory(originID);
-
-        this.testClient1 = new MessengerTestClient("testClient1", stringMessageContents);
-        this.testClient2 = new MessengerTestClient("testClient2", integerMessageContents);
-
-        this.testMessage1 = testFactory.<String>createMessage(testClient1.getClientID(),
-                priority, stringMessageContents);
-        this.testMessage2 = testFactory.<Integer>createMessage(testClient2.getClientID(),
-                priority, integerMessageContents);
-
-        // Get the server
-        testServer = MessengerServer.getInstance();
-    }
+    private MessengerClientInterface spyClient;
 
     @BeforeAll
-    void registerTestClients() throws DuplicateKeyException {
-        // Register the test clients
-        testServer.registerClientModule(testClient1.getClientID(), testClient1);
-        testServer.registerClientModule(testClient2.getClientID(), testClient2);
-    }
+    void setupTests() throws DuplicateKeyException {
+        spyClient = Mockito.spy(client);
+        doReturn(TEST_CLIENT_ID).when(spyClient).getClientID();
 
-    @Test
-    void testRegisterDuplicateClientModule() {
-        // Adding a duplicate should throw an exception
-        Exception exception = assertThrows(DuplicateKeyException.class,
-                () -> testServer.registerClientModule(testClient1.getClientID(), testClient1));
+        testServer.registerClientModule(spyClient.getClientID(), spyClient);
     }
 
     @Test
@@ -81,28 +99,24 @@ class MessengerServerTest {
 
     @Test
     void testDispatch() {
-        testServer.dispatch(testMessage1);
-        testServer.dispatch(testMessage2);
+        MessageInterface spyMessage = Mockito.spy(message);
+        when(spyMessage.getDestinationID()).thenReturn(TEST_CLIENT_ID);
+        when(spyMessage.getMessageContents()).thenReturn(MESSAGE_CONTENTS);
+
+        testServer.dispatch(spyMessage);
+
+        ArgumentCaptor<MessageInterface> captor = ArgumentCaptor.forClass(MessageInterface.class);
+        verify(spyClient).dispatch(captor.capture());
+
+        MessageInterface dispatchedMessage = captor.getValue();
+
+        assertEquals(dispatchedMessage.getMessageContents(), MESSAGE_CONTENTS);
     }
 
-    private final class MessengerTestClient<T> implements MessengerClientInterface{
-        private final String clientID;
-        private final T messageContents;
-
-        MessengerTestClient(String clientID, T messageContents) {
-            this.clientID = clientID;
-            this.messageContents = messageContents;
-        }
-
-        // Make sure we got the right message
-        @Override
-        public void dispatch(MessageInterface message) {
-            assertEquals(messageContents, message.getMessageContents());
-        }
-
-        @Override
-        public String getClientID() {
-            return this.clientID;
-        }
+    @Test
+    void testDuplicateRegistrations() throws DuplicateKeyException {
+        // Registering again should throw exception
+        Exception exception = assertThrows(DuplicateKeyException.class,
+                () -> testServer.registerClientModule(spyClient.getClientID(), spyClient));
     }
 }
