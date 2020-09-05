@@ -38,14 +38,10 @@ public class ASV {
 
         arduino.openPort();
 
+        arduino.sendSerialData(message.getBytes(StandardCharsets.US_ASCII));
         try {
-            arduino.sendSerialData(message.getBytes(StandardCharsets.US_ASCII));
-            try {
-                Thread.sleep(10);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
+            Thread.sleep(10);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -55,14 +51,10 @@ public class ASV {
             e.printStackTrace();
         }
 
+        arduino.sendSerialData("<Another>".getBytes(StandardCharsets.US_ASCII));
         try {
-            arduino.sendSerialData("<Another>".getBytes(StandardCharsets.US_ASCII));
-            try {
-                Thread.sleep(10);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
+            Thread.sleep(10);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

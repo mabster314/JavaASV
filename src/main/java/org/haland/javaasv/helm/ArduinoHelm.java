@@ -25,6 +25,7 @@ import org.haland.javaasv.util.PIDController;
 import org.haland.javaasv.util.SerialArduino;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -34,7 +35,7 @@ public class ArduinoHelm implements HelmInterface {
     /**
      * The client ID for an ArduinoHelm
      */
-    public final String DEFAULT_CLIENT_ID = "arduinoHelmClient";
+    public static final String DEFAULT_CLIENT_ID = "arduinoHelmClient";
 
     private MessengerServer server;
     private HelmArduino helmArduino;
@@ -62,9 +63,7 @@ public class ArduinoHelm implements HelmInterface {
      * @param helmArduino The {@link SerialArduino} controlling the throttle and rudder
      */
     public ArduinoHelm(MessengerServer server, HelmArduino helmArduino) {
-        this.helmArduino = helmArduino;
-        this.server = server;
-        this.clientID = DEFAULT_CLIENT_ID;
+        this(server, helmArduino, DEFAULT_CLIENT_ID);
     }
 
     /**
@@ -74,17 +73,17 @@ public class ArduinoHelm implements HelmInterface {
      */
     @Override
     public void dispatch(HelmMessage message) {
-        try {
-            helmArduino.sendSerialData(message.getMessageContents().getBytes(StandardCharsets.US_ASCII));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        helmArduino.sendSerialData(message.getMessageContents().getBytes(StandardCharsets.US_ASCII));
 
         // Initialize our message factory with the correct pilot client ID
         if (messageFactory == null) messageFactory = new ArduinoHelmMessageFactory(clientID, message.getOriginID());
 
         // Send a return message with the actual state of the controls
-        server.dispatch(messageFactory.createMessage(helmArduino.getHelmState()));
+        try {
+            server.dispatch(messageFactory.createMessage(helmArduino.getHelmState()));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

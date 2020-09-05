@@ -6,21 +6,18 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith({MockitoExtension.class})
 class ArduinoHelmTest {
-    private static final String MESSAGE_CONTENTS = "0.734,33";
-    private static final String HELM_STATE = "0.88,25";
+    private static final String MESSAGE_CONTENTS = "<0.734,33.0>";
+    private static final String HELM_STATE = "<0.88,25.0>";
     private static final String PILOT_ID = "pilotTestClient";
     private static final String HELM_ID = "helmTestClient";
 

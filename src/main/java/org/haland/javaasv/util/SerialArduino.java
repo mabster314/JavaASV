@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Serial interface for the arduino
  */
-public class SerialArduino {
+public class SerialArduino implements SerialArduinoInterface {
     /**
      * The default port name for an Arduino on Debian
      */
@@ -73,6 +73,7 @@ public class SerialArduino {
      *
      * @return <code>true</code> if the port was opened successfully, <code>false</code> otherwise
      */
+    @Override
     public boolean openPort() {
         boolean opened = serialPort.openPort();
         serialPort.addDataListener(messageListener);
@@ -84,6 +85,7 @@ public class SerialArduino {
      *
      * @return <code>true</code> if the port was closed successfully, <code>false</code> otherwise
      */
+    @Override
     public boolean closePort() {
         serialPort.removeDataListener();
         return serialPort.closePort();
@@ -95,14 +97,16 @@ public class SerialArduino {
      * @param serialData <code>byte[]</code> array containing data to send
      * @return the number of bytes actually sent (-1 if no bytes sent)
      */
-    public int sendSerialData(byte[] serialData) throws IOException {
+    @Override
+    public int sendSerialData(byte[] serialData) {
         return serialPort.writeBytes(serialData, serialData.length);
     }
 
-    public void setLastMessage(byte[] lastMessage) {
+    private void setLastMessage(byte[] lastMessage) {
         this.lastMessage = lastMessage;
     }
 
+    @Override
     public byte[] getLastMessage() {
         byte[] message = lastMessage;
         lastMessage = null;
