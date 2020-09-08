@@ -79,7 +79,7 @@ public class MessengerServer implements MessengerServerInterface {
      * @param message the message being dispatched
      */
     @Override
-    public void dispatch(MessageInterface message) {
+    public synchronized void dispatch(MessageInterface message) {
         messageStack.push(message);
     }
 
@@ -88,7 +88,7 @@ public class MessengerServer implements MessengerServerInterface {
      * message in the stack
      */
     @Override
-    public void run() {
+    public synchronized void run() {
         while (!messageStack.empty()) {
             MessageInterface message = messageStack.pop();
             MessengerClientInterface client = clients.get(message.getDestinationID());
@@ -98,6 +98,14 @@ public class MessengerServer implements MessengerServerInterface {
             } else {
                 // TODO do something
             }
+        }
+    }
+
+    private Thread thread;
+    public void start() {
+        if (thread == null) {
+            thread = new Thread(this, "Server");
+            thread.start();
         }
     }
 }
