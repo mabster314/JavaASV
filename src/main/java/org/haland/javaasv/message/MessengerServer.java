@@ -60,10 +60,15 @@ public class MessengerServer implements MessengerServerInterface {
         return messengerServerInstance;
     }
 
+    public static void killInstance() {
+        messengerServerInstance = null;
+    }
+
     /**
-     * Adds a module to the registry
+     * Adds a module to the registry with a specific client name
      * @param clientID the name of the module to register
      * @param clientModule the module to register
+     * @throws DuplicateKeyException if a module with a duplicate ID is registered
      */
     @Override
     public void registerClientModule(String clientID, MessengerClientInterface clientModule)
@@ -71,6 +76,16 @@ public class MessengerServer implements MessengerServerInterface {
         if (clients.putIfAbsent(clientID, clientModule) != null){
                 throw new DuplicateKeyException("Duplicate client registered to server: " + clientModule.getClientID());
         }
+    }
+
+    /**
+     * Adds a module to the registry
+     * @param clientModule the module to register
+     * @throws DuplicateKeyException if a module with a duplicate ID is registered
+     */
+    @Override
+    public void registerClientModule(MessengerClientInterface clientModule) throws DuplicateKeyException{
+        registerClientModule(clientModule.getClientID(), clientModule);
     }
 
     /**

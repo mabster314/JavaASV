@@ -49,11 +49,22 @@ sourceSets {
             srcDirs = ['src/test/resources']
         }
     }
+
+    integrationTest {
+        java {
+            compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+            runtimeClasspath += output + compileClasspath
+            srcDirs = ['src/integration-test/java']
+        }
+        resources {
+            srcDirs = ['src/integration-test/resources']
+        }
+    }
 }
 
-test {
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
 }
 
 dependencies {
@@ -62,6 +73,19 @@ dependencies {
     testCompile "org.mockito:mockito-junit-jupiter:3.+"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.+'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.+'
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen {false}
+    mustRunAfter test
 }
 
 jacocoTestReport {
@@ -75,3 +99,5 @@ jacocoTestReport {
 coveralls {
     jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
 }
+
+check.dependsOn integrationTest

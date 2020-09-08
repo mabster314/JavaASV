@@ -1,24 +1,44 @@
-package org.haland.javaasv;
+package org.haland.javaasv.message;
 
 import org.haland.javaasv.message.*;
 
-class SendingClient implements MessengerClientInterface, Runnable {
+/**
+ * A client for integration testing
+ */
+class TestClient implements MessengerClientInterface, Runnable {
     private final MessengerServerInterface server;
     private final String clientName;
     private final String receiverName;
+    private final TestDispatcher testDispatcher;
 
-    public SendingClient(MessengerServerInterface server, String clientName, String receiverName) {
+    /**
+     * Initialize with a server, specified client name, and receiver name
+     * @param server {@link MessengerServerInterface} to interact with
+     * @param clientName client ID as a string
+     * @param receiverName receiver ID as a string
+     */
+    public TestClient(MessengerServerInterface server, String clientName, String receiverName,
+                      TestDispatcher testDispatcher) {
         this.server = server;
         this.clientName = clientName;
         this.receiverName = receiverName;
+        this.testDispatcher = testDispatcher;
     }
 
+    /**
+     * Returns a new {@link SimpleMessage} containing test stuff
+     * @return the message
+     * @throws MessageTypeException
+     */
     private SimpleMessage createMessage() throws MessageTypeException {
         long time = System.currentTimeMillis();
         return new SimpleMessage(clientName, receiverName, time, MessageInterface.MessagePriority.NORMAL,
                 new MessageContent("Sent at: " + String.valueOf(time), null, null));
     }
 
+    /**
+     * Dispatch a new message to the server
+     */
     @Override
     public void run() {
         try {
@@ -28,13 +48,14 @@ class SendingClient implements MessengerClientInterface, Runnable {
         }
     }
 
+    /**
+     * Dispatch a received message by printing its contents
+     * @param message the received message
+     */
     @Override
     public void dispatch(MessageInterface message) {
-        try {
-            System.out.println(message.getMessageContents().getStringMessage());
-        } catch (MessageTypeException e) {
-            e.printStackTrace();
-        }
+        System.out.println("test");
+        testDispatcher.dispatch();
     }
 
     @Override

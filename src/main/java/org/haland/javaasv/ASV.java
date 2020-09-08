@@ -28,64 +28,7 @@ import java.util.concurrent.*;
 public class ASV {
     public static void main(String[] args) {
         final String port = "/dev/ttyACM1";
-        final String sendingClientID = "sendingClient";
-        final String receivingClientID = "receivingClient";
 
-        MessengerServer server = MessengerServer.getInstance();
-        SendingClient sendingClient = new SendingClient(server, sendingClientID, receivingClientID);
-        MessengerClientInterface receivingClient = new MessengerClientInterface() {
-            @Override
-            public void dispatch(MessageInterface message) {
-                try {
-                    System.out.println(message.getMessageContents().getStringMessage());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if ((message.getCreationTime() % 10000) < 1000) {
-                    try {
-                        server.dispatch(new SimpleMessage(receivingClientID, sendingClientID, System.currentTimeMillis(),
-                                MessageInterface.MessagePriority.NORMAL,
-                                new MessageContent("Return", null, null)));
-                    } catch (MessageTypeException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public String getClientID() {
-                return receivingClientID;
-            }
-
-            @Override
-            public MessageInterface.MessageType getClientType() {
-                return MessageInterface.MessageType.STRING;
-            }
-        };
-
-        try {
-            server.registerClientModule(sendingClient.getClientID(), sendingClient);
-            server.registerClientModule(receivingClient.getClientID(), receivingClient);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Runnable runBoth = new Runnable() {
-            @Override
-            public void run() {
-                sendingClient.run();
-                server.run();
-            }
-        };
-
-        ScheduledExecutorService clientExecutor = Executors.newScheduledThreadPool(1);
-        ScheduledExecutorService serverExecutor = Executors.newScheduledThreadPool(1);
-
-        int initialDelay = 0;
-        int clientPeriod = 1000;
-        int serverPeriod = 100;
-        clientExecutor.scheduleAtFixedRate(sendingClient, initialDelay, clientPeriod, TimeUnit.MILLISECONDS);
-        serverExecutor.scheduleAtFixedRate(server, initialDelay, serverPeriod, TimeUnit.MILLISECONDS);
     }
 
 }
