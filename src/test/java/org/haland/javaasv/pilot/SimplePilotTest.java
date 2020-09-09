@@ -1,11 +1,12 @@
 package org.haland.javaasv.pilot;
 
 import org.haland.javaasv.helm.HelmInterface;
-import org.haland.javaasv.message.*;
+import org.haland.javaasv.message.HelmMessage;
+import org.haland.javaasv.message.MessageInterface;
+import org.haland.javaasv.message.MessageTypeException;
+import org.haland.javaasv.message.MessengerServerInterface;
 import org.haland.javaasv.util.PIDController;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -15,10 +16,10 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.concurrent.ExecutionException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 @ExtendWith(MockitoExtension.class)
 class SimplePilotTest {
@@ -26,6 +27,7 @@ class SimplePilotTest {
     private static final String PILOT_ID = "testSimplePilot";
     private static final double THROTTLE_VALUE = 0.75;
     private static final double RUDDER_VALUE = 15.5;
+    private static final double[] GPS_POSITION = {40.884, -73.644};
 
     private SimplePilot testPilot;
 
@@ -35,10 +37,8 @@ class SimplePilotTest {
     private MessengerServerInterface mockServer;
     @Mock
     private HelmInterface mockHelm;
-    @Mock
-    private GPSProviderInterface mockGPSProvider;
+    private GPSProviderInterface mockGPSProvider = () -> GPS_POSITION;
 
-    @BeforeEach
     void setupPilot() {
         // Mock helm should give a client ID
         when(mockHelm.getClientID()).thenReturn(HELM_ID);
@@ -61,6 +61,9 @@ class SimplePilotTest {
 
     @Test
     void testRun() throws MessageTypeException {
+        // Set up the test
+        setupPilot();
+
         // Dispatch a message to set up initial values
         try {
             testPilot.dispatch(new HelmMessage(mockHelm.getClientID(), testPilot.getClientID(),
@@ -83,6 +86,8 @@ class SimplePilotTest {
 
     @Test
     void testDispatch() {
+        setupPilot();
+
         try {
             testPilot.dispatch(new HelmMessage(mockHelm.getClientID(), testPilot.getClientID(),
                     System.currentTimeMillis(), MessageInterface.MessagePriority.NORMAL, THROTTLE_VALUE, RUDDER_VALUE));
@@ -92,5 +97,14 @@ class SimplePilotTest {
 
         assertEquals(testPilot.getThrottleSetpoint(), THROTTLE_VALUE);
         assertEquals(testPilot.getRudderSetpoint(), RUDDER_VALUE);
+    }
+
+    @Test
+    void testUpdateGPSCoordinates() throws ExecutionException, InterruptedException {
+        testPilot = new SimplePilot(PILOT_ID, mockServer, mockHelm, mockPIDController, mockPIDController,
+                mockGPSProvider);
+
+        testPilot.updateGPS();
+        assertEquals(GPS_POSITION, testPilot.getGPSCoordinates());
     }
 }

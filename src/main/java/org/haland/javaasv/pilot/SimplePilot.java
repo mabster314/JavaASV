@@ -110,12 +110,14 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     /**
      * Updates the stored GPS coordinates
      */
-    private void updateGPS() throws ExecutionException, InterruptedException {
+    public void updateGPS() throws ExecutionException, InterruptedException {
         Future<double[]> gpsFuture;
         gpsFuture = executor.submit(gpsProvider);
         double[] gpsDataReceived = gpsFuture.get();
         this.gpsCoordinates = gpsDataReceived;
     }
+
+
 
     /**
      * Returns the ID of the messenger client
@@ -138,11 +140,15 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     }
 
     public double getThrottleSetpoint() {
-        return throttleSetpoint;
+        return this.throttleSetpoint;
     }
 
     public double getRudderSetpoint() {
-        return rudderSetpoint;
+        return this.rudderSetpoint;
+    }
+
+    public double[] getGPSCoordinates() {
+        return this.gpsCoordinates;
     }
 
     private class PilotMessageFactory {
