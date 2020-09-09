@@ -21,6 +21,9 @@ package org.haland.javaasv.message;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Handles message passing for the system. Only one should exist
@@ -28,6 +31,8 @@ import java.util.Stack;
 public class MessengerServer implements MessengerServerInterface {
     // Our instance of the server
     private static MessengerServer messengerServerInstance = null;
+    // The server's executor service
+    private static ScheduledExecutorService executor = null;
 
     /**
      * Stack representing messages to handle
@@ -42,9 +47,10 @@ public class MessengerServer implements MessengerServerInterface {
     /**
      * Creates a new instance of the server
      */
-    private MessengerServer(){
+    private MessengerServer(ScheduledExecutorService executor){
         clients = new HashMap<String, MessengerClientInterface>();
         messageStack = new Stack<MessageInterface>();
+        this.executor = executor;
     }
 
     /**
@@ -54,7 +60,7 @@ public class MessengerServer implements MessengerServerInterface {
     public static MessengerServer getInstance(){
         // Make a new one if we don't have one
         if (messengerServerInstance == null)
-            messengerServerInstance = new MessengerServer();
+            messengerServerInstance = new MessengerServer(Executors.newScheduledThreadPool(1));
 
         // Give the instance
         return messengerServerInstance;
@@ -62,6 +68,8 @@ public class MessengerServer implements MessengerServerInterface {
 
     public static void killInstance() {
         messengerServerInstance = null;
+        executor.shutdownNow();
+        executor = null;
     }
 
     /**
@@ -116,11 +124,15 @@ public class MessengerServer implements MessengerServerInterface {
         }
     }
 
-    private Thread thread;
-    public void start() {
-        if (thread == null) {
-            thread = new Thread(this, "Server");
-            thread.start();
-        }
+    /**
+     * Starts the server by scheduling it repeatedly
+     * @param period execution period
+     */
+    public void startServer(long period) {
+        executor.scheduleAtFixedRate(messengerServerInstance, 0, period, TimeUnit.MILLISECONDS);
+    }
+
+    public void stopServer() {
+        executor.shutdown();
     }
 }

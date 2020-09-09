@@ -62,13 +62,10 @@ public class MessengerIntegrationTest {
 
     @Test
     public void testMessageSending() {
-        ScheduledExecutorService serverExecutor = Executors.newScheduledThreadPool(1);
+        server.startServer(serverPeriod);
 
         ScheduledExecutorService clientOneExecutor = Executors.newScheduledThreadPool(1);
         ScheduledExecutorService clientTwoExecutor = Executors.newScheduledThreadPool(1);
-
-        // Run the server continuously
-        serverExecutor.scheduleAtFixedRate(server, 0, serverPeriod, TimeUnit.MILLISECONDS);
 
         // Send each message once
         clientOneExecutor.schedule(testClientOne, 0, TimeUnit.MILLISECONDS);
@@ -76,5 +73,8 @@ public class MessengerIntegrationTest {
 
         // Make sure we receive both packets
         await().until(() -> (testClientOneDispatched == 1) && (testClientTwoDispatched == 1));
+
+        // Shutdown the server
+        server.stopServer();
     }
 }

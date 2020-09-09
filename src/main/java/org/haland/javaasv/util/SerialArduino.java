@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Serial interface for the arduino
  */
-public class SerialArduino implements SerialArduinoInterface {
+public class SerialArduino implements SerialArduinoInterface<byte[]> {
     /**
      * The default port name for an Arduino on Debian
      */
@@ -46,6 +46,7 @@ public class SerialArduino implements SerialArduinoInterface {
 
     private ArduinoMessageListener messageListener;
     private byte[] lastMessage;
+    private boolean messageAvailable;
 
     /**
      * Connect a new arduino with specified port name
@@ -74,7 +75,7 @@ public class SerialArduino implements SerialArduinoInterface {
      * @return <code>true</code> if the port was opened successfully, <code>false</code> otherwise
      */
     @Override
-    public boolean openPort() {
+    public synchronized boolean openPort() {
         boolean opened = serialPort.openPort();
         serialPort.addDataListener(messageListener);
         return opened;
@@ -86,7 +87,7 @@ public class SerialArduino implements SerialArduinoInterface {
      * @return <code>true</code> if the port was closed successfully, <code>false</code> otherwise
      */
     @Override
-    public boolean closePort() {
+    public synchronized boolean closePort() {
         serialPort.removeDataListener();
         return serialPort.closePort();
     }
@@ -102,15 +103,29 @@ public class SerialArduino implements SerialArduinoInterface {
         return serialPort.writeBytes(serialData, serialData.length);
     }
 
-    private void setLastMessage(byte[] lastMessage) {
+    private synchronized void setLastMessage(byte[] lastMessage) {
         this.lastMessage = lastMessage;
     }
 
     @Override
-    public byte[] getLastMessage() {
+    public synchronized byte[] getLastMessage() {
         byte[] message = lastMessage;
         lastMessage = null;
         return message;
+    }
+
+    @Override
+    public synchronized boolean isMessageAvailable() {
+        return this.messageAvailable;
+    }
+
+    private void setMessageAvailable(boolean messageAvailability) {
+        this.messageAvailable = messageAvailability;
+    }
+
+    @Override
+    public byte[] call() throws IOException {
+        return getLastMessage();
     }
 
     /**
@@ -142,6 +157,7 @@ public class SerialArduino implements SerialArduinoInterface {
         public void serialEvent(SerialPortEvent event) {
             byte[] delimitedMessage = event.getReceivedData();
             serialArduino.setLastMessage(delimitedMessage);
+            serialArduino.setMessageAvailable(true);
         }
     }
 }
