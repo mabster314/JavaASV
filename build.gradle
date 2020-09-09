@@ -72,6 +72,7 @@ dependencies {
     testCompile "org.mockito:mockito-core:2.+"
     testCompile "org.mockito:mockito-junit-jupiter:3.+"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.+'
+    testImplementation 'org.awaitility:awaitility:4.0.3'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.+'
 }
 
@@ -89,11 +90,17 @@ task integrationTest(type: Test) {
 }
 
 jacocoTestReport {
+    def coverageSourceDirs = ['src/main/java']
     dependsOn test
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
     }
+    getSourceDirectories().setFrom(files(coverageSourceDirs))
+    getClassDirectories().setFrom(fileTree(
+            dir: "${project.buildDir}/classes/main",
+            excludes: []
+    ))
 }
 
 coveralls {

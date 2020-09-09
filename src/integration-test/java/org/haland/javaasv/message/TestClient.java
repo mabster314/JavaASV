@@ -1,7 +1,5 @@
 package org.haland.javaasv.message;
 
-import org.haland.javaasv.message.*;
-
 /**
  * A client for integration testing
  */
@@ -9,7 +7,7 @@ class TestClient implements MessengerClientInterface, Runnable {
     private final MessengerServerInterface server;
     private final String clientName;
     private final String receiverName;
-    private final TestDispatcher testDispatcher;
+    private final Dispatcher dispatcher;
 
     /**
      * Initialize with a server, specified client name, and receiver name
@@ -18,11 +16,11 @@ class TestClient implements MessengerClientInterface, Runnable {
      * @param receiverName receiver ID as a string
      */
     public TestClient(MessengerServerInterface server, String clientName, String receiverName,
-                      TestDispatcher testDispatcher) {
+                      Dispatcher dispatcher) {
         this.server = server;
         this.clientName = clientName;
         this.receiverName = receiverName;
-        this.testDispatcher = testDispatcher;
+        this.dispatcher = dispatcher;
     }
 
     /**
@@ -54,8 +52,7 @@ class TestClient implements MessengerClientInterface, Runnable {
      */
     @Override
     public void dispatch(MessageInterface message) {
-        System.out.println("test");
-        testDispatcher.dispatch();
+        dispatcher.dispatch();
     }
 
     @Override

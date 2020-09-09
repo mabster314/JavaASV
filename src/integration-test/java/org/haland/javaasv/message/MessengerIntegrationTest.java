@@ -6,10 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.*;
+import static org.awaitility.Awaitility.*;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -23,25 +22,30 @@ public class MessengerIntegrationTest {
 
     private TestClient testClientOne;
     private final String testClientOneID = "testClientOne";
-    private final long testClientOnePeriod = 2000;
-    @Mock
-    private TestDispatcher testDispatcherOne;
+
+    private int testClientOneDispatched;
+    private Dispatcher dispatcherOne ;
 
 
     private TestClient testClientTwo;
     private final String testClientTwoID = "testClientTwo";
-    private final long testClientTwoPeriod = 7000;
-    @Mock
-    private TestDispatcher testDispatcherTwo;
+
+    private int testClientTwoDispatched;
+    private Dispatcher dispatcherTwo;
 
     @BeforeAll
     public void setupTest() {
         server = MessengerServer.getInstance();
 
+        testClientOneDispatched = 0;
+        dispatcherOne = () -> testClientOneDispatched++;
+
+        testClientTwoDispatched = 0;
+        dispatcherTwo = () -> testClientTwoDispatched++;
 
 
-        testClientOne = new TestClient(server, testClientOneID, testClientTwoID, testDispatcherOne);
-        testClientTwo = new TestClient(server, testClientTwoID, testClientOneID, testDispatcherTwo);
+        testClientOne = new TestClient(server, testClientOneID, testClientTwoID, dispatcherOne);
+        testClientTwo = new TestClient(server, testClientTwoID, testClientOneID, dispatcherTwo);
 
         try {
             server.registerClientModule(testClientOne);
@@ -67,10 +71,10 @@ public class MessengerIntegrationTest {
         serverExecutor.scheduleAtFixedRate(server, 0, serverPeriod, TimeUnit.MILLISECONDS);
 
         // Send each message once
-        clientOneExecutor.schedule(testClientOne, 200, TimeUnit.MILLISECONDS);
-        clientTwoExecutor.schedule(testClientTwo, 200, TimeUnit.MILLISECONDS);
+        clientOneExecutor.schedule(testClientOne, 0, TimeUnit.MILLISECONDS);
+        clientTwoExecutor.schedule(testClientTwo, 0, TimeUnit.MILLISECONDS);
 
-        verify(testDispatcherOne, times(1)).dispatch();
-        verify(testDispatcherTwo, times(1)).dispatch();
+        // Make sure we receive both packets
+        await().until(() -> (testClientOneDispatched == 1) && (testClientTwoDispatched == 1));
     }
 }
