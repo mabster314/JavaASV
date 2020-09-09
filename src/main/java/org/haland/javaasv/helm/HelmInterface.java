@@ -9,6 +9,7 @@ import org.haland.javaasv.message.MessengerClientInterface;
 public interface HelmInterface extends MessengerClientInterface {
     /**
      * Dispatch a message. Should send actual state message in return
+     *
      * @param message a message of type {@link org.haland.javaasv.message.MessageInterface.MessageType#HELM}
      */
     @Override

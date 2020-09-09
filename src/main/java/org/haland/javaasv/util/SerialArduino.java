@@ -23,7 +23,6 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -103,15 +102,15 @@ public class SerialArduino implements SerialArduinoInterface<byte[]> {
         return serialPort.writeBytes(serialData, serialData.length);
     }
 
-    private synchronized void setLastMessage(byte[] lastMessage) {
-        this.lastMessage = lastMessage;
-    }
-
     @Override
     public synchronized byte[] getLastMessage() {
         byte[] message = lastMessage;
         lastMessage = null;
         return message;
+    }
+
+    private synchronized void setLastMessage(byte[] lastMessage) {
+        this.lastMessage = lastMessage;
     }
 
     @Override

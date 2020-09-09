@@ -15,12 +15,10 @@ public class MessageContent {
      *
      * @param stringMessage String message, or null if using another type
      * @param doubleMessage Double message, or null if using another type
-     * @param helmMessage Helm message, or null if using another type
-     *
+     * @param helmMessage   Helm message, or null if using another type
      * @throws MessageTypeException if the number of non-null parameters is not one
      */
-    public MessageContent(String stringMessage, Double doubleMessage, String helmMessage)
-            throws MessageTypeException {
+    public MessageContent(String stringMessage, Double doubleMessage, String helmMessage) throws MessageTypeException {
 
         if (stringMessage != null) {
             this.messageType = MessageInterface.MessageType.STRING;
@@ -48,21 +46,21 @@ public class MessageContent {
         this.helmMessage = helmMessage;
     }
 
-    public String getStringMessage() throws MessageTypeException{
+    public String getStringMessage() throws MessageTypeException {
         if (stringMessage == null) {
             throw new MessageTypeException("No string data in message contents: ");
         }
         return stringMessage;
     }
 
-    public Double getDoubleMessage() throws MessageTypeException{
+    public Double getDoubleMessage() throws MessageTypeException {
         if (doubleMessage == null) {
             throw new MessageTypeException("No double data in message contents: ");
         }
         return doubleMessage;
     }
 
-    public String getHelmMessage() throws MessageTypeException{
+    public String getHelmMessage() throws MessageTypeException {
         if (helmMessage == null) {
             throw new MessageTypeException("No helm data in message contents: ");
         }

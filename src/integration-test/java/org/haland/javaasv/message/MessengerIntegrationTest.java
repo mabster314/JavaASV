@@ -5,31 +5,25 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.awaitility.Awaitility.*;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static org.awaitility.Awaitility.await;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
 public class MessengerIntegrationTest {
-    private MessengerServer server;
     private final long serverPeriod = 10;
-
-    private TestClient testClientOne;
     private final String testClientOneID = "testClientOne";
-
-    private int testClientOneDispatched;
-    private Dispatcher dispatcherOne ;
-
-
-    private TestClient testClientTwo;
     private final String testClientTwoID = "testClientTwo";
-
+    private MessengerServer server;
+    private TestClient testClientOne;
+    private int testClientOneDispatched;
+    private Dispatcher dispatcherOne;
+    private TestClient testClientTwo;
     private int testClientTwoDispatched;
     private Dispatcher dispatcherTwo;
 

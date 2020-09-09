@@ -50,8 +50,8 @@ class SimplePilotTest {
             }
         });
 
-        testPilot = new SimplePilot(PILOT_ID, mockServer, mockHelm, mockPIDController, mockPIDController,
-                mockGPSProvider);
+        testPilot =
+                new SimplePilot(PILOT_ID, mockServer, mockHelm, mockPIDController, mockPIDController, mockGPSProvider);
     }
 
     @AfterEach
@@ -66,8 +66,9 @@ class SimplePilotTest {
 
         // Dispatch a message to set up initial values
         try {
-            testPilot.dispatch(new HelmMessage(mockHelm.getClientID(), testPilot.getClientID(),
-                    System.currentTimeMillis(), MessageInterface.MessagePriority.NORMAL, THROTTLE_VALUE, RUDDER_VALUE));
+            testPilot.dispatch(
+                    new HelmMessage(mockHelm.getClientID(), testPilot.getClientID(), System.currentTimeMillis(),
+                            MessageInterface.MessagePriority.NORMAL, THROTTLE_VALUE, RUDDER_VALUE));
         } catch (MessageTypeException e) {
             e.printStackTrace();
         }
@@ -89,8 +90,9 @@ class SimplePilotTest {
         setupPilot();
 
         try {
-            testPilot.dispatch(new HelmMessage(mockHelm.getClientID(), testPilot.getClientID(),
-                    System.currentTimeMillis(), MessageInterface.MessagePriority.NORMAL, THROTTLE_VALUE, RUDDER_VALUE));
+            testPilot.dispatch(
+                    new HelmMessage(mockHelm.getClientID(), testPilot.getClientID(), System.currentTimeMillis(),
+                            MessageInterface.MessagePriority.NORMAL, THROTTLE_VALUE, RUDDER_VALUE));
         } catch (MessageTypeException e) {
             e.printStackTrace();
         }
@@ -101,8 +103,8 @@ class SimplePilotTest {
 
     @Test
     void testUpdateGPSCoordinates() throws ExecutionException, InterruptedException {
-        testPilot = new SimplePilot(PILOT_ID, mockServer, mockHelm, mockPIDController, mockPIDController,
-                mockGPSProvider);
+        testPilot =
+                new SimplePilot(PILOT_ID, mockServer, mockHelm, mockPIDController, mockPIDController, mockGPSProvider);
 
         testPilot.updateGPS();
         assertEquals(GPS_POSITION, testPilot.getGPSCoordinates());

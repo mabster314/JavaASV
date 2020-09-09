@@ -1,22 +1,21 @@
 package org.haland.javaasv.helm;
 
-import org.haland.javaasv.message.*;
+import org.haland.javaasv.message.HelmMessage;
+import org.haland.javaasv.message.MessageInterface;
+import org.haland.javaasv.message.MessageTypeException;
+import org.haland.javaasv.message.MessengerServerInterface;
 import org.haland.javaasv.util.SerialArduino;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import static org.awaitility.Awaitility.*;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
@@ -50,8 +49,8 @@ public class ArduinoHelmIntegrationTest {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 MessageInterface message = (MessageInterface) invocation.getArguments()[0];
-                receivedValidResponse = (message.getMessageContents().getHelmMessage().matches(MATCH_PATTERN)
-                                            && message.getDestinationID() == "origin");
+                receivedValidResponse = (message.getMessageContents().getHelmMessage().matches(MATCH_PATTERN) && message
+                        .getDestinationID() == "origin");
                 return null;
             }
         }).when(server).dispatch(any(MessageInterface.class));

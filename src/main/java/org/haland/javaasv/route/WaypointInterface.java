@@ -13,9 +13,9 @@ public interface WaypointInterface {
      * Defines behavior modes for at checkpoints
      *
      * <p>
-     *     NEXT_WAYPOINT: continue immediately to next waypoint
-     *
-     *     LOITER: keep station at the waypoint
+     * NEXT_WAYPOINT: continue immediately to next waypoint
+     * <p>
+     * LOITER: keep station at the waypoint
      * </p>
      */
     enum WaypointBehavior {

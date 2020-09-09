@@ -25,8 +25,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MessengerServerTest {
@@ -93,7 +95,7 @@ class MessengerServerTest {
     }
 
     @Test
-    void testSingletonInstance(){
+    void testSingletonInstance() {
         // We should get the same instance if we ask for the server
         assertEquals(testServer, MessengerServer.getInstance());
     }
@@ -106,7 +108,7 @@ class MessengerServerTest {
         // Dispatch to the stack
         testServer.dispatch(spyMessage1);
         testServer.dispatch(spyMessage2);
-        
+
         // Distribute
         testServer.run();
 
@@ -114,7 +116,7 @@ class MessengerServerTest {
         verify(spyClient1).dispatch(captor1.capture());
         MessageInterface dispatchedMessage1 = captor1.getValue();
         assertEquals(dispatchedMessage1.getMessageContents().getStringMessage(), STRING_MESSAGE_CONTENT);
-        
+
         ArgumentCaptor<MessageInterface> captor2 = ArgumentCaptor.forClass(MessageInterface.class);
         verify(spyClient2).dispatch(captor2.capture());
         MessageInterface dispatchedMessage2 = captor2.getValue();

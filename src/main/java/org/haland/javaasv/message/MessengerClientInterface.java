@@ -25,18 +25,21 @@ public interface MessengerClientInterface {
 
     /**
      * Executes when receiving message from server. Implementing classes must provide type safety
+     *
      * @param message the message
      */
     void dispatch(MessageInterface message);
 
     /**
      * Returns the ID of the messenger client
+     *
      * @return the ID
      */
     String getClientID();
 
     /**
      * Returns the type of messages the client can handle
+     *
      * @return
      */
     MessageInterface.MessageType getClientType();

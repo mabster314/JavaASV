@@ -3,7 +3,7 @@ package org.haland.javaasv.helm;
 import org.haland.javaasv.message.MessageTypeException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ArduinoHelmMessageFactoryTest {
     private static final double THROTTLE_SETPOINT = 0.75;
@@ -18,13 +18,14 @@ class ArduinoHelmMessageFactoryTest {
 
     @Test
     void testCreateMessage() throws MessageTypeException {
-        assertEquals(EXPECTED_CONTENTS, testFactory.createMessage(THROTTLE_SETPOINT, RUDDER_SETPOINT)
-                .getMessageContents().getHelmMessage());
+        assertEquals(EXPECTED_CONTENTS,
+                testFactory.createMessage(THROTTLE_SETPOINT, RUDDER_SETPOINT).getMessageContents().getHelmMessage());
     }
 
     @Test
     void testCreateMessageNegative() throws MessageTypeException {
-        assertEquals(NEGATIVE_EXPECTED_CONTENTS, testFactory.createMessage(-1 * THROTTLE_SETPOINT, -1 * RUDDER_SETPOINT)
-                .getMessageContents().getHelmMessage());
+        assertEquals(NEGATIVE_EXPECTED_CONTENTS,
+                testFactory.createMessage(-1 * THROTTLE_SETPOINT, -1 * RUDDER_SETPOINT).getMessageContents()
+                        .getHelmMessage());
     }
 }

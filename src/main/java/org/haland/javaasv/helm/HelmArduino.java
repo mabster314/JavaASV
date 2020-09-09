@@ -31,7 +31,7 @@ public class HelmArduino implements SerialArduinoInterface<String> {
 
     /**
      * Constructs a new {@link HelmArduino} with a new {@link SerialArduino} on a specified port
-     * 
+     *
      * @param port Serial port to connect over
      */
     public HelmArduino(String port) {
@@ -40,6 +40,7 @@ public class HelmArduino implements SerialArduinoInterface<String> {
 
     /**
      * Gives the helm state
+     *
      * @return the state as a String in the form "&lt;throttleState,rudderState&gt;"
      */
     public String getHelmState() throws UnsupportedEncodingException, IOException {

@@ -1,13 +1,12 @@
 package org.haland.javaasv.helm;
 
-import org.haland.javaasv.message.*;
-import org.haland.javaasv.util.SerialUtil;
-
-import java.io.UnsupportedEncodingException;
+import org.haland.javaasv.message.HelmMessage;
+import org.haland.javaasv.message.MessageInterface;
+import org.haland.javaasv.message.MessageTypeException;
 
 /**
  * Creates messages to send between a {@link org.haland.javaasv.pilot.PilotInterface} and a helm.
- *
+ * <p>
  * Messages sent to a helm contain new setpoints for the throttle and rudder. The helm will then return a message
  * containing the actual throttle and rudder position
  */
@@ -18,7 +17,7 @@ public class ArduinoHelmMessageFactory {
     /**
      * Constructor for a new factory
      *
-     * @param originID name of the origin client module
+     * @param originID      name of the origin client module
      * @param destinationID name of the destination client module
      */
     public ArduinoHelmMessageFactory(String originID, String destinationID) {
@@ -32,7 +31,7 @@ public class ArduinoHelmMessageFactory {
      * Arduino helm. This should be called by a {@link org.haland.javaasv.pilot.PilotInterface}.
      *
      * @param throttleSetpoint the new throttle setpoint to use
-     * @param rudderSetpoint the new rudder setpoint to use
+     * @param rudderSetpoint   the new rudder setpoint to use
      * @return a message representing the new helm instructions
      */
     public MessageInterface createMessage(double throttleSetpoint, double rudderSetpoint) throws MessageTypeException {

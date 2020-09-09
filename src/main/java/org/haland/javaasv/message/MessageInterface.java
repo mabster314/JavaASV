@@ -24,36 +24,42 @@ package org.haland.javaasv.message;
 public interface MessageInterface {
     /**
      * Returns the origin module ID for the message
+     *
      * @return the origin module ID
      */
     String getOriginID();
 
     /**
      * Returns the destination module ID for the message
+     *
      * @return the destination module ID
      */
     String getDestinationID();
 
     /**
      * Returns the time the message was created
+     *
      * @return the time the message was created
      */
     long getCreationTime();
 
     /**
      * Returns the priority of the message
+     *
      * @return the message priority
      */
     MessagePriority getPriority();
 
     /**
      * Returns the type of message
+     *
      * @return the message type
      */
     MessageType getType();
 
     /**
      * Returns the actual contents of the message
+     *
      * @return the contents of the message
      */
     MessageContent getMessageContents();

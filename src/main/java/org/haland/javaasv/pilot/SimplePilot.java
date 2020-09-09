@@ -35,11 +35,12 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
 
     /**
      * Construct a new SimplePilot
-     * @param server Server to dispatch through
-     * @param helm Helm to send messages to
+     *
+     * @param server             Server to dispatch through
+     * @param helm               Helm to send messages to
      * @param throttleController PID controller for the throttle.
-     * @param rudderController PID controller for the rudder
-     * @param gpsProvider GPS provider for the pilot
+     * @param rudderController   PID controller for the rudder
+     * @param gpsProvider        GPS provider for the pilot
      */
     public SimplePilot(String clientID, MessengerServerInterface server, HelmInterface helm,
                        PIDController throttleController, PIDController rudderController,
@@ -62,9 +63,8 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
         }
     }
 
-    public SimplePilot(MessengerServerInterface server, HelmInterface helm,
-                       PIDController throttleController, PIDController rudderController,
-                       GPSProviderInterface gpsProvider) {
+    public SimplePilot(MessengerServerInterface server, HelmInterface helm, PIDController throttleController,
+                       PIDController rudderController, GPSProviderInterface gpsProvider) {
         this(DEFAULT_CLIENT_ID, server, helm, throttleController, rudderController, gpsProvider);
     }
 
@@ -118,7 +118,6 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     }
 
 
-
     /**
      * Returns the ID of the messenger client
      *
@@ -166,7 +165,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
          * Arduino helm.
          *
          * @param throttleSetpoint the new throttle setpoint to use
-         * @param rudderSetpoint the new rudder setpoint to use
+         * @param rudderSetpoint   the new rudder setpoint to use
          * @return a message representing the new helm instructions
          */
         public HelmMessage createMessage(double throttleSetpoint, double rudderSetpoint) throws MessageTypeException {

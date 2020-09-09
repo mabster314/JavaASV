@@ -11,12 +11,12 @@ class TestClient implements MessengerClientInterface, Runnable {
 
     /**
      * Initialize with a server, specified client name, and receiver name
-     * @param server {@link MessengerServerInterface} to interact with
-     * @param clientName client ID as a string
+     *
+     * @param server       {@link MessengerServerInterface} to interact with
+     * @param clientName   client ID as a string
      * @param receiverName receiver ID as a string
      */
-    public TestClient(MessengerServerInterface server, String clientName, String receiverName,
-                      Dispatcher dispatcher) {
+    public TestClient(MessengerServerInterface server, String clientName, String receiverName, Dispatcher dispatcher) {
         this.server = server;
         this.clientName = clientName;
         this.receiverName = receiverName;
@@ -25,6 +25,7 @@ class TestClient implements MessengerClientInterface, Runnable {
 
     /**
      * Returns a new {@link SimpleMessage} containing test stuff
+     *
      * @return the message
      * @throws MessageTypeException
      */
@@ -48,6 +49,7 @@ class TestClient implements MessengerClientInterface, Runnable {
 
     /**
      * Dispatch a received message by printing its contents
+     *
      * @param message the received message
      */
     @Override

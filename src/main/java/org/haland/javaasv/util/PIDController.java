@@ -52,9 +52,10 @@ public class PIDController {
 
     /**
      * Constructs a PIDController with the given constants and default controller period
+     *
      * @param proportionalityCoefficient the proportionality coefficient for the controller
-     * @param integralCoefficient the integral coefficient for the controller
-     * @param derivativeCoefficient the derivative coefficient for the controller
+     * @param integralCoefficient        the integral coefficient for the controller
+     * @param derivativeCoefficient      the derivative coefficient for the controller
      */
     public PIDController(double proportionalityCoefficient, double integralCoefficient, double derivativeCoefficient) {
         this(proportionalityCoefficient, integralCoefficient, derivativeCoefficient, DEFAULT_PERIOD);
@@ -62,10 +63,11 @@ public class PIDController {
 
     /**
      * Constructs a PIDController with the given constants and controller period
+     *
      * @param proportionalityCoefficient the proportionality coefficient for the controller
-     * @param integralCoefficient the integral coefficient for the controller
-     * @param derivativeCoefficient the derivative coefficient for the controller
-     * @param period the period for the controller in seconds
+     * @param integralCoefficient        the integral coefficient for the controller
+     * @param derivativeCoefficient      the derivative coefficient for the controller
+     * @param period                     the period for the controller in seconds
      */
     public PIDController(double proportionalityCoefficient, double integralCoefficient, double derivativeCoefficient,
                          double period) {
@@ -77,15 +79,16 @@ public class PIDController {
 
     /**
      * Returns true if the error is within the tolerance of the setpoint
+     *
      * @return whether the error is within acceptable bounds
      */
     public boolean atSetpoint() {
-        return Math.abs(positionError) < positionTolerance
-                && Math.abs(velocityError) < velocityTolerance;
+        return Math.abs(positionError) < positionTolerance && Math.abs(velocityError) < velocityTolerance;
     }
 
     /**
      * Calculates the next output for the control variable. This must be called at the period of the controller
+     *
      * @param processVariable the current measurement of the monitored process variable
      * @return the next output for the controller
      */
@@ -96,14 +99,12 @@ public class PIDController {
 
         velocityError = (positionError - previousError) / period;
 
-        if (integralCoefficient != 0 ) {
-            totalError = MathUtil.clamp(totalError + positionError * period,
-                    minimumIntegral / integralCoefficient, maximumIntegral / integralCoefficient);
+        if (integralCoefficient != 0) {
+            totalError = MathUtil.clamp(totalError + positionError * period, minimumIntegral / integralCoefficient,
+                    maximumIntegral / integralCoefficient);
         }
 
-        return proportionalityCoefficient * positionError
-                + integralCoefficient * totalError
-                + derivativeCoefficient * velocityError;
+        return proportionalityCoefficient * positionError + integralCoefficient * totalError + derivativeCoefficient * velocityError;
     }
 
     public void setPID(double proportionalityCoefficient, double integralCoefficient, double derivativeCoefficient) {
@@ -114,7 +115,7 @@ public class PIDController {
 
     /**
      * Sets the minimum and maximum values for the integrator term
-     *
+     * <p>
      * When the cap is reached, the max or min value is added to the controller instead of the integrator times the gain
      *
      * @param mimimumIntegral the minimum value of the integrator
@@ -127,6 +128,7 @@ public class PIDController {
 
     /**
      * Sets the tolerable error from setpoint
+     *
      * @param positionTolerance position error which is tolerable
      */
     public void setTolerance(double positionTolerance) {
@@ -135,6 +137,7 @@ public class PIDController {
 
     /**
      * Sets the tolerable error from setpoint
+     *
      * @param positionTolerance position error which is tolerable
      * @param velocityTolerance velocity error which is tolerable
      */

@@ -24,7 +24,8 @@ package org.haland.javaasv.message;
 public interface MessengerServerInterface extends Runnable {
     /**
      * Registers a client module to the server
-     * @param clientID the name of the module to register
+     *
+     * @param clientID     the name of the module to register
      * @param clientModule the module to register
      */
     void registerClientModule(String clientID, MessengerClientInterface clientModule) throws DuplicateKeyException;

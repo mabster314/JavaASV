@@ -18,10 +18,6 @@
 
 package org.haland.javaasv;
 
-import org.haland.javaasv.message.*;
-
-import java.util.concurrent.*;
-
 /**
  * Our entry point
  */

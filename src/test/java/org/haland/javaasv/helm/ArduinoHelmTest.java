@@ -4,17 +4,17 @@ import org.haland.javaasv.message.HelmMessage;
 import org.haland.javaasv.message.MessageInterface;
 import org.haland.javaasv.message.MessageTypeException;
 import org.haland.javaasv.message.MessengerServer;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 class ArduinoHelmTest {
@@ -23,8 +23,9 @@ class ArduinoHelmTest {
     private static final String PILOT_ID = "pilotTestClient";
     private static final String HELM_ID = "helmTestClient";
 
-    private final MessageInterface testMessage = new HelmMessage(PILOT_ID, HELM_ID,
-            System.currentTimeMillis(), MessageInterface.MessagePriority.NORMAL, MESSAGE_CONTENTS);
+    private final MessageInterface testMessage =
+            new HelmMessage(PILOT_ID, HELM_ID, System.currentTimeMillis(), MessageInterface.MessagePriority.NORMAL,
+                    MESSAGE_CONTENTS);
 
     @Mock
     private MessengerServer mockServer;

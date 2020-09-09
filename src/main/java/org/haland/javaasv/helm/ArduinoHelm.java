@@ -18,12 +18,12 @@
 
 package org.haland.javaasv.helm;
 
-import org.haland.javaasv.message.*;
-import org.haland.javaasv.util.PIDController;
+import org.haland.javaasv.message.MessageInterface;
+import org.haland.javaasv.message.MessageTypeException;
+import org.haland.javaasv.message.MessengerServer;
+import org.haland.javaasv.message.MessengerServerInterface;
 import org.haland.javaasv.util.SerialArduino;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -50,9 +50,10 @@ public class ArduinoHelm implements HelmInterface {
 
     /**
      * Constructs a new instance with a given {@link MessengerServer}, {@link SerialArduino}, and clientID
-     * @param server The {@link MessengerServer} being used by the navigation software
+     *
+     * @param server      The {@link MessengerServer} being used by the navigation software
      * @param helmArduino The {@link SerialArduino} controlling the throttle and rudder
-     * @param clientID ID of the client module. This must be unique.
+     * @param clientID    ID of the client module. This must be unique.
      */
     public ArduinoHelm(MessengerServerInterface server, HelmArduino helmArduino, String clientID) {
         this.helmArduino = helmArduino;
@@ -63,7 +64,8 @@ public class ArduinoHelm implements HelmInterface {
 
     /**
      * Constructs a new instance with a given {@link MessengerServer}, {@link SerialArduino}, and default clientID
-     * @param server The {@link MessengerServer} being used by the navigation software
+     *
+     * @param server      The {@link MessengerServer} being used by the navigation software
      * @param helmArduino The {@link SerialArduino} controlling the throttle and rudder
      */
     public ArduinoHelm(MessengerServerInterface server, HelmArduino helmArduino) {
@@ -72,6 +74,7 @@ public class ArduinoHelm implements HelmInterface {
 
     /**
      * Opens the arduino port
+     *
      * @return true if the operation was completed successfully
      */
     public boolean openPort() {
@@ -80,6 +83,7 @@ public class ArduinoHelm implements HelmInterface {
 
     /**
      * Closes the arduino port
+     *
      * @return true if the operation was completed successfully
      */
     public boolean closePort() {
@@ -89,14 +93,15 @@ public class ArduinoHelm implements HelmInterface {
     /**
      * Dispatches a {@link MessageInterface} by sending its contents to the arduino and sending a return message with the
      * actual rudder and
+     *
      * @param message {@link MessageInterface} containing new throttle and rudder data
      */
     @Override
     public void dispatch(MessageInterface message) {
         if (message.getType() == getClientType()) {
             try {
-                helmArduino.sendSerialData(message.getMessageContents().getHelmMessage()
-                        .getBytes(StandardCharsets.US_ASCII));
+                helmArduino.sendSerialData(
+                        message.getMessageContents().getHelmMessage().getBytes(StandardCharsets.US_ASCII));
             } catch (MessageTypeException e) {
                 e.printStackTrace();
             }

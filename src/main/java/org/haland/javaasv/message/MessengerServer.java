@@ -47,7 +47,7 @@ public class MessengerServer implements MessengerServerInterface {
     /**
      * Creates a new instance of the server
      */
-    private MessengerServer(ScheduledExecutorService executor){
+    private MessengerServer(ScheduledExecutorService executor) {
         clients = new HashMap<String, MessengerClientInterface>();
         messageStack = new Stack<MessageInterface>();
         this.executor = executor;
@@ -55,9 +55,10 @@ public class MessengerServer implements MessengerServerInterface {
 
     /**
      * Gets the current instance of the server
+     *
      * @return the current MessengerServer instance
      */
-    public static MessengerServer getInstance(){
+    public static MessengerServer getInstance() {
         // Make a new one if we don't have one
         if (messengerServerInstance == null)
             messengerServerInstance = new MessengerServer(Executors.newScheduledThreadPool(1));
@@ -74,25 +75,27 @@ public class MessengerServer implements MessengerServerInterface {
 
     /**
      * Adds a module to the registry with a specific client name
-     * @param clientID the name of the module to register
+     *
+     * @param clientID     the name of the module to register
      * @param clientModule the module to register
      * @throws DuplicateKeyException if a module with a duplicate ID is registered
      */
     @Override
-    public void registerClientModule(String clientID, MessengerClientInterface clientModule)
-            throws DuplicateKeyException {
-        if (clients.putIfAbsent(clientID, clientModule) != null){
-                throw new DuplicateKeyException("Duplicate client registered to server: " + clientModule.getClientID());
+    public void registerClientModule(String clientID,
+                                     MessengerClientInterface clientModule) throws DuplicateKeyException {
+        if (clients.putIfAbsent(clientID, clientModule) != null) {
+            throw new DuplicateKeyException("Duplicate client registered to server: " + clientModule.getClientID());
         }
     }
 
     /**
      * Adds a module to the registry
+     *
      * @param clientModule the module to register
      * @throws DuplicateKeyException if a module with a duplicate ID is registered
      */
     @Override
-    public void registerClientModule(MessengerClientInterface clientModule) throws DuplicateKeyException{
+    public void registerClientModule(MessengerClientInterface clientModule) throws DuplicateKeyException {
         registerClientModule(clientModule.getClientID(), clientModule);
     }
 
@@ -116,7 +119,7 @@ public class MessengerServer implements MessengerServerInterface {
             MessageInterface message = messageStack.pop();
             MessengerClientInterface client = clients.get(message.getDestinationID());
 
-            if(message.getType() == client.getClientType()) {
+            if (message.getType() == client.getClientType()) {
                 client.dispatch(message);
             } else {
                 // TODO do something
@@ -126,6 +129,7 @@ public class MessengerServer implements MessengerServerInterface {
 
     /**
      * Starts the server by scheduling it repeatedly
+     *
      * @param period execution period
      */
     public void startServer(long period) {
