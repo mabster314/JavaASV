@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +25,7 @@ class HelmArduinoTest {
     };
 
     @Test
-    public void testGetHelmState() throws UnsupportedEncodingException {
+    public void testGetHelmState() throws IOException {
         helmArduino = new HelmArduino(fakeSerialArduino);
 
         assertEquals(HELM_STATE, helmArduino.getHelmState());

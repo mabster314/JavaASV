@@ -18,13 +18,9 @@
 
 package org.haland.javaasv;
 
-import org.haland.javaasv.util.SerialArduino;
-import org.haland.javaasv.util.SerialUtil;
+import org.haland.javaasv.message.*;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
+import java.util.concurrent.*;
 
 /**
  * Our entry point
@@ -34,4 +30,5 @@ public class ASV {
         final String port = "/dev/ttyACM1";
 
     }
+
 }

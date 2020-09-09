@@ -42,10 +42,10 @@ class ArduinoHelmTest {
      * Tests that the method {@link ArduinoHelm#dispatch(HelmMessage)} sends a correct response message to the server
      */
     @Test
-    public void returnDispatchTest() throws IOException, MessageTypeException {
+    public void returnDispatchTest() throws Exception {
         byte[] messageBytes = testMessage.getMessageContents().getHelmMessage().getBytes(StandardCharsets.US_ASCII);
 
-        when(mockHelmArduino.getHelmState()).thenReturn(HELM_STATE);
+        when(mockHelmArduino.call()).thenReturn(HELM_STATE);
         when(mockHelmArduino.sendSerialData(messageBytes)).thenReturn(messageBytes.length);
 
         arduinoHelm = new ArduinoHelm(mockServer, mockHelmArduino);
