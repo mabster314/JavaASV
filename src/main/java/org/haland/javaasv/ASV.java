@@ -18,13 +18,9 @@
 
 package org.haland.javaasv;
 
-import org.haland.javaasv.util.SerialArduino;
-import org.haland.javaasv.util.SerialUtil;
+import org.haland.javaasv.message.*;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
+import java.util.concurrent.*;
 
 /**
  * Our entry point
@@ -32,38 +28,7 @@ import java.nio.charset.UnsupportedCharsetException;
 public class ASV {
     public static void main(String[] args) {
         final String port = "/dev/ttyACM1";
-        final String message = "<Message>";
 
-        SerialArduino arduino = new SerialArduino(port);
-
-        arduino.openPort();
-
-        arduino.sendSerialData(message.getBytes(StandardCharsets.US_ASCII));
-        try {
-            Thread.sleep(10);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            System.out.println(new String(arduino.getLastMessage(), "US-ASCII"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        arduino.sendSerialData("<Another>".getBytes(StandardCharsets.US_ASCII));
-        try {
-            Thread.sleep(10);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        arduino.closePort();
-
-        try {
-            System.out.println(new String(arduino.getLastMessage(), "US-ASCII"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
     }
+
 }

@@ -21,17 +21,21 @@ package org.haland.javaasv.message;
 /**
  * Defines the messaging interface for server modules
  */
-public interface MessengerServerInterface<E extends MessageInterface> {
+public interface MessengerServerInterface extends Runnable {
     /**
      * Registers a client module to the server
      * @param clientID the name of the module to register
      * @param clientModule the module to register
      */
-    void registerClientModule(String clientID, MessengerClientInterface<? extends E> clientModule) throws DuplicateKeyException;
+    void registerClientModule(String clientID, MessengerClientInterface clientModule) throws DuplicateKeyException;
+
+    void registerClientModule(MessengerClientInterface clientModule) throws DuplicateKeyException;
 
     /**
-     * Dispatches a message to the destination module
+     * Dispatches a message to the destination module. The server should check that the client is able to receive
+     * messages of that type.
+     *
      * @param message the message being dispatched
      */
-    void dispatch(E message);
+    void dispatch(MessageInterface message);
 }

@@ -1,6 +1,8 @@
 package org.haland.javaasv.helm;
 
+import org.haland.javaasv.message.HelmMessage;
 import org.haland.javaasv.message.MessageInterface;
+import org.haland.javaasv.message.MessageTypeException;
 import org.haland.javaasv.message.MessengerServer;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +23,7 @@ class ArduinoHelmTest {
     private static final String PILOT_ID = "pilotTestClient";
     private static final String HELM_ID = "helmTestClient";
 
-    private final HelmMessage testMessage = new HelmMessage(PILOT_ID, HELM_ID,
+    private final MessageInterface testMessage = new HelmMessage(PILOT_ID, HELM_ID,
             System.currentTimeMillis(), MessageInterface.MessagePriority.NORMAL, MESSAGE_CONTENTS);
 
     @Mock
@@ -33,14 +35,17 @@ class ArduinoHelmTest {
     // Class to test
     private ArduinoHelm arduinoHelm;
 
+    ArduinoHelmTest() throws MessageTypeException {
+    }
+
     /**
      * Tests that the method {@link ArduinoHelm#dispatch(HelmMessage)} sends a correct response message to the server
      */
     @Test
-    public void returnDispatchTest() throws IOException {
-        byte[] messageBytes = testMessage.getMessageContents().getBytes(StandardCharsets.US_ASCII);
+    public void returnDispatchTest() throws Exception {
+        byte[] messageBytes = testMessage.getMessageContents().getHelmMessage().getBytes(StandardCharsets.US_ASCII);
 
-        when(mockHelmArduino.getHelmState()).thenReturn(HELM_STATE);
+        when(mockHelmArduino.call()).thenReturn(HELM_STATE);
         when(mockHelmArduino.sendSerialData(messageBytes)).thenReturn(messageBytes.length);
 
         arduinoHelm = new ArduinoHelm(mockServer, mockHelmArduino);
@@ -56,6 +61,6 @@ class ArduinoHelmTest {
         assertEquals(returnedMessage.getDestinationID(), PILOT_ID);
 
         // Contents of returned message must match helm state
-        assertEquals(returnedMessage.getMessageContents(), HELM_STATE);
+        assertEquals(returnedMessage.getMessageContents().getHelmMessage(), HELM_STATE);
     }
 }

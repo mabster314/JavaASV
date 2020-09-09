@@ -20,19 +20,24 @@ package org.haland.javaasv.message;
 
 /**
  * Defines the messaging interface for client modules
- * @param <E> the message type
  */
-public interface MessengerClientInterface<E extends MessageInterface> {
+public interface MessengerClientInterface {
 
     /**
-     * Executes when receiving message from server
+     * Executes when receiving message from server. Implementing classes must provide type safety
      * @param message the message
      */
-    void dispatch(E message);
+    void dispatch(MessageInterface message);
 
     /**
      * Returns the ID of the messenger client
      * @return the ID
      */
     String getClientID();
+
+    /**
+     * Returns the type of messages the client can handle
+     * @return
+     */
+    MessageInterface.MessageType getClientType();
 }

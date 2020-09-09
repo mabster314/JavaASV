@@ -20,9 +20,8 @@ package org.haland.javaasv.message;
 
 /**
  * Defines the required structure of an ASV message
- * @param <T> the data type of the contents of the message
  */
-public interface MessageInterface<T> {
+public interface MessageInterface {
     /**
      * Returns the origin module ID for the message
      * @return the origin module ID
@@ -48,16 +47,16 @@ public interface MessageInterface<T> {
     MessagePriority getPriority();
 
     /**
-     * Returns the class for the message contents
-     * @return the class of the contents
+     * Returns the type of message
+     * @return the message type
      */
-    Class<?> getType();
+    MessageType getType();
 
     /**
      * Returns the actual contents of the message
      * @return the contents of the message
      */
-    T getMessageContents();
+    MessageContent getMessageContents();
 
     /**
      * Enum defining available message priorities. Priorities should be listed in order of severity.
@@ -65,4 +64,9 @@ public interface MessageInterface<T> {
     enum MessagePriority {
         LOW, NORMAL, HIGH, CRITICAL
     }
+
+    enum MessageType {
+        STRING, DOUBLE, HELM
+    }
+
 }

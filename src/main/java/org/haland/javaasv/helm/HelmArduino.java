@@ -3,12 +3,13 @@ package org.haland.javaasv.helm;
 import org.haland.javaasv.util.SerialArduino;
 import org.haland.javaasv.util.SerialArduinoInterface;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
  * Provides a specialized {@link SerialArduino} for use with an {@link ArduinoHelm}
  */
-public class HelmArduino implements SerialArduinoInterface {
+public class HelmArduino implements SerialArduinoInterface<String> {
     private final SerialArduinoInterface arduino;
 
     /**
@@ -17,7 +18,7 @@ public class HelmArduino implements SerialArduinoInterface {
      *
      * @param arduino a {@link SerialArduinoInterface}.
      */
-    public HelmArduino(SerialArduinoInterface arduino) {
+    public HelmArduino(SerialArduinoInterface<byte[]> arduino) {
         this.arduino = arduino;
     }
 
@@ -29,10 +30,19 @@ public class HelmArduino implements SerialArduinoInterface {
     }
 
     /**
+     * Constructs a new {@link HelmArduino} with a new {@link SerialArduino} on a specified port
+     * 
+     * @param port Serial port to connect over
+     */
+    public HelmArduino(String port) {
+        this(new SerialArduino(port));
+    }
+
+    /**
      * Gives the helm state
      * @return the state as a String in the form "&lt;throttleState,rudderState&gt;"
      */
-    public String getHelmState() throws UnsupportedEncodingException {
+    public String getHelmState() throws UnsupportedEncodingException, IOException {
         byte[] receivedState = getLastMessage();
         String stringState = new String(receivedState, "US-ASCII");
         return stringState;
@@ -49,12 +59,27 @@ public class HelmArduino implements SerialArduinoInterface {
     }
 
     @Override
+    public boolean isMessageAvailable() {
+        return arduino.isMessageAvailable();
+    }
+
+    @Override
     public int sendSerialData(byte[] serialData) {
         return arduino.sendSerialData(serialData);
     }
 
     @Override
-    public byte[] getLastMessage() {
+    public byte[] getLastMessage() throws IOException {
         return arduino.getLastMessage();
+    }
+
+    @Override
+    public String call() throws Exception {
+        if (isMessageAvailable()) {
+            return getHelmState();
+        } else {
+            Thread.sleep(10);
+            return call();
+        }
     }
 }

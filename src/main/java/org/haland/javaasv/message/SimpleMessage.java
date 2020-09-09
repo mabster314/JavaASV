@@ -18,16 +18,15 @@
 
 package org.haland.javaasv.message;
 
-import java.util.Date;
-
-public class SimpleMessage<T> implements MessageInterface<T> {
+public class SimpleMessage implements MessageInterface {
     private final String originID;
     private final String destinationID;
     private final long creationTime;
     private final MessagePriority priority;
-    private final T messageContents;
+    private final MessageContent messageContents;
 
-    public SimpleMessage(String originID, String destinationID, long creationTime, MessagePriority priority, T messageContents) {
+    public SimpleMessage(String originID, String destinationID, long creationTime, MessagePriority priority,
+                         MessageContent messageContents) {
         this.originID = originID;
         this.destinationID = destinationID;
         this.creationTime = creationTime;
@@ -56,12 +55,12 @@ public class SimpleMessage<T> implements MessageInterface<T> {
     }
 
     @Override
-    public Class<?> getType() {
-        return messageContents.getClass();
+    public MessageType getType() {
+        return messageContents.getContentType();
     }
 
     @Override
-    public T getMessageContents() {
+    public MessageContent getMessageContents() {
         return messageContents;
     }
 }

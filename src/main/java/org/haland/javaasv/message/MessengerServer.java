@@ -20,6 +20,10 @@ package org.haland.javaasv.message;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Handles message passing for the system. Only one should exist
@@ -27,6 +31,13 @@ import java.util.Map;
 public class MessengerServer implements MessengerServerInterface {
     // Our instance of the server
     private static MessengerServer messengerServerInstance = null;
+    // The server's executor service
+    private static ScheduledExecutorService executor = null;
+
+    /**
+     * Stack representing messages to handle
+     */
+    private Stack<MessageInterface> messageStack;
 
     /**
      * Map representing registered client modules
@@ -36,8 +47,10 @@ public class MessengerServer implements MessengerServerInterface {
     /**
      * Creates a new instance of the server
      */
-    private MessengerServer(){
+    private MessengerServer(ScheduledExecutorService executor){
         clients = new HashMap<String, MessengerClientInterface>();
+        messageStack = new Stack<MessageInterface>();
+        this.executor = executor;
     }
 
     /**
@@ -47,16 +60,23 @@ public class MessengerServer implements MessengerServerInterface {
     public static MessengerServer getInstance(){
         // Make a new one if we don't have one
         if (messengerServerInstance == null)
-            messengerServerInstance = new MessengerServer();
+            messengerServerInstance = new MessengerServer(Executors.newScheduledThreadPool(1));
 
         // Give the instance
         return messengerServerInstance;
     }
 
+    public static void killInstance() {
+        messengerServerInstance = null;
+        executor.shutdownNow();
+        executor = null;
+    }
+
     /**
-     * Adds a module to the registry
+     * Adds a module to the registry with a specific client name
      * @param clientID the name of the module to register
      * @param clientModule the module to register
+     * @throws DuplicateKeyException if a module with a duplicate ID is registered
      */
     @Override
     public void registerClientModule(String clientID, MessengerClientInterface clientModule)
@@ -67,13 +87,52 @@ public class MessengerServer implements MessengerServerInterface {
     }
 
     /**
-     * Dispatches a message to a client by calling the {@link MessengerClientInterface#dispatch(MessageInterface)}
-     * method of the destination module
+     * Adds a module to the registry
+     * @param clientModule the module to register
+     * @throws DuplicateKeyException if a module with a duplicate ID is registered
+     */
+    @Override
+    public void registerClientModule(MessengerClientInterface clientModule) throws DuplicateKeyException{
+        registerClientModule(clientModule.getClientID(), clientModule);
+    }
+
+    /**
+     * Dispatches a message to the stack
+     *
      * @param message the message being dispatched
      */
     @Override
-    public void dispatch(MessageInterface message) {
-        clients.get(message.getDestinationID()).dispatch(message);
+    public synchronized void dispatch(MessageInterface message) {
+        messageStack.push(message);
     }
 
+    /**
+     * Calls the {@link MessengerClientInterface#dispatch(MessageInterface)} method of the destination client for each
+     * message in the stack
+     */
+    @Override
+    public synchronized void run() {
+        while (!messageStack.empty()) {
+            MessageInterface message = messageStack.pop();
+            MessengerClientInterface client = clients.get(message.getDestinationID());
+
+            if(message.getType() == client.getClientType()) {
+                client.dispatch(message);
+            } else {
+                // TODO do something
+            }
+        }
+    }
+
+    /**
+     * Starts the server by scheduling it repeatedly
+     * @param period execution period
+     */
+    public void startServer(long period) {
+        executor.scheduleAtFixedRate(messengerServerInstance, 0, period, TimeUnit.MILLISECONDS);
+    }
+
+    public void stopServer() {
+        executor.shutdown();
+    }
 }
