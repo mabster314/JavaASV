@@ -33,7 +33,7 @@ import java.util.concurrent.Future;
 /**
  * Controls helm by interfacing with an Arduino. This is a singleton class, and only one should be run.
  */
-public class ArduinoHelm implements MessengerClientInterface {
+public class ArduinoHelm implements HelmInterface {
     /**
      * The client ID for an ArduinoHelm
      */
