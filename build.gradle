@@ -104,8 +104,6 @@ jacocoTestReport {
 }
 
 coveralls {
-    sourceDirs += ['src/main/java']
+    sourceDirs += files(sourceSets.main.java.srcDirs).files.absolutePath
     jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
 }
-
-check.dependsOn integrationTest
