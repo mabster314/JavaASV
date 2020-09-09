@@ -104,6 +104,7 @@ jacocoTestReport {
 }
 
 coveralls {
+    project.extensions.coveralls.sourceDirs = ['src/main/java']
     jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
 }
 

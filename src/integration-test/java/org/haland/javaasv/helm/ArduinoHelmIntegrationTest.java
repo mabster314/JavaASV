@@ -50,7 +50,8 @@ public class ArduinoHelmIntegrationTest {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 MessageInterface message = (MessageInterface) invocation.getArguments()[0];
-                receivedValidResponse = message.getMessageContents().getHelmMessage().matches(MATCH_PATTERN);
+                receivedValidResponse = (message.getMessageContents().getHelmMessage().matches(MATCH_PATTERN)
+                                            && message.getDestinationID() == "origin");
                 return null;
             }
         }).when(server).dispatch(any(MessageInterface.class));

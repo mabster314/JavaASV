@@ -69,7 +69,6 @@ public class HelmArduino implements SerialArduinoInterface<String> {
         if (isMessageAvailable()) {
             return getHelmState();
         } else {
-            System.out.println("Sleeping 10");
             Thread.sleep(10);
             return call();
         }
