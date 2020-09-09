@@ -7,7 +7,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class MessageContentTest {
     private static final String STRING_MESSAGE = "foo";
     private static final double DOUBLE_MESSAGE = 1.1;
-    private static final String HELM_MESSAGE = "<0.73,22.0>";
+    private static final double THROTTLE_VALUE = 0.73;
+    private static final double RUDDER_VALUE = 22.0;
+    private static final String HELM_MESSAGE = "<" + String.valueOf(THROTTLE_VALUE) + ","
+                                + String.valueOf(RUDDER_VALUE) + ">";
 
     final MessageContent stringContent;
     final MessageContent doubleContent;
@@ -62,6 +65,8 @@ class MessageContentTest {
     @Test
     void testGetHelmMessage() throws MessageTypeException {
         assertEquals(HELM_MESSAGE, helmContent.getHelmMessage());
+        assertEquals(helmContent.getHelmThrottleValue(), THROTTLE_VALUE);
+        assertEquals(helmContent.getHelmRudderValue(), RUDDER_VALUE);
 
         // Trying to get the others should throw exception
         Exception exception = assertThrows(MessageTypeException.class,

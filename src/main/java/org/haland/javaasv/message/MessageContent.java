@@ -69,6 +69,22 @@ public class MessageContent {
         return helmMessage;
     }
 
+    public double getHelmThrottleValue() throws MessageTypeException {
+        if (helmMessage == null) {
+            throw new MessageTypeException("No helm data in message contents: ");
+        }
+        String value = helmMessage.replaceAll("[<>]", "").split(",")[0];
+        return Double.parseDouble(value);
+    }
+
+    public double getHelmRudderValue() throws MessageTypeException {
+        if (helmMessage == null) {
+            throw new MessageTypeException("No helm data in message contents: ");
+        }
+        String value = helmMessage.replaceAll("[<>]", "").split(",")[1];
+        return Double.parseDouble(value);
+    }
+
     public MessageInterface.MessageType getContentType() {
         return messageType;
     }
