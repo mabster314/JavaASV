@@ -90,11 +90,17 @@ task integrationTest(type: Test) {
 }
 
 jacocoTestReport {
+    def coverageSourceDirs = ['src/main/java']
     dependsOn test
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
     }
+    getSourceDirectories().setFrom(files(coverageSourceDirs))
+    getClassDirectories().setFrom(fileTree(
+            dir: "${project.buildDir}/classes/java/main",
+            excludes: []
+    ))
 }
 
 coveralls {
