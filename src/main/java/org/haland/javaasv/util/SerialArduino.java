@@ -43,10 +43,6 @@ public class SerialArduino implements SerialArduinoInterface<byte[]> {
     private String portName;
     private SerialPort serialPort;
 
-    private ArduinoMessageListener messageListener;
-    private byte[] lastMessage;
-    private boolean messageAvailable;
-
     /**
      * Connect a new arduino with specified port name
      *
@@ -57,8 +53,6 @@ public class SerialArduino implements SerialArduinoInterface<byte[]> {
         this.serialPort = SerialPort.getCommPort(this.portName);
         this.serialPort.setComPortParameters(DEFAULT_BAUD_RATE, DEFAULT_DATA_BITS, DEFAULT_STOP_BITS, DEFAULT_PARITY);
         this.serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
-
-        this.messageListener = new ArduinoMessageListener(this);
     }
 
     /**
@@ -76,7 +70,6 @@ public class SerialArduino implements SerialArduinoInterface<byte[]> {
     @Override
     public synchronized boolean openPort() {
         boolean opened = serialPort.openPort();
-        serialPort.addDataListener(messageListener);
         return opened;
     }
 
@@ -87,7 +80,6 @@ public class SerialArduino implements SerialArduinoInterface<byte[]> {
      */
     @Override
     public synchronized boolean closePort() {
-        serialPort.removeDataListener();
         return serialPort.closePort();
     }
 
@@ -100,63 +92,5 @@ public class SerialArduino implements SerialArduinoInterface<byte[]> {
     @Override
     public int sendSerialData(byte[] serialData) {
         return serialPort.writeBytes(serialData, serialData.length);
-    }
-
-    @Override
-    public synchronized byte[] getLastMessage() {
-        byte[] message = lastMessage;
-        lastMessage = null;
-        return message;
-    }
-
-    private synchronized void setLastMessage(byte[] lastMessage) {
-        this.lastMessage = lastMessage;
-    }
-
-    @Override
-    public synchronized boolean isMessageAvailable() {
-        return this.messageAvailable;
-    }
-
-    private void setMessageAvailable(boolean messageAvailability) {
-        this.messageAvailable = messageAvailability;
-    }
-
-    @Override
-    public byte[] call() throws IOException {
-        return getLastMessage();
-    }
-
-    /**
-     * A class providing a message listener for the serial arduino
-     */
-    private final class ArduinoMessageListener implements SerialPortMessageListener {
-        private final SerialArduino serialArduino;
-
-        public ArduinoMessageListener(SerialArduino serialArduino) {
-            this.serialArduino = serialArduino;
-        }
-
-        @Override
-        public byte[] getMessageDelimiter() {
-            return SerialUtil.END_MESSAGE_CHAR.getBytes(StandardCharsets.US_ASCII);
-        }
-
-        @Override
-        public boolean delimiterIndicatesEndOfMessage() {
-            return true;
-        }
-
-        @Override
-        public int getListeningEvents() {
-            return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
-        }
-
-        @Override
-        public void serialEvent(SerialPortEvent event) {
-            byte[] delimitedMessage = event.getReceivedData();
-            serialArduino.setLastMessage(delimitedMessage);
-            serialArduino.setMessageAvailable(true);
-        }
     }
 }

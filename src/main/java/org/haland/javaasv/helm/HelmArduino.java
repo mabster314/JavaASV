@@ -38,17 +38,6 @@ public class HelmArduino implements SerialArduinoInterface<String> {
         this(new SerialArduino(port));
     }
 
-    /**
-     * Gives the helm state
-     *
-     * @return the state as a String in the form "&lt;throttleState,rudderState&gt;"
-     */
-    public String getHelmState() throws UnsupportedEncodingException, IOException {
-        byte[] receivedState = getLastMessage();
-        String stringState = new String(receivedState, "US-ASCII");
-        return stringState;
-    }
-
     @Override
     public boolean openPort() {
         return arduino.openPort();
@@ -60,27 +49,7 @@ public class HelmArduino implements SerialArduinoInterface<String> {
     }
 
     @Override
-    public boolean isMessageAvailable() {
-        return arduino.isMessageAvailable();
-    }
-
-    @Override
     public int sendSerialData(byte[] serialData) {
         return arduino.sendSerialData(serialData);
-    }
-
-    @Override
-    public byte[] getLastMessage() throws IOException {
-        return arduino.getLastMessage();
-    }
-
-    @Override
-    public String call() throws Exception {
-        if (isMessageAvailable()) {
-            return getHelmState();
-        } else {
-            Thread.sleep(10);
-            return call();
-        }
     }
 }

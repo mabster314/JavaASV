@@ -91,8 +91,7 @@ public class ArduinoHelm implements HelmInterface {
     }
 
     /**
-     * Dispatches a {@link MessageInterface} by sending its contents to the arduino and sending a return message with the
-     * actual rudder and
+     * Dispatches a {@link MessageInterface} by sending its contents to the arduino
      *
      * @param message {@link MessageInterface} containing new throttle and rudder data
      */
@@ -107,27 +106,6 @@ public class ArduinoHelm implements HelmInterface {
             }
         } else {
             // TODO do something
-        }
-        // Initialize our message factory with the correct pilot client ID
-        if (messageFactory == null) {
-            messageFactory = new ArduinoHelmMessageFactory(clientID, message.getOriginID());
-        }
-
-        // Get the actual state from the arduino
-        Future<String> helmStateFuture;
-        helmStateFuture = executor.submit(helmArduino);
-        String helmState = null;
-        try {
-            helmState = helmStateFuture.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        // Send a return message with the actual state of the controls
-        try {
-            server.dispatch(messageFactory.createMessage(helmState));
-        } catch (MessageTypeException e) {
-            e.printStackTrace();
         }
     }
 
