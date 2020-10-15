@@ -32,7 +32,7 @@ public class SerialArduino implements SerialArduinoInterface<byte[]> {
     /**
      * The default port name for an Arduino on Debian
      */
-    private static final String DEFAULT_PORT_NAME = "/dev/tty/ACM0"; // Default device name on Debian
+    private static final String DEFAULT_PORT_NAME = "/dev/ttyACM0"; // Default device name on Debian
 
     // Default arduino serial com settings
     private static final int DEFAULT_BAUD_RATE = 115200;

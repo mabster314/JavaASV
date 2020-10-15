@@ -82,6 +82,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
         server.dispatch(message);
     }
 
+    // TODO This should not actually recieve messages from the helm
     /**
      * Executes when receiving message from server. Should only be sent messages by the linked {@link HelmInterface}.
      * Any message of incorrect type or origin will be ignored.
@@ -101,6 +102,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
                     e.printStackTrace();
                 }
             }
+
 
             throttleSetpoint = throttleController.calculateNextOutput(throttleState);
             rudderSetpoint = rudderController.calculateNextOutput(rudderState);

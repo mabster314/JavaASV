@@ -5,6 +5,8 @@ public interface WaypointInterface {
 
     double getLongitude();
 
+    double[] getCoordinates();
+
     double getTolerance();
 
     WaypointBehavior atDestination();

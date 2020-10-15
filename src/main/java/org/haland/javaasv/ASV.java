@@ -23,7 +23,7 @@ package org.haland.javaasv;
  */
 public class ASV {
     public static void main(String[] args) {
-        final String port = "/dev/ttyACM1";
+        final String port = "/dev/ttyArduino";
 
     }
 
