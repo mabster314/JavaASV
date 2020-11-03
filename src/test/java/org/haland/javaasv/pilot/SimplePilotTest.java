@@ -5,6 +5,9 @@ import org.haland.javaasv.message.HelmMessage;
 import org.haland.javaasv.message.MessageInterface;
 import org.haland.javaasv.message.MessageTypeException;
 import org.haland.javaasv.message.MessengerServerInterface;
+import org.haland.javaasv.route.RouteInterface;
+import org.haland.javaasv.route.WaypointFactory;
+import org.haland.javaasv.route.WaypointInterface;
 import org.haland.javaasv.util.PIDController;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +40,8 @@ class SimplePilotTest {
     private MessengerServerInterface mockServer;
     @Mock
     private HelmInterface mockHelm;
-    private GPSProviderInterface mockGPSProvider = () -> GPS_POSITION;
+    private GPSProviderInterface mockGPSProvider;
+    private MockRoute mockRoute = new MockRoute();
 
     void setupPilot() {
         // Mock helm should give a client ID
@@ -52,6 +56,7 @@ class SimplePilotTest {
 
         testPilot =
                 new SimplePilot(PILOT_ID, mockServer, mockHelm, mockPIDController, mockPIDController, mockGPSProvider);
+        testPilot.setCurrentRoute(mockRoute);
     }
 
     @AfterEach
@@ -64,41 +69,12 @@ class SimplePilotTest {
         // Set up the test
         setupPilot();
 
-        // Dispatch a message to set up initial values
-        try {
-            testPilot.dispatch(
-                    new HelmMessage(mockHelm.getClientID(), testPilot.getClientID(), System.currentTimeMillis(),
-                            MessageInterface.MessagePriority.NORMAL, THROTTLE_VALUE, RUDDER_VALUE));
-        } catch (MessageTypeException e) {
-            e.printStackTrace();
-        }
-
         // should dispatch return message
         testPilot.run();
 
         // Make sure server receives message
         ArgumentCaptor<HelmMessage> captor = ArgumentCaptor.forClass(HelmMessage.class);
         verify(mockServer).dispatch(captor.capture());
-
-        // Check message
-        assertEquals(captor.getValue().getMessageContents().getHelmThrottleValue(), THROTTLE_VALUE);
-        assertEquals(captor.getValue().getMessageContents().getHelmRudderValue(), RUDDER_VALUE);
-    }
-
-    @Test
-    void testDispatch() {
-        setupPilot();
-
-        try {
-            testPilot.dispatch(
-                    new HelmMessage(mockHelm.getClientID(), testPilot.getClientID(), System.currentTimeMillis(),
-                            MessageInterface.MessagePriority.NORMAL, THROTTLE_VALUE, RUDDER_VALUE));
-        } catch (MessageTypeException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(testPilot.getThrottleSetpoint(), THROTTLE_VALUE);
-        assertEquals(testPilot.getRudderSetpoint(), RUDDER_VALUE);
     }
 
     @Test
@@ -108,5 +84,27 @@ class SimplePilotTest {
 
         testPilot.updateGPS();
         assertEquals(GPS_POSITION, testPilot.getGPSCoordinates());
+    }
+
+    protected class MockRoute implements RouteInterface {
+        WaypointFactory factory = new WaypointFactory();
+
+        WaypointInterface previousWaypoint = factory.createWaypoint(45, -93, 0);
+        WaypointInterface nextWaypoint = factory.createWaypoint(46.7, -92, 0);
+
+        @Override
+        public WaypointInterface getPreviousWaypoint() {
+            return previousWaypoint;
+        }
+
+        @Override
+        public WaypointInterface getNextWaypoint() {
+            return nextWaypoint;
+        }
+
+        @Override
+        public boolean isComplete() {
+            return false;
+        }
     }
 }

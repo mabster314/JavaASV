@@ -18,13 +18,28 @@
 
 package org.haland.javaasv;
 
+import org.haland.javaasv.pilot.GPSHat;
+
 /**
  * Our entry point
  */
 public class ASV {
     public static void main(String[] args) {
-        final String port = "/dev/ttyArduino";
+        GPSHat gpsHat = new GPSHat();
+        gpsHat.openPort();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        gpsHat.setGPSPower(true);
+        gpsHat.setGPSDataReporting(true);
 
+        while(true) {
+            if(gpsHat.isMessageAvailable()) {
+                System.out.println(gpsHat.getLastMessage());
+            }
+        }
     }
 
 }

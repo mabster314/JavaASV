@@ -4,6 +4,7 @@ import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.*;
 import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.util.PIDController;
+import org.haland.javaasv.util.PilotUtil;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -23,22 +24,16 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
 
     private PilotMessageFactory messageFactory;
 
-    private double throttleState;
-    private double throttleSetpoint;
-
-    private double rudderState;
-    private double rudderSetpoint;
-
     private double[] gpsCoordinates;
 
     private RouteInterface currentRoute;
 
     /**
-     * Construct a new SimplePilot
+     * Construct a new SimplePilot. PID controllers should be configured before injection.
      *
      * @param server             Server to dispatch through
      * @param helm               Helm to send messages to
-     * @param throttleController PID controller for the throttle.
+     * @param throttleController PID controller for the throttle
      * @param rudderController   PID controller for the rudder
      * @param gpsProvider        GPS provider for the pilot
      */
@@ -68,57 +63,55 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
         this(DEFAULT_CLIENT_ID, server, helm, throttleController, rudderController, gpsProvider);
     }
 
+    public void setUpControllers() {
+    }
+
     /**
      * Dispatches a message to the helm with the new throttle and rudder setpoints
      */
     @Override
     public void run() {
+        // Calculate the XTD
+        double xtd = calculateCrossTrackDistance();
+
+        // Now dispatch the new helm instructions
         MessageInterface message = null;
         try {
-            message = messageFactory.createMessage(throttleSetpoint, rudderSetpoint);
+            message = messageFactory.createMessage(throttleController.calculateNextOutput(xtd),
+                    rudderController.calculateNextOutput(xtd));
         } catch (MessageTypeException e) {
             e.printStackTrace();
         }
         server.dispatch(message);
     }
 
-    // TODO This should not actually recieve messages from the helm
     /**
-     * Executes when receiving message from server. Should only be sent messages by the linked {@link HelmInterface}.
-     * Any message of incorrect type or origin will be ignored.
+     * Executes when receiving message from server. Currently unused.
      *
-     * @param message Message containing actual helm state.
+     * @param message Message from the server.
      */
     @Override
     public synchronized void dispatch(MessageInterface message) {
-        // Check that the message came from the correct sender
-        if (message.getOriginID() == helm.getClientID()) {
-            // Check that the message is of the correct type
-            if (message.getType() == MessageInterface.MessageType.HELM) {
-                try {
-                    this.throttleState = message.getMessageContents().getHelmThrottleValue();
-                    this.rudderState = message.getMessageContents().getHelmRudderValue();
-                } catch (MessageTypeException e) {
-                    e.printStackTrace();
-                }
-            }
 
-
-            throttleSetpoint = throttleController.calculateNextOutput(throttleState);
-            rudderSetpoint = rudderController.calculateNextOutput(rudderState);
-        }
     }
 
     /**
      * Updates the stored GPS coordinates
      */
-    public void updateGPS() throws ExecutionException, InterruptedException {
-        Future<double[]> gpsFuture;
-        gpsFuture = executor.submit(gpsProvider);
-        double[] gpsDataReceived = gpsFuture.get();
-        this.gpsCoordinates = gpsDataReceived;
+    public void updateGPS() {
+
     }
 
+    /**
+     * Calculates the cross-track distance using the current route segment
+     *
+     * @return The XTD in nmi
+     */
+
+    public double calculateCrossTrackDistance() {
+        return PilotUtil.calculateCrossTrackDistance(currentRoute.getPreviousWaypoint().getCoordinates(),
+                currentRoute.getNextWaypoint().getCoordinates(), gpsCoordinates);
+    }
 
     /**
      * Returns the ID of the messenger client
@@ -130,6 +123,10 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
         return clientID;
     }
 
+    public void setCurrentRoute(RouteInterface newRoute) {
+        this.currentRoute = newRoute;
+    }
+
     /**
      * Returns the type of messages the client can handle
      *
@@ -138,14 +135,6 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     @Override
     public MessageInterface.MessageType getClientType() {
         return MessageInterface.MessageType.HELM;
-    }
-
-    public double getThrottleSetpoint() {
-        return this.throttleSetpoint;
-    }
-
-    public double getRudderSetpoint() {
-        return this.rudderSetpoint;
     }
 
     public double[] getGPSCoordinates() {

@@ -31,7 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Controls helm by interfacing with an Arduino. This is a singleton class, and only one should be run.
+ * Controls helm by interfacing with an Arduino.
  */
 public class ArduinoHelm implements HelmInterface {
     /**

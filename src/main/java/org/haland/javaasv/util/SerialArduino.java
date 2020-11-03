@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Serial interface for the arduino
  */
-public class SerialArduino implements SerialArduinoInterface<byte[]> {
+public class SerialArduino implements SerialDeviceInterface<byte[]> {
     /**
      * The default port name for an Arduino on Debian
      */
@@ -42,6 +42,10 @@ public class SerialArduino implements SerialArduinoInterface<byte[]> {
 
     private String portName;
     private SerialPort serialPort;
+
+    private ArduinoMessageListener messageListener;
+    private byte[] lastMessage;
+    private boolean messageAvailable;
 
     /**
      * Connect a new arduino with specified port name
@@ -92,5 +96,58 @@ public class SerialArduino implements SerialArduinoInterface<byte[]> {
     @Override
     public int sendSerialData(byte[] serialData) {
         return serialPort.writeBytes(serialData, serialData.length);
+    }
+
+    private synchronized void setLastMessage(byte[] lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    @Override
+    public synchronized byte[] getLastMessage() {
+        byte[] message = lastMessage;
+        lastMessage = null;
+        return message;
+    }
+
+    @Override
+    public synchronized boolean isMessageAvailable() {
+        return this.messageAvailable;
+    }
+
+    private void setMessageAvailable(boolean messageAvailability) {
+        this.messageAvailable = messageAvailability;
+    }
+
+    /**
+     * A class providing a message listener for the serial arduino
+     */
+    private final class ArduinoMessageListener implements SerialPortMessageListener {
+        private final SerialArduino serialArduino;
+
+        public ArduinoMessageListener(SerialArduino serialArduino) {
+            this.serialArduino = serialArduino;
+        }
+
+        @Override
+        public byte[] getMessageDelimiter() {
+            return SerialUtil.END_MESSAGE_CHAR.getBytes(StandardCharsets.US_ASCII);
+        }
+
+        @Override
+        public boolean delimiterIndicatesEndOfMessage() {
+            return true;
+        }
+
+        @Override
+        public int getListeningEvents() {
+            return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
+        }
+
+        @Override
+        public void serialEvent(SerialPortEvent event) {
+            byte[] delimitedMessage = event.getReceivedData();
+            serialArduino.setLastMessage(delimitedMessage);
+            serialArduino.setMessageAvailable(true);
+        }
     }
 }

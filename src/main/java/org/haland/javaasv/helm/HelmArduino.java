@@ -1,24 +1,23 @@
 package org.haland.javaasv.helm;
 
 import org.haland.javaasv.util.SerialArduino;
-import org.haland.javaasv.util.SerialArduinoInterface;
+import org.haland.javaasv.util.SerialDeviceInterface;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Provides a specialized {@link SerialArduino} for use with an {@link ArduinoHelm}
  */
-public class HelmArduino implements SerialArduinoInterface<String> {
-    private final SerialArduinoInterface arduino;
+public class HelmArduino implements SerialDeviceInterface<String> {
+    private final SerialDeviceInterface arduino;
 
     /**
      * The serial arduino is provided to the class and wrapped with the helm class. This method should not be called
      * directly outside of tests.
      *
-     * @param arduino a {@link SerialArduinoInterface}.
+     * @param arduino a {@link SerialDeviceInterface}.
      */
-    public HelmArduino(SerialArduinoInterface<byte[]> arduino) {
+    public HelmArduino(SerialDeviceInterface<byte[]> arduino) {
         this.arduino = arduino;
     }
 
@@ -49,7 +48,17 @@ public class HelmArduino implements SerialArduinoInterface<String> {
     }
 
     @Override
+    public boolean isMessageAvailable() {
+        return false;
+    }
+
+    @Override
     public int sendSerialData(byte[] serialData) {
         return arduino.sendSerialData(serialData);
+    }
+
+    @Override
+    public String getLastMessage() throws IOException {
+        return new String();
     }
 }
