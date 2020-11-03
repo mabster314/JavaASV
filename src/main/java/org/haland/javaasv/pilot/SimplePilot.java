@@ -6,10 +6,8 @@ import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.util.PIDController;
 import org.haland.javaasv.util.PilotUtil;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class SimplePilot implements MessengerClientInterface, Runnable {
     private static final String DEFAULT_CLIENT_ID = "simplePilot";

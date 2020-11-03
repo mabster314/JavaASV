@@ -22,7 +22,6 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**

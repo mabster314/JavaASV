@@ -2,7 +2,6 @@ package org.haland.javaasv.pilot;
 
 import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.HelmMessage;
-import org.haland.javaasv.message.MessageInterface;
 import org.haland.javaasv.message.MessageTypeException;
 import org.haland.javaasv.message.MessengerServerInterface;
 import org.haland.javaasv.route.RouteInterface;

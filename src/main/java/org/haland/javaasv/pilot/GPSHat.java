@@ -19,10 +19,7 @@
 package org.haland.javaasv.pilot;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortEvent;
-import com.fazecast.jSerialComm.SerialPortMessageListener;
 import org.haland.javaasv.util.SerialDeviceInterface;
-import org.haland.javaasv.util.SerialUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
