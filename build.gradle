@@ -18,7 +18,7 @@
 
 plugins {
     id 'java'
-
+    id 'application'
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.10.2'
 }
@@ -106,4 +106,8 @@ jacocoTestReport {
 coveralls {
     sourceDirs += files(sourceSets.main.java.srcDirs).files.absolutePath
     jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
+}
+
+application {
+    mainClassName = 'org.haland.javaasv.ASV'
 }
