@@ -19,8 +19,11 @@
 package org.haland.javaasv.pilot;
 
 import net.sf.marineapi.nmea.event.AbstractSentenceListener;
+import net.sf.marineapi.nmea.event.SentenceEvent;
+import net.sf.marineapi.nmea.event.SentenceListener;
 import net.sf.marineapi.nmea.io.SentenceReader;
 import net.sf.marineapi.nmea.sentence.RMCSentence;
+import net.sf.marineapi.nmea.sentence.Sentence;
 import net.sf.marineapi.nmea.util.DataStatus;
 import net.sf.marineapi.nmea.util.Position;
 import net.sf.marineapi.nmea.util.Time;
@@ -40,8 +43,10 @@ public class GPSHatParser implements GPSProviderInterface {
 
     public GPSHatParser(GPSHat gpsHat) {
         this.gpsHat = gpsHat;
+        this.gpsHat.openPort();
         this.reader = new SentenceReader(gpsHat.getInputStream());
         reader.addSentenceListener(new RMCListener());
+        reader.start();
     }
 
     public GPSHatParser(String portName) {
@@ -84,7 +89,6 @@ public class GPSHatParser implements GPSProviderInterface {
 
     private void setPosition(Position position) {
         this.position = position;
-        System.out.println("Lat: " + position.getLatitude() + ", Long: " + position.getLongitude());
     }
 
     private void setStatus(DataStatus status) {
@@ -95,12 +99,34 @@ public class GPSHatParser implements GPSProviderInterface {
         this.heading = heading;
     }
 
-    private class RMCListener extends AbstractSentenceListener<RMCSentence> {
+    private class RMCListener implements SentenceListener {
+
         @Override
-        public void sentenceRead(RMCSentence sentence) {
-            setPosition(sentence.getPosition());
-            setStatus(sentence.getStatus());
-            setHeading(sentence.getCourse());
+        public void readingPaused() {
+            System.out.println("-- Paused --");
+        }
+
+        @Override
+        public void readingStarted() {
+            System.out.println("-- Started --");
+        }
+
+        @Override
+        public void readingStopped() {
+            System.out.println("-- Stopped --");
+        }
+
+        @Override
+        public void sentenceRead(SentenceEvent event) {
+            Sentence s = event.getSentence();
+            System.out.println(s);
+
+            if ("RMC".equals(s.getSentenceId())) {
+                RMCSentence rmc = (RMCSentence) s;
+                setPosition(rmc.getPosition());
+                setStatus(rmc.getStatus());
+                setHeading(rmc.getCourse());
+            }
         }
     }
 }

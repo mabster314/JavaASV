@@ -44,22 +44,22 @@ public class GPSHat implements SerialDeviceInterface<String> {
     /**
      * Serial string to start the GPS module
      */
-    public static final String START_GPS_MESSAGE = "AT+CGNSPWR=1";
+    public static final String START_GPS_MESSAGE = "AT+CGNSPWR=1\n";
 
     /**
      * Serial string to stop the GPS module
      */
-    public static final String STOP_GPS_MESSAGE = "AT+CGNSPWR=0";
+    public static final String STOP_GPS_MESSAGE = "AT+CGNSPWR=0\n";
 
     /**
      * Serial string to start GPS data output in RMC NMEA format
      */
-    public static final String START_GPS_DATA_MESSAGE = "AT+CGPSOUT=32";
+    public static final String START_GPS_DATA_MESSAGE = "AT+CGPSOUT=32\n";
 
     /**
      * Serial string to start GPS data output
      */
-    public static final String STOP_GPS_DATA_MESSAGE = "AT+CGPSOUT=0";
+    public static final String STOP_GPS_DATA_MESSAGE = "AT+CGPSOUT=0\n";
 
     private SerialPort serialPort;
     private String portName;

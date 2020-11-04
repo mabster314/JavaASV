@@ -90,6 +90,12 @@ task integrationTest(type: Test) {
     mustRunAfter test
 }
 
+tasks.withType(JavaExec) {
+    if (System.getProperty('DEBUG', 'false') == 'true') {
+        jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=*:5005'
+    }
+}
+
 jacocoTestReport {
     def coverageSourceDirs = ['src/main/java']
     dependsOn test
@@ -111,4 +117,13 @@ coveralls {
 
 application {
     mainClassName = 'org.haland.javaasv.ASV'
+}
+
+jar {
+    manifest {
+        attributes (
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': 'org.haland.javaasv.ASV'
+        )
+    }
 }
