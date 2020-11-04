@@ -69,6 +69,7 @@ public class GPSHat implements SerialDeviceInterface<String> {
 
     public GPSHat(String portName) {
         this.portName = portName;
+        this.serialPort = SerialPort.getCommPort(this.portName);
         this.serialPort.setComPortParameters(DEFAULT_BAUD_RATE, DEFAULT_DATA_BITS, DEFAULT_STOP_BITS, DEFAULT_PARITY);
         this.serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
         this.in = serialPort.getInputStream();
