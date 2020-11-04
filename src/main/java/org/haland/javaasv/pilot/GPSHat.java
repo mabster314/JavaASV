@@ -94,6 +94,7 @@ public class GPSHat implements SerialDeviceInterface<String> {
 
     /**
      * Turns the GPS module on or off
+     *
      * @param powerOn true for power on, false for power off
      */
     public void setGPSPower(boolean powerOn) {
@@ -106,6 +107,7 @@ public class GPSHat implements SerialDeviceInterface<String> {
 
     /**
      * Starts and stops GPS reporting
+     *
      * @param reportingOn true to start reporting, false to stop reporting
      */
     public void setGPSDataReporting(boolean reportingOn) {
@@ -135,6 +137,10 @@ public class GPSHat implements SerialDeviceInterface<String> {
     @Override
     public int sendSerialData(byte[] serialData) {
         return serialPort.writeBytes(serialData, serialData.length);
+    }
+
+    public InputStream getInputStream() {
+        return in;
     }
 
     @Override

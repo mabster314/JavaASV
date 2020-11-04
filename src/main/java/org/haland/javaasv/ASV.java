@@ -18,27 +18,18 @@
 
 package org.haland.javaasv;
 
-import org.haland.javaasv.pilot.GPSHat;
+import org.haland.javaasv.pilot.GPSHatParser;
 
 /**
  * Our entry point
  */
 public class ASV {
     public static void main(String[] args) {
-        GPSHat gpsHat = new GPSHat();
-        gpsHat.openPort();
+        GPSHatParser parser = new GPSHatParser();
         try {
-            Thread.sleep(1000);
+            parser.startGPS();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-        gpsHat.setGPSPower(true);
-        gpsHat.setGPSDataReporting(true);
-
-        while(true) {
-            if(gpsHat.isMessageAvailable()) {
-                System.out.println(gpsHat.getLastMessage());
-            }
         }
     }
 

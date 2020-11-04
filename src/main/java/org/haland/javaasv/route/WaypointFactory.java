@@ -33,7 +33,7 @@ public class WaypointFactory {
 
             @Override
             public double[] getCoordinates() {
-                return new double[] {latitude, longitude};
+                return new double[]{latitude, longitude};
             }
 
             @Override

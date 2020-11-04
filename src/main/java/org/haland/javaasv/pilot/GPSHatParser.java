@@ -18,56 +18,89 @@
 
 package org.haland.javaasv.pilot;
 
+import net.sf.marineapi.nmea.event.AbstractSentenceListener;
+import net.sf.marineapi.nmea.io.SentenceReader;
+import net.sf.marineapi.nmea.sentence.RMCSentence;
+import net.sf.marineapi.nmea.util.DataStatus;
+import net.sf.marineapi.nmea.util.Position;
+import net.sf.marineapi.nmea.util.Time;
+
 /**
  * A class to parse incoming data from the serial GPS hat
  */
-public class GPSHatParser implements GPSProviderInterface{
+public class GPSHatParser implements GPSProviderInterface {
     private GPSHat gpsHat;
+    private SentenceReader reader;
+
+
+    private Position position;
+    private DataStatus status;
+    private Time updateTime;
+    private double heading;
 
     public GPSHatParser(GPSHat gpsHat) {
         this.gpsHat = gpsHat;
+        this.reader = new SentenceReader(gpsHat.getInputStream());
+        reader.addSentenceListener(new RMCListener());
     }
 
     public GPSHatParser(String portName) {
-        this.gpsHat = new GPSHat(portName);
+        this(new GPSHat(portName));
     }
 
     public GPSHatParser() {
-        this.gpsHat = new GPSHat();
+        this(new GPSHat());
     }
 
-    private void startGPS() throws InterruptedException {
+    public void startGPS() throws InterruptedException {
         gpsHat.setGPSPower(true);
         gpsHat.setGPSDataReporting(true);
     }
 
     @Override
     public boolean getFixStatus() {
-        return false;
+        return (status == DataStatus.ACTIVE);
     }
 
     @Override
-    public double getUpdateTime() {
-        return 0;
+    public Time getUpdateTime() {
+        return this.updateTime;
     }
 
     @Override
     public double getLatitude() {
-        return 0;
+        return this.position.getLatitude();
     }
 
     @Override
     public double getLongitude() {
-        return 0;
+        return this.position.getLongitude();
     }
 
     @Override
     public double getHeading() {
-        return 0;
+        return this.heading;
     }
 
-    @Override
-    public void run() {
+    private void setPosition(Position position) {
+        this.position = position;
+        System.out.println("Lat: " + position.getLatitude() + ", Long: " + position.getLongitude());
+    }
 
+    private void setStatus(DataStatus status) {
+        this.status = status;
+    }
+
+    private void setHeading(double heading) {
+        this.heading = heading;
+    }
+
+    private class RMCListener extends AbstractSentenceListener<RMCSentence> {
+        @Override
+        public void sentenceRead(RMCSentence sentence) {
+            setPosition(sentence.getPosition());
+            setStatus(sentence.getStatus());
+            setHeading(sentence.getCourse());
+        }
     }
 }

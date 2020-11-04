@@ -1,9 +1,12 @@
 package org.haland.javaasv.pilot;
 
-public interface GPSProviderInterface extends Runnable{
+import net.sf.marineapi.nmea.util.Time;
+
+
+public interface GPSProviderInterface {
     boolean getFixStatus();
 
-    double getUpdateTime();
+    Time getUpdateTime();
 
     double getLatitude();
 
