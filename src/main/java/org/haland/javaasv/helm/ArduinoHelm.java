@@ -58,6 +58,7 @@ public class ArduinoHelm implements HelmInterface {
         this.server = server;
         this.clientID = clientID;
         executor = Executors.newFixedThreadPool(1);
+        openPort();
     }
 
     /**

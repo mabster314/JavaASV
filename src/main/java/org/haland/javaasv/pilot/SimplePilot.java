@@ -8,6 +8,8 @@ import org.haland.javaasv.util.PilotUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class SimplePilot implements MessengerClientInterface, Runnable {
     private static final String DEFAULT_CLIENT_ID = "simplePilot";
@@ -18,7 +20,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     private PIDController throttleController;
     private PIDController rudderController;
     private GPSProviderInterface gps;
-    private ExecutorService executor;
+    private ScheduledExecutorService executor;
 
     private PilotMessageFactory messageFactory;
     private RouteInterface currentRoute;
@@ -42,7 +44,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
         this.rudderController = rudderController;
         this.gps = gps;
 
-        this.executor = Executors.newFixedThreadPool(1);
+        this.executor = Executors.newScheduledThreadPool(1);
 
         messageFactory = new PilotMessageFactory(clientID, helm.getClientID());
 
@@ -78,6 +80,14 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
             e.printStackTrace();
         }
         server.dispatch(message);
+    }
+    
+    public void startPilot(long period) {
+        executor.scheduleAtFixedRate(this, 0, period, TimeUnit.MILLISECONDS);
+    }
+
+    public void stopPilot() {
+        executor.shutdown();
     }
 
     /**

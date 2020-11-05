@@ -18,14 +18,58 @@
 
 package org.haland.javaasv;
 
+import org.haland.javaasv.helm.ArduinoHelm;
+import org.haland.javaasv.helm.HelmArduino;
+import org.haland.javaasv.message.MessengerServer;
 import org.haland.javaasv.pilot.GPSHatParser;
+import org.haland.javaasv.pilot.SimplePilot;
+import org.haland.javaasv.route.RouteInterface;
+import org.haland.javaasv.util.PIDController;
 
 /**
  * Our entry point
  */
 public class ASV {
-    public static void main(String[] args) throws InterruptedException {
-        GPSHatParser gps = new GPSHatParser();
+    private MessengerServer server;
+    private static final long SERVER_PERIOD = 10;
+
+    private ArduinoHelm helm;
+    private HelmArduino helmArduino;
+    private static final String HELM_ID = "helm";
+    private static final String ARDUINO_PORT = "/dev/ttyACM0";
+
+    private SimplePilot pilot;
+    private static final String PILOT_ID = "pilot";
+    private static final long PILOT_PERIOD = 1000;
+
+    private PIDController throttlePID;
+    private PIDController rudderPID;
+
+    private GPSHatParser gps;
+    private static final String GPS_PORT = "/dev/ttyS0";
+
+    private RouteInterface route;
+
+    private ASV() {
+        this.server = MessengerServer.getInstance();
+
+        this.helmArduino = new HelmArduino(ARDUINO_PORT);
+        this.helm = new ArduinoHelm(server, helmArduino, HELM_ID);
+
+        this.gps = new GPSHatParser(GPS_PORT);
+
+        this.pilot = new SimplePilot(PILOT_ID, server, helm, throttlePID, rudderPID, gps);
+        pilot.setCurrentRoute(route);
+    }
+
+    private void start() {
+        server.startServer(SERVER_PERIOD);
+        pilot.startPilot(PILOT_PERIOD);
+    }
+
+    public static void main(String[] args) {
+        ASV asv = new ASV();
+        asv.start();
     }
 
 }
