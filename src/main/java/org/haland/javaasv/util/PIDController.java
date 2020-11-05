@@ -21,7 +21,7 @@ package org.haland.javaasv.util;
 /**
  * Implements a basic PID controller.
  */
-public class PIDController {
+public class PIDController implements Controller {
     /**
      * The default period for the PID controller, in seconds
      */
@@ -92,6 +92,7 @@ public class PIDController {
      * @param processVariable the current measurement of the monitored process variable
      * @return the next output for the controller
      */
+    @Override
     public double calculateNextOutput(double processVariable) {
         previousError = positionError;
 

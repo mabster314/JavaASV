@@ -3,6 +3,7 @@ package org.haland.javaasv.pilot;
 import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.*;
 import org.haland.javaasv.route.RouteInterface;
+import org.haland.javaasv.util.Controller;
 import org.haland.javaasv.util.PIDController;
 import org.haland.javaasv.util.PilotUtil;
 
@@ -17,8 +18,8 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     private final String clientID;
     private final MessengerServerInterface server;
     private final HelmInterface helm;
-    private PIDController throttleController;
-    private PIDController rudderController;
+    private Controller throttleController;
+    private Controller rudderController;
     private GPSProviderInterface gps;
     private ScheduledExecutorService executor;
 
@@ -35,7 +36,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
      * @param gps                GPS provider for the pilot
      */
     public SimplePilot(String clientID, MessengerServerInterface server, HelmInterface helm,
-                       PIDController throttleController, PIDController rudderController,
+                       Controller throttleController, Controller rudderController,
                        GPSProviderInterface gps) {
         this.clientID = clientID;
         this.server = server;

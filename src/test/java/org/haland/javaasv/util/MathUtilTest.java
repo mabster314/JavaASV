@@ -18,6 +18,7 @@
 
 package org.haland.javaasv.util;
 
+import org.haland.javaasv.TestBase;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Test class for {@link MathUtil}
  */
-class MathUtilTest {
+class MathUtilTest extends TestBase {
     private static final int INT_LOW = 5;
     private static final int INT_HIGH = 10;
 

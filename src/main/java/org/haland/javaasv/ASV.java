@@ -18,6 +18,7 @@
 
 package org.haland.javaasv;
 
+import org.haland.javaasv.config.AllConfig;
 import org.haland.javaasv.helm.ArduinoHelm;
 import org.haland.javaasv.helm.HelmArduino;
 import org.haland.javaasv.message.MessengerServer;
@@ -25,40 +26,46 @@ import org.haland.javaasv.pilot.GPSHatParser;
 import org.haland.javaasv.pilot.SimplePilot;
 import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.util.PIDController;
+import org.haland.javaasv.util.TrivialController;
 
 /**
  * Our entry point
  */
 public class ASV {
+    private final AllConfig config = new AllConfig();
+
     private MessengerServer server;
     private static final long SERVER_PERIOD = 10;
 
     private ArduinoHelm helm;
     private HelmArduino helmArduino;
     private static final String HELM_ID = "helm";
-    private static final String ARDUINO_PORT = "/dev/ttyACM0";
 
     private SimplePilot pilot;
     private static final String PILOT_ID = "pilot";
-    private static final long PILOT_PERIOD = 1000;
+    private static final long PILOT_PERIOD = 1000; //TODO propertize this
 
-    private PIDController throttlePID;
-    private PIDController rudderPID;
+    private TrivialController throttleController;
+    private PIDController rudderController;
 
     private GPSHatParser gps;
-    private static final String GPS_PORT = "/dev/ttyS0";
 
     private RouteInterface route;
 
     private ASV() {
         this.server = MessengerServer.getInstance();
 
-        this.helmArduino = new HelmArduino(ARDUINO_PORT);
+        this.helmArduino = new HelmArduino(config.getSerialConfig().getArduinoPort());
         this.helm = new ArduinoHelm(server, helmArduino, HELM_ID);
 
-        this.gps = new GPSHatParser(GPS_PORT);
+        this.gps = new GPSHatParser(config.getSerialConfig().getGpsPort());
 
-        this.pilot = new SimplePilot(PILOT_ID, server, helm, throttlePID, rudderPID, gps);
+        this.throttleController = new TrivialController(config.getControllerConfig().getThrottleValue());
+        this.rudderController = new PIDController(config.getControllerConfig().getRudderKp(),
+                config.getControllerConfig().getRudderKi(), config.getControllerConfig().getRudderKd(),
+                config.getControllerConfig().getRudderPeriod());
+
+        this.pilot = new SimplePilot(PILOT_ID, server, helm, throttleController, rudderController, gps);
         pilot.setCurrentRoute(route);
     }
 
