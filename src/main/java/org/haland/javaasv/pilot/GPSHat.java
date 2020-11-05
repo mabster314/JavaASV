@@ -146,9 +146,9 @@ public class GPSHat implements SerialDeviceInterface<String> {
         boolean closed = serialPort.closePort();
 
         if (closed) {
-            Logger.info("Port " + portName + " opened successfully");
+            Logger.info("Port " + portName + " close successfully");
         } else {
-            Logger.error("Failed to open port " + portName);
+            Logger.error("Failed to close port " + portName);
         }
 
         return closed;

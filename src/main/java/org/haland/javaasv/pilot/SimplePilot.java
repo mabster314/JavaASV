@@ -6,6 +6,7 @@ import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.util.Controller;
 import org.haland.javaasv.util.PIDController;
 import org.haland.javaasv.util.PilotUtil;
+import org.tinylog.Logger;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,6 +39,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     public SimplePilot(String clientID, MessengerServerInterface server, HelmInterface helm,
                        Controller throttleController, Controller rudderController,
                        GPSProviderInterface gps) {
+        Logger.info("Attempting to instantiate SimplePilot");
         this.clientID = clientID;
         this.server = server;
         this.helm = helm;
@@ -84,10 +86,12 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     }
     
     public void startPilot(long period) {
+        Logger.info("Starting SimplePilot");
         executor.scheduleAtFixedRate(this, 0, period, TimeUnit.MILLISECONDS);
     }
 
     public void stopPilot() {
+        Logger.info("Stopping SimplePilot");
         executor.shutdown();
     }
 
@@ -98,7 +102,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
      */
     @Override
     public synchronized void dispatch(MessageInterface message) {
-
+        Logger.debug("Pilot received message from " + message.getOriginID() + " for some reason");
     }
 
     /**

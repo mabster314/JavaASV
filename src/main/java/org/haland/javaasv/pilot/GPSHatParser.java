@@ -42,7 +42,7 @@ public class GPSHatParser implements GPSProviderInterface {
     private double heading;
 
     public GPSHatParser(GPSHat gpsHat) {
-        Logger.info("Attempting to configure GPSHatParser");
+        Logger.info("Attempting to start GPSHatParser");
         this.gpsHat = gpsHat;
         this.gpsHat.openPort();
         this.reader = new SentenceReader(gpsHat.getInputStream());

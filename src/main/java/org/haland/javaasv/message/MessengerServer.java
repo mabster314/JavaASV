@@ -53,7 +53,7 @@ public class MessengerServer implements MessengerServerInterface {
         clients = new HashMap<String, MessengerClientInterface>();
         messageStack = new Stack<MessageInterface>();
         this.executor = executor;
-        Logger.info("Server configured");
+        Logger.info("Server constructed");
     }
 
     /**

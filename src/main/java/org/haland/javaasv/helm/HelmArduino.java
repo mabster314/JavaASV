@@ -2,6 +2,7 @@ package org.haland.javaasv.helm;
 
 import org.haland.javaasv.util.SerialArduino;
 import org.haland.javaasv.util.SerialDeviceInterface;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 
@@ -37,14 +38,44 @@ public class HelmArduino implements SerialDeviceInterface<String> {
         this(new SerialArduino(port));
     }
 
+    /**
+     * Attempts to open the serial port
+     *
+     * @return <code>true</code> if the port was opened successfully, <code>false</code> otherwise
+     */
     @Override
-    public boolean openPort() {
-        return arduino.openPort();
+    public synchronized boolean openPort() {
+        Logger.info("Attempting to open Arduino serial port");
+
+        boolean opened = arduino.openPort();
+
+        if (opened) {
+            Logger.info("Arduino port opened successfully");
+        } else {
+            Logger.error("Failed to open Arduino port");
+        }
+
+        return opened;
     }
 
+    /**
+     * Attempts to close the serial port
+     *
+     * @return <code>true</code> if the port was closed successfully, <code>false</code> otherwise
+     */
     @Override
-    public boolean closePort() {
-        return arduino.closePort();
+    public synchronized boolean closePort() {
+        Logger.info("Attempting to close Arduino serial port");
+
+        boolean closed = arduino.closePort();
+
+        if (closed) {
+            Logger.info("Arduino port closed successfully");
+        } else {
+            Logger.error("Failed to close arduino port");
+        }
+
+        return closed;
     }
 
     @Override

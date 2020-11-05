@@ -3,6 +3,7 @@ package org.haland.javaasv.helm;
 import org.haland.javaasv.message.HelmMessage;
 import org.haland.javaasv.message.MessageInterface;
 import org.haland.javaasv.message.MessageTypeException;
+import org.tinylog.Logger;
 
 /**
  * Creates messages to send between a {@link org.haland.javaasv.pilot.PilotInterface} and a helm.
@@ -23,6 +24,8 @@ public class ArduinoHelmMessageFactory {
     public ArduinoHelmMessageFactory(String originID, String destinationID) {
         this.originID = originID;
         this.destinationID = destinationID;
+        Logger.info("Initialized new arduino helm message factory with origin " + originID + " and destination "
+                + destinationID);
     }
 
     /**

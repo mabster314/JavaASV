@@ -21,6 +21,7 @@ package org.haland.javaasv.util;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
+import org.tinylog.Logger;
 
 import java.nio.charset.StandardCharsets;
 
@@ -52,10 +53,12 @@ public class SerialArduino implements SerialDeviceInterface<byte[]> {
      * @param portName the serial port name
      */
     public SerialArduino(String portName) {
+        Logger.info("Attempting to configure serial Arduino on port " + portName);
         this.portName = portName;
         this.serialPort = SerialPort.getCommPort(this.portName);
         this.serialPort.setComPortParameters(DEFAULT_BAUD_RATE, DEFAULT_DATA_BITS, DEFAULT_STOP_BITS, DEFAULT_PARITY);
         this.serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
+        Logger.info("Arduino configured");
     }
 
     /**
@@ -68,11 +71,20 @@ public class SerialArduino implements SerialDeviceInterface<byte[]> {
     /**
      * Attempts to open the serial port
      *
-     * @return <code>true</code> if the port was opened successfully, <code>false</code> otherwise
+             * @return <code>true</code> if the port was opened successfully, <code>false</code> otherwise
      */
     @Override
     public synchronized boolean openPort() {
+        Logger.info("Attempting to open serial port " + portName);
+
         boolean opened = serialPort.openPort();
+
+        if (opened) {
+            Logger.info("Port " + portName + " opened successfully");
+        } else {
+            Logger.error("Failed to open port " + portName);
+        }
+
         return opened;
     }
 
@@ -83,7 +95,17 @@ public class SerialArduino implements SerialDeviceInterface<byte[]> {
      */
     @Override
     public synchronized boolean closePort() {
-        return serialPort.closePort();
+        Logger.info("Attempting to close serial port " + portName);
+
+        boolean closed = serialPort.closePort();
+
+        if (closed) {
+            Logger.info("Port " + portName + " close successfully");
+        } else {
+            Logger.error("Failed to close port " + portName);
+        }
+
+        return closed;
     }
 
     /**

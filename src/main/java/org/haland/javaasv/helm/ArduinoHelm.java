@@ -18,11 +18,9 @@
 
 package org.haland.javaasv.helm;
 
-import org.haland.javaasv.message.MessageInterface;
-import org.haland.javaasv.message.MessageTypeException;
-import org.haland.javaasv.message.MessengerServer;
-import org.haland.javaasv.message.MessengerServerInterface;
+import org.haland.javaasv.message.*;
 import org.haland.javaasv.util.SerialArduino;
+import org.tinylog.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
@@ -54,11 +52,19 @@ public class ArduinoHelm implements HelmInterface {
      * @param clientID    ID of the client module. This must be unique.
      */
     public ArduinoHelm(MessengerServerInterface server, HelmArduino helmArduino, String clientID) {
+        Logger.info("Attempting to instantiate ArduinoHelm");
+
         this.helmArduino = helmArduino;
         this.server = server;
         this.clientID = clientID;
         executor = Executors.newFixedThreadPool(1);
         openPort();
+
+        try {
+            server.registerClientModule(this);
+        } catch (DuplicateKeyException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
