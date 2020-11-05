@@ -23,19 +23,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.tinylog.Logger;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Logger;
 
+import static org.haland.javaasv.config.BaseConfig.PROPERTY_FILE_DIR_SRC_TESTS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
 
 public abstract class TestBase {
-    private final Logger log = Logger.getLogger(getClass().getName());
 
     public static final String PROPERTY_FILE_DIR_SRC_RUN =
             "src/main/resources/properties/";
@@ -48,12 +48,12 @@ public abstract class TestBase {
 
     @BeforeEach
     public void processTestStarting(TestInfo testInfo) {
-        log.fine("Test starting: " + testInfo.getDisplayName());
+        Logger.info("Test starting: " + testInfo.getDisplayName());
     }
 
     @AfterEach
     public void processTestFinished(TestInfo testInfo) {
-        log.fine("Test finished: " + testInfo.getDisplayName());
+        Logger.info("Test finished: " + testInfo.getDisplayName());
     }
 
     protected void assertInstanceVariablesNotNull(Object sut)

@@ -1,11 +1,12 @@
 package org.haland.javaasv.message;
 
+import org.haland.javaasv.TestBase;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class MessageContentTest {
+class MessageContentTest extends TestBase {
     private static final String STRING_MESSAGE = "foo";
     private static final double DOUBLE_MESSAGE = 1.1;
     private static final double THROTTLE_VALUE = 0.73;

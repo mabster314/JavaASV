@@ -27,6 +27,7 @@ import org.haland.javaasv.pilot.SimplePilot;
 import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.util.PIDController;
 import org.haland.javaasv.util.TrivialController;
+import org.tinylog.Logger;
 
 /**
  * Our entry point
@@ -53,6 +54,7 @@ public class ASV {
     private RouteInterface route;
 
     private ASV() {
+        Logger.info("Starting ASV configuration");
         this.server = MessengerServer.getInstance();
 
         this.helmArduino = new HelmArduino(config.getSerialConfig().getArduinoPort());

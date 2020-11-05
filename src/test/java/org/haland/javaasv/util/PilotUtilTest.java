@@ -1,10 +1,11 @@
 package org.haland.javaasv.util;
 
+import org.haland.javaasv.TestBase;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PilotUtilTest {
+class PilotUtilTest extends TestBase {
     private static final double[] JFK_LOCATION = {40.63, -73.78};
     private static final double[] LAX_LOCATION = {33.95, -118.40};
     private static final double[] CURRENT_LOCATION = {34.5, -116.5};

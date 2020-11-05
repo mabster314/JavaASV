@@ -18,24 +18,25 @@
 
 package org.haland.javaasv.config;
 
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.tinylog.Logger;
 
+import java.util.Properties;
 /**
  * Base class for configuration from loading values from properties file.
  */
 public abstract class BaseConfig {
-    private final Logger log = Logger.getLogger(getClass().getName());
 
-    private static final String PROPERTY_FILE_DIR_DEFAULT = "/home/asv-config/";
+    public static final String PROPERTY_FILE_DIR_SRC_RUN =
+            "src/main/resources/properties/";
+    public static final String PROPERTY_FILE_DIR_SRC_TESTS =
+            "src/test/resources/properties/";
 
-    private static String propertyFileDir = PROPERTY_FILE_DIR_DEFAULT;
+    private static String propertyFileDir = PROPERTY_FILE_DIR_SRC_RUN;
 
     private final Properties properties;
 
     public BaseConfig() {
-        log.info("Configuring class=" + getClass());
+        Logger.info("Configuring class " + getClass());
 
         final String propertyFileName = getFullyQualifiedPropertyFileName();
         properties = new PropertiesLoader().loadProperties(propertyFileName);
@@ -43,8 +44,8 @@ public abstract class BaseConfig {
         try {
             configure(properties);
         } catch (Throwable e) {
-            String msg = "ERROR during configuration of class=" + getClass();
-            log.log(Level.SEVERE, msg, e);
+            String msg = "ERROR during configuration of class " + getClass();
+            Logger.error(e, msg);
             throw e;
         }
     }

@@ -1,6 +1,7 @@
 package org.haland.javaasv.pilot;
 
 import net.sf.marineapi.nmea.util.Time;
+import org.haland.javaasv.TestBase;
 import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.HelmMessage;
 import org.haland.javaasv.message.MessageTypeException;
@@ -22,7 +23,7 @@ import org.mockito.stubbing.Answer;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SimplePilotTest {
+class SimplePilotTest extends TestBase {
     private static final String HELM_ID = "testHelm";
     private static final String PILOT_ID = "testSimplePilot";
     private static final double THROTTLE_VALUE = 0.75;

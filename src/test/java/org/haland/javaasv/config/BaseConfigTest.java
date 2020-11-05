@@ -52,6 +52,9 @@ public class BaseConfigTest extends TestBase {
         }
     }
 
+    /**
+     * Test the int array reader
+     */
     @Test
     public void testGetIntArrayPropertyValue() {
         int[] testArray = { 1, 2, 3 };

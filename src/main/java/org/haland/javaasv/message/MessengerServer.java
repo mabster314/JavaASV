@@ -18,6 +18,8 @@
 
 package org.haland.javaasv.message;
 
+import org.tinylog.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -51,6 +53,7 @@ public class MessengerServer implements MessengerServerInterface {
         clients = new HashMap<String, MessengerClientInterface>();
         messageStack = new Stack<MessageInterface>();
         this.executor = executor;
+        Logger.info("Server configured");
     }
 
     /**
@@ -83,8 +86,12 @@ public class MessengerServer implements MessengerServerInterface {
     @Override
     public void registerClientModule(String clientID,
                                      MessengerClientInterface clientModule) throws DuplicateKeyException {
+        Logger.info("Attempting to attach client " + clientModule.getClass() + " with name " +clientID);
         if (clients.putIfAbsent(clientID, clientModule) != null) {
-            throw new DuplicateKeyException("Duplicate client registered to server: " + clientModule.getClientID());
+            DuplicateKeyException e = new DuplicateKeyException("Duplicate client registered to server: "
+                    + clientModule.getClientID());
+            Logger.error(e);
+            throw e;
         }
     }
 
@@ -106,6 +113,8 @@ public class MessengerServer implements MessengerServerInterface {
      */
     @Override
     public synchronized void dispatch(MessageInterface message) {
+        Logger.trace("Message from module " + message.getOriginID() + " and to module " + message.getDestinationID()
+                + " added to queue");
         messageStack.push(message);
     }
 
@@ -120,9 +129,12 @@ public class MessengerServer implements MessengerServerInterface {
             MessengerClientInterface client = clients.get(message.getDestinationID());
 
             if (message.getType() == client.getClientType()) {
+                Logger.trace("Message from module " + message.getOriginID() + " dispatched to "
+                        + message.getDestinationID());
                 client.dispatch(message);
             } else {
-                // TODO do something
+                Logger.trace("Message from module " + message.getOriginID() + " wrong message type for "
+                        + message.getDestinationID() + "; message was dropped");
             }
         }
     }
@@ -134,9 +146,11 @@ public class MessengerServer implements MessengerServerInterface {
      */
     public void startServer(long period) {
         executor.scheduleAtFixedRate(messengerServerInstance, 0, period, TimeUnit.MILLISECONDS);
+        Logger.info("Started server at period " + period);
     }
 
     public void stopServer() {
         executor.shutdown();
+        Logger.info("Stopping server");
     }
 }

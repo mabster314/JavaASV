@@ -1,11 +1,12 @@
 package org.haland.javaasv.helm;
 
+import org.haland.javaasv.TestBase;
 import org.haland.javaasv.message.MessageTypeException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ArduinoHelmMessageFactoryTest {
+class ArduinoHelmMessageFactoryTest extends TestBase {
     private static final double THROTTLE_SETPOINT = 0.75;
     private static final double RUDDER_SETPOINT = 25;
     private static final String ORIGIN_ID = "testOriginClient";

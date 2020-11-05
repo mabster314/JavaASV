@@ -18,6 +18,7 @@
 
 package org.haland.javaasv.message;
 
+import org.haland.javaasv.TestBase;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MessengerServerTest {
+class MessengerServerTest extends TestBase {
     // Test constants
     private static final String TEST_CLIENT_ID_1 = "testID1";
     private static final String TEST_CLIENT_ID_2 = "testID2";

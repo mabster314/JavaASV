@@ -26,6 +26,7 @@ import net.sf.marineapi.nmea.sentence.Sentence;
 import net.sf.marineapi.nmea.util.DataStatus;
 import net.sf.marineapi.nmea.util.Position;
 import net.sf.marineapi.nmea.util.Time;
+import org.tinylog.Logger;
 
 /**
  * A class to parse incoming data from the serial GPS hat
@@ -41,6 +42,7 @@ public class GPSHatParser implements GPSProviderInterface {
     private double heading;
 
     public GPSHatParser(GPSHat gpsHat) {
+        Logger.info("Attempting to configure GPSHatParser");
         this.gpsHat = gpsHat;
         this.gpsHat.openPort();
         this.reader = new SentenceReader(gpsHat.getInputStream());
@@ -126,6 +128,7 @@ public class GPSHatParser implements GPSProviderInterface {
             System.out.println(s);
 
             if ("RMC".equals(s.getSentenceId())) {
+                Logger.trace("Reading RMC sentence");
                 RMCSentence rmc = (RMCSentence) s;
                 setPosition(rmc.getPosition());
                 setStatus(rmc.getStatus());

@@ -70,6 +70,8 @@ configurations {
 dependencies {
     compile 'com.fazecast:jSerialComm:[2.0.0,3.0.0)'
     compile 'net.sf.marineapi:marineapi:0.11.0'
+    compile 'org.tinylog:tinylog-api:2.2.0'
+    compile 'org.tinylog:tinylog-impl:2.2.0'
     testCompile "org.mockito:mockito-core:2.+"
     testCompile "org.mockito:mockito-junit-jupiter:3.+"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.+'

@@ -18,15 +18,15 @@
 
 package org.haland.javaasv.config;
 
-public class AllConfig {
-    private final ControllerConfig controllerConfig = new ControllerConfig();
-    private final SerialConfig serialConfig = new SerialConfig();
+import org.haland.javaasv.TestBase;
+import org.junit.jupiter.api.Test;
 
-    public ControllerConfig getControllerConfig() {
-        return controllerConfig;
-    }
+import static org.junit.jupiter.api.Assertions.*;
 
-    public SerialConfig getSerialConfig() {
-        return serialConfig;
+class AllConfigTest extends TestBase {
+
+    @Test
+    void testAllConfig() {
+        AllConfig config = new AllConfig();
     }
 }

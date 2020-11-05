@@ -18,10 +18,10 @@
 
 package org.haland.javaasv.config;
 
+import org.tinylog.Logger;
+
 import java.io.*;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -29,7 +29,6 @@ import java.util.logging.Logger;
  * instance.
  */
 public class PropertiesLoader {
-    private final Logger log = Logger.getLogger(getClass().getName());
 
     private static final String CAN_T_CONTINUE_MSG = "; can't continue";
 
@@ -66,7 +65,7 @@ public class PropertiesLoader {
         } catch (FileNotFoundException e) {
             final String msg = "Error finding properties file=" + file
                     + CAN_T_CONTINUE_MSG;
-            log.log(Level.SEVERE, msg, e);
+            Logger.error(e, msg);
             throw new IllegalStateException(msg, e);
         }
         return inputStream;
@@ -79,7 +78,7 @@ public class PropertiesLoader {
         } catch (IOException e) {
             final String msg = "Error reading properties file=" + file
                     + CAN_T_CONTINUE_MSG;
-            log.log(Level.SEVERE, msg, e);
+            Logger.error(e, msg);
             throw new IllegalStateException(msg, e);
         }
         return prop;

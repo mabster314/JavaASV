@@ -20,6 +20,7 @@ package org.haland.javaasv.pilot;
 
 import com.fazecast.jSerialComm.SerialPort;
 import org.haland.javaasv.util.SerialDeviceInterface;
+import org.tinylog.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,6 +69,7 @@ public class GPSHat implements SerialDeviceInterface<String> {
     private BufferedReader bufferedReader;
 
     public GPSHat(String portName) {
+        Logger.info("Attempting to configure GPS on port " + portName);
         this.portName = portName;
         this.serialPort = SerialPort.getCommPort(this.portName);
         this.serialPort.setComPortParameters(DEFAULT_BAUD_RATE, DEFAULT_DATA_BITS, DEFAULT_STOP_BITS, DEFAULT_PARITY);
@@ -75,6 +77,7 @@ public class GPSHat implements SerialDeviceInterface<String> {
         this.in = serialPort.getInputStream();
         this.inReader = new InputStreamReader(in, StandardCharsets.US_ASCII);
         this.bufferedReader = new BufferedReader(inReader);
+        Logger.info("GPS configured");
     }
 
     public GPSHat() {
@@ -88,7 +91,16 @@ public class GPSHat implements SerialDeviceInterface<String> {
      */
     @Override
     public synchronized boolean openPort() {
+        Logger.info("Attempting to open serial port " + portName);
+
         boolean opened = serialPort.openPort();
+
+        if (opened) {
+            Logger.info("Port " + portName + " opened successfully");
+        } else {
+            Logger.error("Failed to open port " + portName);
+        }
+
         return opened;
     }
 
@@ -99,8 +111,10 @@ public class GPSHat implements SerialDeviceInterface<String> {
      */
     public void setGPSPower(boolean powerOn) {
         if (powerOn) {
+            Logger.info("Powering on GPS with serial message " + START_GPS_MESSAGE);
             sendSerialData(START_GPS_MESSAGE.getBytes());
         } else {
+            Logger.info("Powering off GPS with serial message " + STOP_GPS_MESSAGE);
             sendSerialData(STOP_GPS_MESSAGE.getBytes());
         }
     }
@@ -112,8 +126,10 @@ public class GPSHat implements SerialDeviceInterface<String> {
      */
     public void setGPSDataReporting(boolean reportingOn) {
         if (reportingOn) {
+            Logger.info("Starting GPS data reporting with serial message " + START_GPS_DATA_MESSAGE);
             sendSerialData(START_GPS_DATA_MESSAGE.getBytes());
         } else {
+            Logger.info("Stopping GPS data reporting with serial message " + STOP_GPS_DATA_MESSAGE);
             sendSerialData(STOP_GPS_DATA_MESSAGE.getBytes());
         }
     }
@@ -125,7 +141,17 @@ public class GPSHat implements SerialDeviceInterface<String> {
      */
     @Override
     public synchronized boolean closePort() {
-        return serialPort.closePort();
+        Logger.info("Attempting to close serial port " + portName);
+
+        boolean closed = serialPort.closePort();
+
+        if (closed) {
+            Logger.info("Port " + portName + " opened successfully");
+        } else {
+            Logger.error("Failed to open port " + portName);
+        }
+
+        return closed;
     }
 
     /**
@@ -149,6 +175,7 @@ public class GPSHat implements SerialDeviceInterface<String> {
             return bufferedReader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
+            Logger.error(e);
             return "OOPS";
         }
     }
