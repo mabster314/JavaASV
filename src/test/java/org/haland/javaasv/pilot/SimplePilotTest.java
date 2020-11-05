@@ -1,5 +1,6 @@
 package org.haland.javaasv.pilot;
 
+import net.sf.marineapi.nmea.util.Time;
 import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.HelmMessage;
 import org.haland.javaasv.message.MessageTypeException;
@@ -18,9 +19,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import java.util.concurrent.ExecutionException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +51,38 @@ class SimplePilotTest {
             }
         });
 
+        mockGPSProvider = new GPSProviderInterface() {
+            @Override
+            public boolean getFixStatus() {
+                return true;
+            }
+
+            @Override
+            public Time getUpdateTime() {
+                return new Time();
+            }
+
+            @Override
+            public double getLatitude() {
+                return GPS_POSITION[0];
+            }
+
+            @Override
+            public double getLongitude() {
+                return GPS_POSITION[1];
+            }
+
+            @Override
+            public double[] getCoordinates() {
+                return GPS_POSITION;
+            }
+
+            @Override
+            public double getHeading() {
+                return 0;
+            }
+        };
+
         testPilot =
                 new SimplePilot(PILOT_ID, mockServer, mockHelm, mockPIDController, mockPIDController, mockGPSProvider);
         testPilot.setCurrentRoute(mockRoute);
@@ -74,15 +104,6 @@ class SimplePilotTest {
         // Make sure server receives message
         ArgumentCaptor<HelmMessage> captor = ArgumentCaptor.forClass(HelmMessage.class);
         verify(mockServer).dispatch(captor.capture());
-    }
-
-    @Test
-    void testUpdateGPSCoordinates() throws ExecutionException, InterruptedException {
-        testPilot =
-                new SimplePilot(PILOT_ID, mockServer, mockHelm, mockPIDController, mockPIDController, mockGPSProvider);
-
-        testPilot.updateGPS();
-        assertEquals(GPS_POSITION, testPilot.getGPSCoordinates());
     }
 
     protected class MockRoute implements RouteInterface {

@@ -18,7 +18,6 @@
 
 package org.haland.javaasv.pilot;
 
-import net.sf.marineapi.nmea.event.AbstractSentenceListener;
 import net.sf.marineapi.nmea.event.SentenceEvent;
 import net.sf.marineapi.nmea.event.SentenceListener;
 import net.sf.marineapi.nmea.io.SentenceReader;
@@ -80,6 +79,11 @@ public class GPSHatParser implements GPSProviderInterface {
     @Override
     public double getLongitude() {
         return this.position.getLongitude();
+    }
+
+    @Override
+    public double[] getCoordinates() {
+        return new double[]{getLatitude(), getLongitude()};
     }
 
     @Override

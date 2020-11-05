@@ -12,5 +12,7 @@ public interface GPSProviderInterface {
 
     double getLongitude();
 
+    double[] getCoordinates();
+
     double getHeading();
 }

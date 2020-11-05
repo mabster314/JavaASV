@@ -17,13 +17,10 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     private final HelmInterface helm;
     private PIDController throttleController;
     private PIDController rudderController;
-    private GPSProviderInterface gpsProvider;
+    private GPSProviderInterface gps;
     private ExecutorService executor;
 
     private PilotMessageFactory messageFactory;
-
-    private double[] gpsCoordinates;
-
     private RouteInterface currentRoute;
 
     /**
@@ -33,17 +30,17 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
      * @param helm               Helm to send messages to
      * @param throttleController PID controller for the throttle
      * @param rudderController   PID controller for the rudder
-     * @param gpsProvider        GPS provider for the pilot
+     * @param gps                GPS provider for the pilot
      */
     public SimplePilot(String clientID, MessengerServerInterface server, HelmInterface helm,
                        PIDController throttleController, PIDController rudderController,
-                       GPSProviderInterface gpsProvider) {
+                       GPSProviderInterface gps) {
         this.clientID = clientID;
         this.server = server;
         this.helm = helm;
         this.throttleController = throttleController;
         this.rudderController = rudderController;
-        this.gpsProvider = gpsProvider;
+        this.gps = gps;
 
         this.executor = Executors.newFixedThreadPool(1);
 
@@ -57,8 +54,8 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     }
 
     public SimplePilot(MessengerServerInterface server, HelmInterface helm, PIDController throttleController,
-                       PIDController rudderController, GPSProviderInterface gpsProvider) {
-        this(DEFAULT_CLIENT_ID, server, helm, throttleController, rudderController, gpsProvider);
+                       PIDController rudderController, GPSProviderInterface gps) {
+        this(DEFAULT_CLIENT_ID, server, helm, throttleController, rudderController, gps);
     }
 
     public void setUpControllers() {
@@ -94,13 +91,6 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     }
 
     /**
-     * Updates the stored GPS coordinates
-     */
-    public void updateGPS() {
-
-    }
-
-    /**
      * Calculates the cross-track distance using the current route segment
      *
      * @return The XTD in nmi
@@ -108,7 +98,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
 
     public double calculateCrossTrackDistance() {
         return PilotUtil.calculateCrossTrackDistance(currentRoute.getPreviousWaypoint().getCoordinates(),
-                currentRoute.getNextWaypoint().getCoordinates(), gpsCoordinates);
+                currentRoute.getNextWaypoint().getCoordinates(), gps.getCoordinates());
     }
 
     /**
@@ -136,7 +126,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     }
 
     public double[] getGPSCoordinates() {
-        return this.gpsCoordinates;
+        return gps.getCoordinates();
     }
 
     private class PilotMessageFactory {
@@ -156,6 +146,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
          * @param throttleSetpoint the new throttle setpoint to use
          * @param rudderSetpoint   the new rudder setpoint to use
          * @return a message representing the new helm instructions
+         * @throws {@link MessageTypeException}
          */
         public HelmMessage createMessage(double throttleSetpoint, double rudderSetpoint) throws MessageTypeException {
             return new HelmMessage(originID, destinationID, System.currentTimeMillis(),

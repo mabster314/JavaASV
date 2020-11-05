@@ -18,7 +18,6 @@
 
 package org.haland.javaasv;
 
-import org.haland.javaasv.pilot.GPSHat;
 import org.haland.javaasv.pilot.GPSHatParser;
 
 /**

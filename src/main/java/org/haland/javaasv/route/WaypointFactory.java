@@ -22,7 +22,7 @@ public class WaypointFactory {
     public WaypointInterface createWaypoint(double latitude, double longitude, double tolerance) {
         return new WaypointInterface() {
             @Override
-            public double getLattitude() {
+            public double getLatitude() {
                 return latitude;
             }
 

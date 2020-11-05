@@ -115,9 +115,7 @@ public class PilotUtil {
      * @return the cross-track distance in nmi
      */
     public static double calculateCrossTrackDistance(double[] prevWaypoint, double[] nextWaypoint, double[] position) {
-        return asin(sin(calculateAngularDistance(nextWaypoint, prevWaypoint)) * sin(
-                calculateInitialBearingRadians(prevWaypoint, position) - calculateInitialBearingRadians(prevWaypoint,
-                        nextWaypoint))) * EARTH_RADIUS_NMI;
+        return calculateCrossTrackDistance(prevWaypoint, nextWaypoint, position, EARTH_RADIUS_NMI);
     }
 
     /**
@@ -131,9 +129,10 @@ public class PilotUtil {
      */
     public static double calculateCrossTrackDistance(double[] prevWaypoint, double[] nextWaypoint, double[] position,
                                                      double earthRadius) {
-        return asin(sin(calculateAngularDistance(nextWaypoint, prevWaypoint)) * sin(
-                calculateInitialBearingRadians(prevWaypoint, position) - calculateInitialBearingRadians(prevWaypoint,
-                        nextWaypoint))) * earthRadius;
+        double dist_13 = calculateAngularDistance(prevWaypoint, position);
+        double bear_13 = calculateInitialBearingRadians(prevWaypoint, position);
+        double bear_12 = calculateInitialBearingRadians(prevWaypoint, nextWaypoint);
+        return asin(sin(dist_13) * sin(bear_13 - bear_12)) * earthRadius;
     }
 
     /**

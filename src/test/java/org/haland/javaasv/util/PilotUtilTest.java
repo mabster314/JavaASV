@@ -10,7 +10,7 @@ class PilotUtilTest {
     private static final double[] CURRENT_LOCATION = {34.5, -116.5};
     private static final double EXPECTED_DISTANCE = 2145.340;
     private static final double EXPECTED_INITIAL_BEARING = 65.8975;
-    private static final double EXPECTED_CROSS_TRACK_ERROR = 7.456;
+    private static final double EXPECTED_CROSS_TRACK_ERROR = 7.448;
     private static final double TOLERANCE = 0.001;
 
     @Test

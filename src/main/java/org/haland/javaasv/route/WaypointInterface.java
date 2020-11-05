@@ -1,7 +1,7 @@
 package org.haland.javaasv.route;
 
 public interface WaypointInterface {
-    double getLattitude();
+    double getLatitude();
 
     double getLongitude();
 

@@ -121,7 +121,7 @@ application {
 
 jar {
     manifest {
-        attributes (
+        attributes(
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
                 'Main-Class': 'org.haland.javaasv.ASV'
         )
