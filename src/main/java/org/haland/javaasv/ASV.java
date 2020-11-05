@@ -71,12 +71,13 @@ public class ASV {
         pilot.setCurrentRoute(route);
     }
 
-    private void start() {
+    private void start() throws InterruptedException {
         server.startServer(SERVER_PERIOD);
+        gps.startGPS();
         pilot.startPilot(PILOT_PERIOD);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ASV asv = new ASV();
         asv.start();
     }
