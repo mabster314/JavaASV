@@ -1,5 +1,6 @@
 package org.haland.javaasv.helm;
 
+import org.haland.javaasv.config.AllConfig;
 import org.haland.javaasv.util.SerialArduino;
 import org.haland.javaasv.util.SerialDeviceInterface;
 import org.tinylog.Logger;
@@ -36,6 +37,10 @@ public class HelmArduino implements SerialDeviceInterface<String> {
      */
     public HelmArduino(String port) {
         this(new SerialArduino(port));
+    }
+
+    public HelmArduino(AllConfig config) {
+        this(new SerialArduino(config.getSerialConfig().getArduinoPort()));
     }
 
     /**

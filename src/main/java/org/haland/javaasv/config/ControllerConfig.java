@@ -18,17 +18,18 @@
 
 package org.haland.javaasv.config;
 
+import org.haland.javaasv.config.unit.HitzConfigUnit;
+import org.haland.javaasv.config.unit.PIDConfigUnit;
+
 import java.util.Properties;
 
-public class ControllerConfig extends BaseConfig{
+public class ControllerConfig extends BaseConfig {
     private static final String PROPERTY_FILE_NAME = "controllers.properties";
 
     private double throttleValue;
 
-    private double rudderKp;
-    private double rudderKi;
-    private double rudderKd;
-    private double rudderPeriod;
+    private PIDConfigUnit rudderPIDConfig;
+    private HitzConfigUnit rudderHitzConfig;
 
     @Override
     protected String getPropertyFileName() {
@@ -38,30 +39,15 @@ public class ControllerConfig extends BaseConfig{
     @Override
     protected void configure(Properties properties) {
         throttleValue = getDoublePropertyValue("controllers.throttle.value", properties);
-
-        rudderKp = getDoublePropertyValue("controllers.rudder.kp", properties);
-        rudderKi = getDoublePropertyValue("controllers.rudder.ki", properties);
-        rudderKd = getDoublePropertyValue("controllers.rudder.kd", properties);
-        rudderPeriod = getDoublePropertyValue("controllers.rudder.period", properties);
+        rudderPIDConfig = new PIDConfigUnit("rudder");
+        rudderHitzConfig = new HitzConfigUnit("rudder");
     }
 
     public double getThrottleValue() {
         return throttleValue;
     }
 
-    public double getRudderKp() {
-        return rudderKp;
-    }
-
-    public double getRudderKi() {
-        return rudderKi;
-    }
-
-    public double getRudderKd() {
-        return rudderKd;
-    }
-
-    public double getRudderPeriod() {
-        return rudderPeriod;
+    public PIDConfigUnit getRudderPIDConfig() {
+        return rudderPIDConfig;
     }
 }

@@ -18,11 +18,17 @@
 
 package org.haland.javaasv.controller;
 
+import org.haland.javaasv.config.AllConfig;
+
 public class TrivialController implements Controller{
     private double output;
 
     public TrivialController(double output) {
         this.output = output;
+    }
+
+    public TrivialController(AllConfig config) {
+        this.output = config.getControllerConfig().getThrottleValue();
     }
 
     @Override

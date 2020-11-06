@@ -18,6 +18,7 @@
 
 package org.haland.javaasv.controller;
 
+import org.haland.javaasv.config.unit.PIDConfigUnit;
 import org.haland.javaasv.util.MathUtil;
 
 /**
@@ -79,6 +80,10 @@ public class PIDController implements Controller {
         this.integralCoefficient = integralCoefficient;
         this.derivativeCoefficient = derivativeCoefficient;
         this.period = period;
+    }
+
+    public PIDController(PIDConfigUnit config) {
+        this(config.getKp(), config.getKi(), config.getKd(), config.getPeriod());
     }
 
     /**

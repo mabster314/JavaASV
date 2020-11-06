@@ -74,15 +74,13 @@ public class ASV {
         Logger.info("Starting ASV configuration");
         this.server = MessengerServer.getInstance();
 
-        this.helmArduino = new HelmArduino(config.getSerialConfig().getArduinoPort());
+        this.helmArduino = new HelmArduino(config);
         this.helm = new ArduinoHelm(server, helmArduino, HELM_ID);
 
-        this.gps = new GPSHatParser(config.getSerialConfig().getGpsPort());
+        this.gps = new GPSHatParser(config);
 
-        this.throttleController = new TrivialController(config.getControllerConfig().getThrottleValue());
-        this.rudderController = new PIDController(config.getControllerConfig().getRudderKp(),
-                config.getControllerConfig().getRudderKi(), config.getControllerConfig().getRudderKd(),
-                config.getControllerConfig().getRudderPeriod());
+        this.throttleController = new TrivialController(config);
+        this.rudderController = new PIDController(config.getControllerConfig().getRudderPIDConfig());
 
         this.pilot = new SimplePilot(PILOT_ID, server, helm, throttleController, rudderController, gps);
         pilot.setCurrentRoute(route);

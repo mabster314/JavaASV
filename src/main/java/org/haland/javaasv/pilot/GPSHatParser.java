@@ -26,6 +26,7 @@ import net.sf.marineapi.nmea.sentence.Sentence;
 import net.sf.marineapi.nmea.util.DataStatus;
 import net.sf.marineapi.nmea.util.Position;
 import net.sf.marineapi.nmea.util.Time;
+import org.haland.javaasv.config.AllConfig;
 import org.tinylog.Logger;
 
 /**
@@ -52,6 +53,10 @@ public class GPSHatParser implements GPSProviderInterface {
 
     public GPSHatParser(String portName) {
         this(new GPSHat(portName));
+    }
+
+    public GPSHatParser(AllConfig config) {
+        this(new GPSHat(config.getSerialConfig().getGpsPort()));
     }
 
     public GPSHatParser() {
