@@ -47,7 +47,7 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
         this.rudderController = rudderController;
         this.gps = gps;
 
-        this.executor = Executors.newScheduledThreadPool(1);
+        this.executor = Executors.newScheduledThreadPool(10);
 
         messageFactory = new PilotMessageFactory(clientID, helm.getClientID());
 

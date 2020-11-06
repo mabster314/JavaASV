@@ -64,7 +64,7 @@ public class MessengerServer implements MessengerServerInterface {
     public static MessengerServer getInstance() {
         // Make a new one if we don't have one
         if (messengerServerInstance == null)
-            messengerServerInstance = new MessengerServer(Executors.newScheduledThreadPool(1));
+            messengerServerInstance = new MessengerServer(Executors.newScheduledThreadPool(10));
 
         // Give the instance
         return messengerServerInstance;
