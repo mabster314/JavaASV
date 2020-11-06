@@ -25,6 +25,8 @@ import org.haland.javaasv.message.MessengerServer;
 import org.haland.javaasv.pilot.GPSHatParser;
 import org.haland.javaasv.pilot.SimplePilot;
 import org.haland.javaasv.route.RouteInterface;
+import org.haland.javaasv.route.Waypoint;
+import org.haland.javaasv.route.WaypointInterface;
 import org.haland.javaasv.util.PIDController;
 import org.haland.javaasv.util.TrivialController;
 import org.tinylog.Logger;
@@ -51,7 +53,22 @@ public class ASV {
 
     private GPSHatParser gps;
 
-    private RouteInterface route;
+    private RouteInterface route = new RouteInterface() {
+        @Override
+        public WaypointInterface getPreviousWaypoint() {
+            return new Waypoint(44.9187, -92.8435, 0.0001, WaypointInterface.WaypointBehavior.NEXT_WAYPOINT);
+        }
+
+        @Override
+        public WaypointInterface getNextWaypoint() {
+            return new Waypoint(44.9187, -92.8439, 0.0001, WaypointInterface.WaypointBehavior.NEXT_WAYPOINT);
+        }
+
+        @Override
+        public boolean isComplete() {
+            return false;
+        }
+    };
 
     private ASV() {
         Logger.info("Starting ASV configuration");
