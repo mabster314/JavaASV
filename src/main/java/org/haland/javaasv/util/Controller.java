@@ -20,4 +20,5 @@ package org.haland.javaasv.util;
 
 public interface Controller {
     double calculateNextOutput(double processVariable);
+    void start();
 }

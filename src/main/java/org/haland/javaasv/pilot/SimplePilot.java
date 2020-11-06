@@ -67,7 +67,9 @@ public class SimplePilot implements MessengerClientInterface {
         this(DEFAULT_CLIENT_ID, server, helm, throttleController, rudderController, gps);
     }
 
-    public void setUpControllers() {
+    public void startControllers() {
+        throttleController.start();
+        rudderController.start();
     }
 
     public void startPilot(long period) {
@@ -78,8 +80,9 @@ public class SimplePilot implements MessengerClientInterface {
                     && worker.isRunning()) {
                 throw new IllegalStateException("Pilot worker is already running");
             }
-            worker = new PilotWorker(period);
+            worker = new PilotWorker(this, period);
             thread = new Thread(worker);
+            startControllers();
             thread.start();
         } else {
             Logger.warn("GPS not ready, delaying start by 5s");
@@ -117,7 +120,7 @@ public class SimplePilot implements MessengerClientInterface {
 
     public double calculateCrossTrackDistance() {
         return PilotUtil.calculateCrossTrackDistance(currentRoute.getPreviousWaypoint().getCoordinates(),
-                currentRoute.getNextWaypoint().getCoordinates(), gps.getCoordinates());
+                currentRoute.getNextWaypoint().getCoordinates(), gps.getCoordinates(), PilotUtil.EARTH_RADIUS_M);
     }
 
     /**
@@ -179,9 +182,11 @@ public class SimplePilot implements MessengerClientInterface {
     private class PilotWorker implements Runnable {
         private volatile boolean isRunning = true;
 
+        private final SimplePilot pilot;
         private final long period;
 
-        private PilotWorker(long period) {
+        private PilotWorker(SimplePilot pilot, long period) {
+            this.pilot = pilot;
             this.period = period;
         }
 

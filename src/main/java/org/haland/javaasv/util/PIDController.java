@@ -32,6 +32,8 @@ public class PIDController implements Controller {
     private double derivativeCoefficient;
     private double period;
 
+    private long lastUpdate;
+
     // default minimum and maximum integral
     private double minimumIntegral = -1.0;
     private double maximumIntegral = 1.0;
@@ -86,6 +88,11 @@ public class PIDController implements Controller {
         return Math.abs(positionError) < positionTolerance && Math.abs(velocityError) < velocityTolerance;
     }
 
+    @Override
+    public void start() {
+        lastUpdate = System.currentTimeMillis();
+    }
+
     /**
      * Calculates the next output for the control variable. This must be called at the period of the controller
      *
@@ -98,13 +105,14 @@ public class PIDController implements Controller {
 
         positionError = setpoint - processVariable;
 
-        velocityError = (positionError - previousError) / period;
+        velocityError = (positionError - previousError) / lastUpdate;
 
         if (integralCoefficient != 0) {
-            totalError = MathUtil.clamp(totalError + positionError * period, minimumIntegral / integralCoefficient,
+            totalError = MathUtil.clamp(totalError + positionError * lastUpdate, minimumIntegral / integralCoefficient,
                     maximumIntegral / integralCoefficient);
         }
 
+        lastUpdate = System.currentTimeMillis();
         return proportionalityCoefficient * positionError + integralCoefficient * totalError + derivativeCoefficient * velocityError;
     }
 

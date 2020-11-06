@@ -26,6 +26,9 @@ public class TrivialController implements Controller{
     }
 
     @Override
+    public void start() { }
+
+    @Override
     public double calculateNextOutput(double processVariable) {
         return output;
     }
