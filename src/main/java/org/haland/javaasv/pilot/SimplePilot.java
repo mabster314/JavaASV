@@ -8,7 +8,6 @@ import org.haland.javaasv.util.PIDController;
 import org.haland.javaasv.util.PilotUtil;
 import org.tinylog.Logger;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -86,8 +85,14 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     }
     
     public void startPilot(long period) {
-        Logger.info("Starting SimplePilot");
-        executor.scheduleAtFixedRate(this, 0, period, TimeUnit.MILLISECONDS);
+        Logger.info("Attempting to start SimplePilot");
+        if (gps.getFixStatus()) {
+            Logger.info("GPS ready, Starting SimplePilot");
+            executor.scheduleAtFixedRate(this, 0, period, TimeUnit.MILLISECONDS);
+        } else {
+            Logger.warn("GPS not ready, delaying start by 5s");
+            executor.schedule(new PilotStarter(period), 10, TimeUnit.SECONDS);
+        }
     }
 
     public void stopPilot() {
@@ -166,6 +171,22 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
         public HelmMessage createMessage(double throttleSetpoint, double rudderSetpoint) throws MessageTypeException {
             return new HelmMessage(originID, destinationID, System.currentTimeMillis(),
                     MessageInterface.MessagePriority.NORMAL, throttleSetpoint, rudderSetpoint);
+        }
+    }
+
+    /**
+     * Runnable to start pilot
+     */
+    private class PilotStarter implements Runnable {
+        long period;
+
+        private PilotStarter(long period) {
+            this.period = period;
+        }
+
+        @Override
+        public void run() {
+            startPilot(period);
         }
     }
 }
