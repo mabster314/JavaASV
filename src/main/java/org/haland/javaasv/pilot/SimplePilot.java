@@ -192,22 +192,26 @@ public class SimplePilot implements MessengerClientInterface {
         public void run() {
             Logger.info("Starting pilot worker");
             while (isRunning) {
-                // Calculate the XTD
-                double xtd = calculateCrossTrackDistance();
+                try {
+                    // Calculate the XTD
+                    double xtd = calculateCrossTrackDistance();
 
-                // Now dispatch the new helm instructions
-                MessageInterface message = null;
-                try {
-                    message = messageFactory.createMessage(throttleController.calculateNextOutput(xtd),
-                            rudderController.calculateNextOutput(xtd));
-                } catch (MessageTypeException e) {
-                    e.printStackTrace();
-                }
-                server.dispatch(message);
-                try {
-                    sleep(period);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    // Now dispatch the new helm instructions
+                    MessageInterface message = null;
+                    try {
+                        message = messageFactory.createMessage(throttleController.calculateNextOutput(xtd),
+                                rudderController.calculateNextOutput(xtd));
+                    } catch (MessageTypeException e) {
+                        e.printStackTrace();
+                    }
+                    server.dispatch(message);
+                    try {
+                        sleep(period);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } catch (Exception e) {
+                    Logger.error(e);
                 }
             }
         }
