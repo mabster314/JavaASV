@@ -100,11 +100,12 @@ class SimplePilotTest extends TestBase {
         setupPilot();
 
         // should dispatch return message
-        testPilot.run();
+        testPilot.startPilot(10);
 
         // Make sure server receives message
         ArgumentCaptor<HelmMessage> captor = ArgumentCaptor.forClass(HelmMessage.class);
         verify(mockServer).dispatch(captor.capture());
+        testPilot.stopPilot();
     }
 
     protected class MockRoute implements RouteInterface {

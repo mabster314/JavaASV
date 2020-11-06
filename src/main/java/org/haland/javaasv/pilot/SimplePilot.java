@@ -12,8 +12,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class SimplePilot implements MessengerClientInterface, Runnable {
+import static java.lang.Thread.sleep;
+
+public class SimplePilot implements MessengerClientInterface {
     private static final String DEFAULT_CLIENT_ID = "simplePilot";
+
+    // Thread to run on
+    private Thread thread;
+
+    // Thread worker
+    private PilotWorker worker;
 
     private final String clientID;
     private final MessengerServerInterface server;
@@ -21,7 +29,6 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     private Controller throttleController;
     private Controller rudderController;
     private GPSProviderInterface gps;
-    private ScheduledExecutorService executor;
 
     private PilotMessageFactory messageFactory;
     private RouteInterface currentRoute;
@@ -46,8 +53,6 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
         this.rudderController = rudderController;
         this.gps = gps;
 
-        this.executor = Executors.newScheduledThreadPool(10);
-
         messageFactory = new PilotMessageFactory(clientID, helm.getClientID());
 
         try {
@@ -65,39 +70,33 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     public void setUpControllers() {
     }
 
-    /**
-     * Dispatches a message to the helm with the new throttle and rudder setpoints
-     */
-    @Override
-    public void run() {
-        // Calculate the XTD
-        double xtd = calculateCrossTrackDistance();
-
-        // Now dispatch the new helm instructions
-        MessageInterface message = null;
-        try {
-            message = messageFactory.createMessage(throttleController.calculateNextOutput(xtd),
-                    rudderController.calculateNextOutput(xtd));
-        } catch (MessageTypeException e) {
-            e.printStackTrace();
-        }
-        server.dispatch(message);
-    }
-    
     public void startPilot(long period) {
-        Logger.info("Attempting to start SimplePilot");
         if (gps.getFixStatus()) {
             Logger.info("GPS ready, Starting SimplePilot");
-            executor.scheduleAtFixedRate(this, 0, period, TimeUnit.MILLISECONDS);
+
+            if (thread != null && thread.isAlive() && worker != null
+                    && worker.isRunning()) {
+                throw new IllegalStateException("Pilot worker is already running");
+            }
+            worker = new PilotWorker(period);
+            thread = new Thread(worker);
+            thread.start();
         } else {
             Logger.warn("GPS not ready, delaying start by 5s");
-            executor.schedule(new PilotStarter(period), 10, TimeUnit.SECONDS);
+            try {
+                sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            startPilot(period);
         }
     }
 
     public void stopPilot() {
         Logger.info("Stopping SimplePilot");
-        executor.shutdown();
+        if (worker != null) {
+            worker.stop();
+        }
     }
 
     /**
@@ -175,18 +174,51 @@ public class SimplePilot implements MessengerClientInterface, Runnable {
     }
 
     /**
-     * Runnable to start pilot
+     * Runnable for pilot class
      */
-    private class PilotStarter implements Runnable {
-        long period;
+    private class PilotWorker implements Runnable {
+        private volatile boolean isRunning = true;
 
-        private PilotStarter(long period) {
+        private final long period;
+
+        private PilotWorker(long period) {
             this.period = period;
         }
 
+        /**
+         * Dispatches a message to the helm with the new throttle and rudder setpoints
+         */
         @Override
         public void run() {
-            startPilot(period);
+            Logger.info("Starting pilot worker");
+            while (isRunning) {
+                // Calculate the XTD
+                double xtd = calculateCrossTrackDistance();
+
+                // Now dispatch the new helm instructions
+                MessageInterface message = null;
+                try {
+                    message = messageFactory.createMessage(throttleController.calculateNextOutput(xtd),
+                            rudderController.calculateNextOutput(xtd));
+                } catch (MessageTypeException e) {
+                    e.printStackTrace();
+                }
+                server.dispatch(message);
+                try {
+                    sleep(period);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public boolean isRunning() {
+            return isRunning;
+        }
+
+        public void stop() {
+            Logger.info("Stopping SimplePilot");
+            isRunning = false;
         }
     }
 }
