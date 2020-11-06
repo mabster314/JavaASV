@@ -125,10 +125,9 @@ public class GPSHatParser implements GPSProviderInterface {
         @Override
         public void sentenceRead(SentenceEvent event) {
             Sentence s = event.getSentence();
-            System.out.println(s);
 
             if ("RMC".equals(s.getSentenceId())) {
-                Logger.trace("Reading RMC sentence");
+                Logger.trace("Received sentence" + s);
                 RMCSentence rmc = (RMCSentence) s;
                 setPosition(rmc.getPosition());
                 setStatus(rmc.getStatus());
