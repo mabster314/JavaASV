@@ -9,7 +9,9 @@ import org.haland.javaasv.message.MessengerServerInterface;
 import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.route.WaypointFactory;
 import org.haland.javaasv.route.WaypointInterface;
+import org.haland.javaasv.util.Controller;
 import org.haland.javaasv.util.PIDController;
+import org.haland.javaasv.util.TrivialController;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +35,7 @@ class SimplePilotTest extends TestBase {
     private SimplePilot testPilot;
 
     @Spy
-    private PIDController mockPIDController = new PIDController(0, 0, 0);
+    private Controller controller = new TrivialController(0);
     @Spy
     private MessengerServerInterface mockServer;
     @Mock
@@ -44,13 +46,6 @@ class SimplePilotTest extends TestBase {
     void setupPilot() {
         // Mock helm should give a client ID
         when(mockHelm.getClientID()).thenReturn(HELM_ID);
-        // Mock PID controller returns same value
-        when(mockPIDController.calculateNextOutput(anyDouble())).thenAnswer(new Answer<Double>() {
-            @Override
-            public Double answer(InvocationOnMock invocation) throws Throwable {
-                return (Double) invocation.getArguments()[0];
-            }
-        });
 
         mockGPSProvider = new GPSProviderInterface() {
             @Override
@@ -85,7 +80,7 @@ class SimplePilotTest extends TestBase {
         };
 
         testPilot =
-                new SimplePilot(PILOT_ID, mockServer, mockHelm, mockPIDController, mockPIDController, mockGPSProvider);
+                new SimplePilot(PILOT_ID, mockServer, mockHelm, controller, controller, mockGPSProvider);
         testPilot.setCurrentRoute(mockRoute);
     }
 
