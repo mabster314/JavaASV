@@ -105,15 +105,16 @@ public class PIDController implements Controller {
 
         positionError = setpoint - processVariable;
 
-        velocityError = (positionError - previousError) / lastUpdate;
+        velocityError = (positionError - previousError) / (System.currentTimeMillis() - lastUpdate);
 
         if (integralCoefficient != 0) {
-            totalError = MathUtil.clamp(totalError + positionError * lastUpdate, minimumIntegral / integralCoefficient,
-                    maximumIntegral / integralCoefficient);
+            totalError = MathUtil.clamp(totalError + positionError * (System.currentTimeMillis() - lastUpdate),
+                    minimumIntegral / integralCoefficient, maximumIntegral / integralCoefficient);
         }
 
         lastUpdate = System.currentTimeMillis();
-        return proportionalityCoefficient * positionError + integralCoefficient * totalError + derivativeCoefficient * velocityError;
+        return proportionalityCoefficient * positionError + integralCoefficient * totalError
+                + derivativeCoefficient * velocityError;
     }
 
     public void setPID(double proportionalityCoefficient, double integralCoefficient, double derivativeCoefficient) {
