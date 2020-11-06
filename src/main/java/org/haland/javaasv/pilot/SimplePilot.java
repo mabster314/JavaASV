@@ -3,14 +3,10 @@ package org.haland.javaasv.pilot;
 import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.*;
 import org.haland.javaasv.route.RouteInterface;
-import org.haland.javaasv.util.Controller;
-import org.haland.javaasv.util.PIDController;
+import org.haland.javaasv.controller.Controller;
+import org.haland.javaasv.controller.PIDController;
 import org.haland.javaasv.util.PilotUtil;
 import org.tinylog.Logger;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static java.lang.Thread.sleep;
 

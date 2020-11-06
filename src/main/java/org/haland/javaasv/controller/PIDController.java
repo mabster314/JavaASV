@@ -16,7 +16,9 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv.util;
+package org.haland.javaasv.controller;
+
+import org.haland.javaasv.util.MathUtil;
 
 /**
  * Implements a basic PID controller.

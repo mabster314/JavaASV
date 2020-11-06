@@ -9,18 +9,15 @@ import org.haland.javaasv.message.MessengerServerInterface;
 import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.route.WaypointFactory;
 import org.haland.javaasv.route.WaypointInterface;
-import org.haland.javaasv.util.Controller;
-import org.haland.javaasv.util.PIDController;
-import org.haland.javaasv.util.TrivialController;
+import org.haland.javaasv.controller.Controller;
+import org.haland.javaasv.controller.TrivialController;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import static org.mockito.Mockito.*;
 

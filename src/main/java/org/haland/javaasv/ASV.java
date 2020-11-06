@@ -27,8 +27,8 @@ import org.haland.javaasv.pilot.SimplePilot;
 import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.route.Waypoint;
 import org.haland.javaasv.route.WaypointInterface;
-import org.haland.javaasv.util.PIDController;
-import org.haland.javaasv.util.TrivialController;
+import org.haland.javaasv.controller.PIDController;
+import org.haland.javaasv.controller.TrivialController;
 import org.tinylog.Logger;
 
 /**

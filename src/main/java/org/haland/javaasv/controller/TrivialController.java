@@ -16,9 +16,20 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv.util;
+package org.haland.javaasv.controller;
 
-public interface Controller {
-    double calculateNextOutput(double processVariable);
-    void start();
+public class TrivialController implements Controller{
+    private double output;
+
+    public TrivialController(double output) {
+        this.output = output;
+    }
+
+    @Override
+    public void start() { }
+
+    @Override
+    public double calculateNextOutput(double processVariable) {
+        return output;
+    }
 }
