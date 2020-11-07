@@ -1,6 +1,7 @@
 package org.haland.javaasv.config.unit;
 
 import org.haland.javaasv.config.BaseConfig;
+import org.haland.javaasv.config.PropertiesLoader;
 
 import java.util.Properties;
 
@@ -17,12 +18,9 @@ public class PIDConfigUnit extends BaseConfig {
 
     private final String name;
 
-    public PIDConfigUnit(String name) {
-        this(name, true);
-    }
-
-    private PIDConfigUnit(String name, boolean foo) {
+    public PIDConfigUnit(String name, Properties properties) {
         this.name = name;
+        configure(properties);
     }
 
     /**

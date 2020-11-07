@@ -39,8 +39,8 @@ public class ControllerConfig extends BaseConfig {
     @Override
     protected void configure(Properties properties) {
         throttleValue = getDoublePropertyValue("controllers.throttle.value", properties);
-        rudderPIDConfig = new PIDConfigUnit("rudder");
-        rudderHitzConfig = new HitzConfigUnit("rudder");
+        rudderPIDConfig = new PIDConfigUnit("rudder", properties);
+        rudderHitzConfig = new HitzConfigUnit("rudder", properties);
     }
 
     public double getThrottleValue() {

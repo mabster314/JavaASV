@@ -1,7 +1,9 @@
 package org.haland.javaasv.config.unit;
 
 import org.haland.javaasv.config.BaseConfig;
+import org.haland.javaasv.config.PropertiesLoader;
 
+import java.util.PrimitiveIterator;
 import java.util.Properties;
 
 public class HitzConfigUnit extends BaseConfig {
@@ -13,12 +15,9 @@ public class HitzConfigUnit extends BaseConfig {
 
     private final String name;
 
-    public HitzConfigUnit(String name) {
-        this(name, true);
-    }
-
-    private HitzConfigUnit(String name, boolean foo) {
+    public HitzConfigUnit(String name, Properties properties) {
         this.name = name;
+        configure(properties);
     }
 
     /**
