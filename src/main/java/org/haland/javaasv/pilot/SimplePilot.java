@@ -218,7 +218,7 @@ public class SimplePilot implements MessengerClientInterface {
                             break;
                     }
 
-                    Logger.trace("Rudder PID out: " + rudderOut);
+                    Logger.trace("Xtd:" + xtd + "Rudder PID out: " + rudderOut);
 
                     // Now dispatch the new helm instructions
                     MessageInterface message = null;
