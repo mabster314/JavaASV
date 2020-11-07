@@ -53,7 +53,7 @@ public class HitzController implements Controller {
             headingError = processVariables[1];
             throttle = processVariables[2];
         } else {
-            throw new IllegalArgumentException("Hitz controller requires two parameters");
+            throw new IllegalArgumentException("Hitz controller requires three parameters");
         }
 
         previousError = positionError;

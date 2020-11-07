@@ -205,21 +205,23 @@ public class SimplePilot implements MessengerClientInterface {
                     double xtd = calculateCrossTrackDistance(EarthRadius.METERS);
                     double headingError = calculateHeadingError();
 
-                    double out = 0;
+                    double throttleOut = throttleController.calculateNextOutput();
+
+                    double rudderOut = 0;
                     ControllerType type = rudderController.getType();
                     switch (type) {
                         case HITZ:
-                            out = rudderController.calculateNextOutput(xtd, headingError);
+                            rudderOut = rudderController.calculateNextOutput(xtd, headingError, throttleOut);
                             break;
                         case PID:
-                            out = rudderController.calculateNextOutput(xtd);
+                            rudderOut = rudderController.calculateNextOutput(xtd);
                             break;
                     }
 
                     // Now dispatch the new helm instructions
                     MessageInterface message = null;
                     try {
-                        message = messageFactory.createMessage(throttleController.calculateNextOutput(), out / 100);
+                        message = messageFactory.createMessage(throttleController.calculateNextOutput(), rudderOut / 100);
                     } catch (MessageTypeException e) {
                         e.printStackTrace();
                     }
