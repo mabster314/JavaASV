@@ -104,8 +104,9 @@ public class ArduinoHelm implements HelmInterface {
     public void dispatch(MessageInterface message) {
         if (message.getType() == getClientType()) {
             try {
-                helmArduino.sendSerialData(
-                        message.getMessageContents().getHelmMessage().getBytes(StandardCharsets.US_ASCII));
+                String data = message.getMessageContents().getHelmMessage();
+                Logger.trace("Helm command sent: " + data);
+                helmArduino.sendSerialData(data.getBytes(StandardCharsets.US_ASCII));
             } catch (MessageTypeException e) {
                 e.printStackTrace();
             }
