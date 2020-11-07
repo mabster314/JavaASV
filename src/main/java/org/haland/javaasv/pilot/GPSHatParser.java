@@ -37,10 +37,10 @@ public class GPSHatParser implements GPSProviderInterface {
     private SentenceReader reader;
 
 
-    private Position position;
-    private DataStatus status;
-    private Time updateTime;
-    private double heading;
+    private volatile Position position;
+    private volatile DataStatus status;
+    private volatile Time updateTime;
+    private volatile double heading;
 
     public GPSHatParser(GPSHat gpsHat) {
         Logger.info("Attempting to start GPSHatParser");
@@ -128,7 +128,7 @@ public class GPSHatParser implements GPSProviderInterface {
         }
 
         @Override
-        public void sentenceRead(SentenceEvent event) {
+        public synchronized void sentenceRead(SentenceEvent event) {
             Sentence s = event.getSentence();
 
             if ("RMC".equals(s.getSentenceId())) {
