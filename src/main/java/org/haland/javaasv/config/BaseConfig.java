@@ -88,6 +88,23 @@ public abstract class BaseConfig {
         return returnValues;
     }
 
+    protected double[] getDoubleArrayPropertyValue(String propertyName,
+                                             Properties props) {
+
+        final String propertyValue =
+                getStringPropertyValue(propertyName, props);
+        String rawValues = propertyValue.replace("[", "");
+        rawValues = rawValues.replace("]", "");
+        final String[] splitValues = rawValues.split(",");
+
+        double[] returnValues = new double[splitValues.length];
+        for (int i = 0; i < splitValues.length; i++) {
+            returnValues[i] = Double.parseDouble(splitValues[i].trim());
+        }
+
+        return returnValues;
+    }
+
     protected double getDoublePropertyValue(String propertyName,
                                             Properties props) {
         final String propertyValue =
@@ -99,6 +116,12 @@ public abstract class BaseConfig {
         final String propertyValue =
                 getStringPropertyValue(propertyName, props);
         return Integer.parseInt(propertyValue);
+    }
+
+    protected long getLongPropertyValue(String propertyName, Properties props) {
+        final String propertyValue =
+                getStringPropertyValue(propertyName, props);
+        return Long.parseLong(propertyValue);
     }
 
     protected boolean getBooleanPropertyValue(String propertyName,

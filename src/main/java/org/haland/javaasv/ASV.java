@@ -25,8 +25,7 @@ import org.haland.javaasv.message.MessengerServer;
 import org.haland.javaasv.pilot.GPSHatParser;
 import org.haland.javaasv.pilot.SimplePilot;
 import org.haland.javaasv.route.RouteInterface;
-import org.haland.javaasv.route.Waypoint;
-import org.haland.javaasv.route.WaypointInterface;
+import org.haland.javaasv.route.RouteParser;
 import org.haland.javaasv.controller.PIDController;
 import org.haland.javaasv.controller.TrivialController;
 import org.tinylog.Logger;
@@ -38,7 +37,7 @@ public class ASV {
     private final AllConfig config = new AllConfig();
 
     private MessengerServer server;
-    private static final long SERVER_PERIOD = 10;
+    private long serverPeriod;
 
     private ArduinoHelm helm;
     private HelmArduino helmArduino;
@@ -46,32 +45,21 @@ public class ASV {
 
     private SimplePilot pilot;
     private static final String PILOT_ID = "pilot";
-    private static final long PILOT_PERIOD = 1000; //TODO propertize this
+    private long pilotPeriod;
 
     private TrivialController throttleController;
     private PIDController rudderController;
 
     private GPSHatParser gps;
 
-    private RouteInterface route = new RouteInterface() {
-        @Override
-        public WaypointInterface getPreviousWaypoint() {
-            return new Waypoint(44.9187, -92.8435, 0.0001, WaypointInterface.WaypointBehavior.NEXT_WAYPOINT);
-        }
-
-        @Override
-        public WaypointInterface getNextWaypoint() {
-            return new Waypoint(44.9187, -92.8439, 0.0001, WaypointInterface.WaypointBehavior.NEXT_WAYPOINT);
-        }
-
-        @Override
-        public boolean isComplete() {
-            return false;
-        }
-    };
+    private RouteInterface route;
 
     private ASV() {
         Logger.info("Starting ASV configuration");
+
+        this.serverPeriod = config.getAsvConfig().getServerPeriod();
+        this.pilotPeriod = config.getAsvConfig().getPilotPeriod();
+
         this.server = MessengerServer.getInstance();
 
         this.helmArduino = new HelmArduino(config);
@@ -82,14 +70,16 @@ public class ASV {
         this.throttleController = new TrivialController(config);
         this.rudderController = new PIDController(config.getControllerConfig().getRudderPIDConfig());
 
+        this.route = new RouteParser(config).getRoute();
+
         this.pilot = new SimplePilot(PILOT_ID, server, helm, throttleController, rudderController, gps);
         pilot.setCurrentRoute(route);
     }
 
     private void start() throws InterruptedException {
-        server.startServer(SERVER_PERIOD);
+        server.startServer(serverPeriod);
         gps.startGPS();
-        pilot.startPilot(PILOT_PERIOD);
+        pilot.startPilot(pilotPeriod);
     }
 
     public static void main(String[] args) throws InterruptedException {

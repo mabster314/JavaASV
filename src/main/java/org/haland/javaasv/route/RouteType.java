@@ -16,28 +16,9 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv.config;
+package org.haland.javaasv.route;
 
-public class AllConfig {
-    private final ASVConfig asvConfig = new ASVConfig();
-    private final ControllerConfig controllerConfig = new ControllerConfig();
-    private final SerialConfig serialConfig = new SerialConfig();
-    private final RouteConfig routeConfig = new RouteConfig();
-
-
-    public ControllerConfig getControllerConfig() {
-        return controllerConfig;
-    }
-
-    public SerialConfig getSerialConfig() {
-        return serialConfig;
-    }
-
-    public RouteConfig getRouteConfig() {
-        return routeConfig;
-    }
-
-    public ASVConfig getAsvConfig() {
-        return asvConfig;
-    }
+public enum RouteType {
+    FILE,
+    TWO_POINT
 }

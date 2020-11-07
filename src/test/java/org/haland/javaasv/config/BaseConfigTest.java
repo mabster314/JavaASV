@@ -52,6 +52,18 @@ public class BaseConfigTest extends TestBase {
         }
     }
 
+    private void assertDoubleArrayMatches(double[] expected, double[] actual) {
+        String lengthMsg = "Actual array had length " + actual.length
+                + ", expected " + expected.length;
+        assertEquals(expected.length, actual.length, lengthMsg);
+
+        for (int i = 0; i < expected.length; i++) {
+            String valueMsg = "Actual array had value " + actual[i]
+                    + ", expected " + expected[i];
+            assertEquals(expected[i], actual[i], valueMsg);
+        }
+    }
+
     /**
      * Test the int array reader
      */
@@ -85,6 +97,41 @@ public class BaseConfigTest extends TestBase {
         int[] resultLonger =
                 sut.getIntArrayPropertyValue(TEST_ARRAY_KEY, props);
         assertIntArrayMatches(testArrayLonger, resultLonger);
+    }
+
+    /**
+     * Test the double array reader
+     */
+    @Test
+    public void testGetDoubleArrayPropertyValue() {
+        double[] testArray = { 1, 2, 3 };
+
+        props.setProperty(TEST_ARRAY_KEY, "[1, 2, 3]");
+        double[] resultWithBrackets =
+                sut.getDoubleArrayPropertyValue(TEST_ARRAY_KEY, props);
+        assertDoubleArrayMatches(testArray, resultWithBrackets);
+
+        props.setProperty(TEST_ARRAY_KEY, "1, 2, 3");
+        double[] resultWithoutBrackets =
+                sut.getDoubleArrayPropertyValue(TEST_ARRAY_KEY, props);
+        assertDoubleArrayMatches(testArray, resultWithoutBrackets);
+
+        props.setProperty(TEST_ARRAY_KEY, "[1,2,3]");
+        double[] resultWithoutSpacesWithBrackets =
+                sut.getDoubleArrayPropertyValue(TEST_ARRAY_KEY, props);
+        assertDoubleArrayMatches(testArray, resultWithoutSpacesWithBrackets);
+
+        props.setProperty(TEST_ARRAY_KEY, "1,2,3");
+        double[] resultWithoutSpacesWithoutBrackets =
+                sut.getDoubleArrayPropertyValue(TEST_ARRAY_KEY, props);
+        assertDoubleArrayMatches(testArray, resultWithoutSpacesWithoutBrackets);
+
+        double[] testArrayLonger = { 0, 2, 4, 6, 8, 10 };
+
+        props.setProperty(TEST_ARRAY_KEY, "[0, 2, 4, 6, 8, 10]");
+        double[] resultLonger =
+                sut.getDoubleArrayPropertyValue(TEST_ARRAY_KEY, props);
+        assertDoubleArrayMatches(testArrayLonger, resultLonger);
     }
 
     private class BaseConfigImplementation extends BaseConfig {

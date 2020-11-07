@@ -13,6 +13,13 @@ public class Waypoint implements WaypointInterface {
         this.behavior = behavior;
     }
 
+    public Waypoint(double[] coordinates, double tolerance, WaypointBehavior behavior) {
+        this.latitude = coordinates[0];
+        this.longitude = coordinates[1];
+        this.tolerance = tolerance;
+        this.behavior = behavior;
+    }
+
     @Override
     public double getLatitude() {
         return this.latitude;

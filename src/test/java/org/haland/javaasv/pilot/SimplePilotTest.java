@@ -18,6 +18,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.tinylog.Logger;
 
 import static org.mockito.Mockito.*;
 
@@ -92,11 +93,12 @@ class SimplePilotTest extends TestBase {
         setupPilot();
 
         // should dispatch return message
+        Logger.debug("Starting pilot for test");
         testPilot.startPilot(10);
 
         // Make sure server receives message
         ArgumentCaptor<HelmMessage> captor = ArgumentCaptor.forClass(HelmMessage.class);
-        verify(mockServer).dispatch(captor.capture());
+        verify(mockServer, timeout(1000).atLeastOnce()).dispatch(captor.capture());
         testPilot.stopPilot();
     }
 

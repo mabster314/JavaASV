@@ -18,16 +18,14 @@
 
 package org.haland.javaasv.config;
 
-import org.haland.javaasv.config.unit.PIDConfigUnit;
-
 import java.util.Properties;
 
-public class ControllerConfig extends BaseConfig {
-    private static final String PROPERTY_FILE_NAME = "controllers.properties";
+public class ASVConfig extends BaseConfig{
+    private static final String PROPERTY_FILE_NAME = "asv.properties";
 
-    private double throttleValue;
+    private long serverPeriod;
+    private long pilotPeriod;
 
-    private PIDConfigUnit rudderPIDConfig;
 
     @Override
     protected String getPropertyFileName() {
@@ -36,15 +34,15 @@ public class ControllerConfig extends BaseConfig {
 
     @Override
     protected void configure(Properties properties) {
-        throttleValue = getDoublePropertyValue("controllers.throttle.value", properties);
-        rudderPIDConfig = new PIDConfigUnit("rudder");
+        this.serverPeriod = getLongPropertyValue("server.period", properties);
+        this.pilotPeriod = getLongPropertyValue("pilot.period", properties);
     }
 
-    public double getThrottleValue() {
-        return throttleValue;
+    public long getServerPeriod() {
+        return serverPeriod;
     }
 
-    public PIDConfigUnit getRudderPIDConfig() {
-        return rudderPIDConfig;
+    public long getPilotPeriod() {
+        return pilotPeriod;
     }
 }
