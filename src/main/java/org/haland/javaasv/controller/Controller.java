@@ -19,6 +19,7 @@
 package org.haland.javaasv.controller;
 
 public interface Controller {
-    double calculateNextOutput(double processVariable);
+    double calculateNextOutput(double... processVariable) throws IllegalArgumentException;
     void start();
+    ControllerType getType();
 }

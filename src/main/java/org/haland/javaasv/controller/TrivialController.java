@@ -35,7 +35,12 @@ public class TrivialController implements Controller{
     public void start() { }
 
     @Override
-    public double calculateNextOutput(double processVariable) {
+    public ControllerType getType() {
+        return ControllerType.TRIVIAL;
+    }
+
+    @Override
+    public double calculateNextOutput(double... processVariable) {
         return output;
     }
 }

@@ -98,30 +98,44 @@ public class PIDController implements Controller {
     @Override
     public void start() {
         lastUpdate = System.currentTimeMillis();
+        setSetpoint(0);
+    }
+
+    @Override
+    public ControllerType getType() {
+        return ControllerType.PID;
     }
 
     /**
      * Calculates the next output for the control variable. This must be called at the period of the controller
      *
-     * @param processVariable the current measurement of the monitored process variable
+     * @param processVariables the current measurement of the monitored process variable
      * @return the next output for the controller
      */
     @Override
-    public double calculateNextOutput(double processVariable) {
-        previousError = positionError;
+    public double calculateNextOutput(double... processVariables) {
+        if (processVariables.length == 1) {
+            double processVariable = processVariables[0];
 
-        positionError = setpoint - processVariable;
+            previousError = positionError;
 
-        velocityError = (positionError - previousError) / (System.currentTimeMillis() - lastUpdate);
+            positionError = setpoint - processVariable;
 
-        if (integralCoefficient != 0) {
-            totalError = MathUtil.clamp(totalError + positionError * (System.currentTimeMillis() - lastUpdate),
-                    minimumIntegral / integralCoefficient, maximumIntegral / integralCoefficient);
+            Double deltaT = ((double) (System.currentTimeMillis() - lastUpdate)) / 1000;
+
+            velocityError = (positionError - previousError) / deltaT;
+
+            if (integralCoefficient != 0) {
+                totalError = MathUtil.clamp(totalError + positionError * deltaT,
+                        minimumIntegral / integralCoefficient, maximumIntegral / integralCoefficient);
+            }
+
+            lastUpdate = System.currentTimeMillis();
+            return proportionalityCoefficient * positionError + integralCoefficient * totalError
+                    + derivativeCoefficient * velocityError;
+        } else {
+            throw new IllegalArgumentException("PID controller requires one argument");
         }
-
-        lastUpdate = System.currentTimeMillis();
-        return proportionalityCoefficient * positionError + integralCoefficient * totalError
-                + derivativeCoefficient * velocityError;
     }
 
     public void setPID(double proportionalityCoefficient, double integralCoefficient, double derivativeCoefficient) {

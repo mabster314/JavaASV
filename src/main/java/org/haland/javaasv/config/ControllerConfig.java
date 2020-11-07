@@ -18,6 +18,7 @@
 
 package org.haland.javaasv.config;
 
+import org.haland.javaasv.config.unit.HitzConfigUnit;
 import org.haland.javaasv.config.unit.PIDConfigUnit;
 
 import java.util.Properties;
@@ -28,6 +29,7 @@ public class ControllerConfig extends BaseConfig {
     private double throttleValue;
 
     private PIDConfigUnit rudderPIDConfig;
+    private HitzConfigUnit rudderHitzConfig;
 
     @Override
     protected String getPropertyFileName() {
@@ -38,6 +40,7 @@ public class ControllerConfig extends BaseConfig {
     protected void configure(Properties properties) {
         throttleValue = getDoublePropertyValue("controllers.throttle.value", properties);
         rudderPIDConfig = new PIDConfigUnit("rudder");
+        rudderHitzConfig = new HitzConfigUnit("rudder");
     }
 
     public double getThrottleValue() {
@@ -46,5 +49,9 @@ public class ControllerConfig extends BaseConfig {
 
     public PIDConfigUnit getRudderPIDConfig() {
         return rudderPIDConfig;
+    }
+
+    public HitzConfigUnit getRudderHitzConfig() {
+        return rudderHitzConfig;
     }
 }
