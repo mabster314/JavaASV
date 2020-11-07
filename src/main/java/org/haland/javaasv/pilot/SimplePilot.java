@@ -206,13 +206,13 @@ public class SimplePilot implements MessengerClientInterface {
                     double headingError = calculateHeadingError();
 
                     double out = 0;
-                    ControllerType type = throttleController.getType();
+                    ControllerType type = rudderController.getType();
                     switch (type) {
                         case HITZ:
-                            out = throttleController.calculateNextOutput(xtd, headingError);
+                            out = rudderController.calculateNextOutput(xtd, headingError);
                             break;
                         case PID:
-                            out = throttleController.calculateNextOutput(xtd);
+                            out = rudderController.calculateNextOutput(xtd);
                             break;
                     }
 
