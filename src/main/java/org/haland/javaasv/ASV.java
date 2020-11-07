@@ -19,7 +19,9 @@
 package org.haland.javaasv;
 
 import org.haland.javaasv.config.AllConfig;
+import org.haland.javaasv.config.unit.PIDConfigUnit;
 import org.haland.javaasv.controller.HitzController;
+import org.haland.javaasv.controller.PIDController;
 import org.haland.javaasv.controller.TrivialController;
 import org.haland.javaasv.helm.ArduinoHelm;
 import org.haland.javaasv.helm.HelmArduino;
@@ -48,7 +50,7 @@ public class ASV {
     private long pilotPeriod;
 
     private TrivialController throttleController;
-    private HitzController rudderController;
+    private PIDController rudderController;
 
     private GPSHatParser gps;
 
@@ -68,10 +70,9 @@ public class ASV {
         this.gps = new GPSHatParser(config);
 
         this.throttleController = new TrivialController(config);
-        this.rudderController = new HitzController(config.getControllerConfig().getRudderHitzConfig());
+        this.rudderController = new PIDController(config.getControllerConfig().getRudderPIDConfig());
 
         this.route = new RouteParser(config).getRoute();
-        rudderController.setRoute(route);
 
         this.pilot = new SimplePilot(PILOT_ID, server, helm, throttleController, rudderController, gps);
         pilot.setCurrentRoute(route);
