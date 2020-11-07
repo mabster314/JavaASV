@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BaseConfigTest extends TestBase {
 
@@ -69,7 +69,7 @@ public class BaseConfigTest extends TestBase {
      */
     @Test
     public void testGetIntArrayPropertyValue() {
-        int[] testArray = { 1, 2, 3 };
+        int[] testArray = {1, 2, 3};
 
         props.setProperty(TEST_ARRAY_KEY, "[1, 2, 3]");
         int[] resultWithBrackets =
@@ -91,7 +91,7 @@ public class BaseConfigTest extends TestBase {
                 sut.getIntArrayPropertyValue(TEST_ARRAY_KEY, props);
         assertIntArrayMatches(testArray, resultWithoutSpacesWithoutBrackets);
 
-        int[] testArrayLonger = { 0, 2, 4, 6, 8, 10 };
+        int[] testArrayLonger = {0, 2, 4, 6, 8, 10};
 
         props.setProperty(TEST_ARRAY_KEY, "[0, 2, 4, 6, 8, 10]");
         int[] resultLonger =
@@ -104,7 +104,7 @@ public class BaseConfigTest extends TestBase {
      */
     @Test
     public void testGetDoubleArrayPropertyValue() {
-        double[] testArray = { 1, 2, 3 };
+        double[] testArray = {1, 2, 3};
 
         props.setProperty(TEST_ARRAY_KEY, "[1, 2, 3]");
         double[] resultWithBrackets =
@@ -126,7 +126,7 @@ public class BaseConfigTest extends TestBase {
                 sut.getDoubleArrayPropertyValue(TEST_ARRAY_KEY, props);
         assertDoubleArrayMatches(testArray, resultWithoutSpacesWithoutBrackets);
 
-        double[] testArrayLonger = { 0, 2, 4, 6, 8, 10 };
+        double[] testArrayLonger = {0, 2, 4, 6, 8, 10};
 
         props.setProperty(TEST_ARRAY_KEY, "[0, 2, 4, 6, 8, 10]");
         double[] resultLonger =

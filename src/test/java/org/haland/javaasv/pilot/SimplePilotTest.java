@@ -2,6 +2,8 @@ package org.haland.javaasv.pilot;
 
 import net.sf.marineapi.nmea.util.Time;
 import org.haland.javaasv.TestBase;
+import org.haland.javaasv.controller.Controller;
+import org.haland.javaasv.controller.TrivialController;
 import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.HelmMessage;
 import org.haland.javaasv.message.MessageTypeException;
@@ -9,8 +11,6 @@ import org.haland.javaasv.message.MessengerServerInterface;
 import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.route.WaypointFactory;
 import org.haland.javaasv.route.WaypointInterface;
-import org.haland.javaasv.controller.Controller;
-import org.haland.javaasv.controller.TrivialController;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

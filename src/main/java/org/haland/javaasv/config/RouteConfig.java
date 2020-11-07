@@ -22,7 +22,7 @@ import org.haland.javaasv.route.RouteType;
 
 import java.util.Properties;
 
-public class RouteConfig extends BaseConfig{
+public class RouteConfig extends BaseConfig {
     private static String propertyFileName = "route.properties";
 
     private RouteType routeType;
@@ -40,6 +40,7 @@ public class RouteConfig extends BaseConfig{
 
     /**
      * Set the property file name at runtime for testing
+     *
      * @param name
      */
     public static void setPropertyFileName(String name) {

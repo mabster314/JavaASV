@@ -20,7 +20,7 @@ package org.haland.javaasv.config;
 
 import java.util.Properties;
 
-public class SerialConfig extends BaseConfig{
+public class SerialConfig extends BaseConfig {
     private static final String PROPERTY_FILE_NAME = "serial.properties";
 
     private String arduinoPort;

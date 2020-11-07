@@ -1,10 +1,10 @@
 package org.haland.javaasv.pilot;
 
+import org.haland.javaasv.controller.Controller;
+import org.haland.javaasv.controller.PIDController;
 import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.*;
 import org.haland.javaasv.route.RouteInterface;
-import org.haland.javaasv.controller.Controller;
-import org.haland.javaasv.controller.PIDController;
 import org.haland.javaasv.util.EarthRadius;
 import org.haland.javaasv.util.PilotUtil;
 import org.tinylog.Logger;

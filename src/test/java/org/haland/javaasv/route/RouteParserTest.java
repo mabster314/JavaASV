@@ -22,11 +22,10 @@ import org.haland.javaasv.TestBase;
 import org.haland.javaasv.config.AllConfig;
 import org.haland.javaasv.config.RouteConfig;
 import org.junit.jupiter.api.Test;
-import org.tinylog.Logger;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RouteParserTest extends TestBase {
     private static final String TWO_POINT_FILENAME = "route.properties";

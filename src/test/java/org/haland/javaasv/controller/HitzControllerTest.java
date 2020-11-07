@@ -3,11 +3,11 @@ package org.haland.javaasv.controller;
 import org.haland.javaasv.TestBase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HitzControllerTest extends TestBase {
     private static final double HEADING_ERROR = Math.toRadians(45);
-    private static final double XTD = -15;
+    private static final double XTD = 5;
     private static final double THROTTLE = 1;
 
     private static final double K_ph = 3;
@@ -15,9 +15,9 @@ class HitzControllerTest extends TestBase {
     private static final double K_ix = -0.5;
     private static final double PERIOD = 1;
 
-    private static final double ACCUMULATED_ERROR = -100;
+    private static final double ACCUMULATED_ERROR = -10;
 
-    private static final double EXPECTED_RESULT = 121.648;
+    private static final double EXPECTED_RESULT = -17.9009;
     private static final double TOLERANCE = 0.01;
 
     private HitzController sut;

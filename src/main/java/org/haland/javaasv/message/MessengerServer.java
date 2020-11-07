@@ -86,7 +86,7 @@ public class MessengerServer implements MessengerServerInterface {
     @Override
     public void registerClientModule(String clientID,
                                      MessengerClientInterface clientModule) throws DuplicateKeyException {
-        Logger.info("Attempting to attach client " + clientModule.getClass() + " with name " +clientID);
+        Logger.info("Attempting to attach client " + clientModule.getClass() + " with name " + clientID);
         if (clients.putIfAbsent(clientID, clientModule) != null) {
             DuplicateKeyException e = new DuplicateKeyException("Duplicate client registered to server: "
                     + clientModule.getClientID());

@@ -21,7 +21,6 @@ package org.haland.javaasv;
 import org.haland.javaasv.config.BaseConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.tinylog.Logger;
 
@@ -30,10 +29,9 @@ import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.haland.javaasv.config.BaseConfig.PROPERTY_FILE_DIR_SRC_TESTS;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.CoreMatchers.is;
 
 public abstract class TestBase {
 

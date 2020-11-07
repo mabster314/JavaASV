@@ -21,6 +21,7 @@ package org.haland.javaasv.config;
 import org.tinylog.Logger;
 
 import java.util.Properties;
+
 /**
  * Base class for configuration from loading values from properties file.
  */
@@ -50,13 +51,14 @@ public abstract class BaseConfig {
         }
     }
 
-    /** @return The property file name to load for this config. */
+    /**
+     * @return The property file name to load for this config.
+     */
     protected abstract String getPropertyFileName();
 
     /**
-     * @param properties
-     *            The properties to use for configuration, loaded from the
-     *            specified property file.
+     * @param properties The properties to use for configuration, loaded from the
+     *                   specified property file.
      */
     protected abstract void configure(Properties properties);
 
@@ -89,7 +91,7 @@ public abstract class BaseConfig {
     }
 
     protected double[] getDoubleArrayPropertyValue(String propertyName,
-                                             Properties props) {
+                                                   Properties props) {
 
         final String propertyValue =
                 getStringPropertyValue(propertyName, props);

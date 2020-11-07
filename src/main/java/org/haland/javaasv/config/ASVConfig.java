@@ -20,7 +20,7 @@ package org.haland.javaasv.config;
 
 import java.util.Properties;
 
-public class ASVConfig extends BaseConfig{
+public class ASVConfig extends BaseConfig {
     private static final String PROPERTY_FILE_NAME = "asv.properties";
 
     private long serverPeriod;

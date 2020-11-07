@@ -131,8 +131,9 @@ public class PIDController implements Controller {
             }
 
             lastUpdate = System.currentTimeMillis();
-            return proportionalityCoefficient * positionError + integralCoefficient * totalError
+            double out = proportionalityCoefficient * positionError + integralCoefficient * totalError
                     + derivativeCoefficient * velocityError;
+            return MathUtil.clamp(out, -100, 100);
         } else {
             throw new IllegalArgumentException("PID controller requires one argument");
         }

@@ -21,8 +21,6 @@ package org.haland.javaasv.config;
 import org.haland.javaasv.TestBase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AllConfigTest extends TestBase {
 
     @Test

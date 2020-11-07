@@ -71,7 +71,7 @@ public class SerialArduino implements SerialDeviceInterface<byte[]> {
     /**
      * Attempts to open the serial port
      *
-             * @return <code>true</code> if the port was opened successfully, <code>false</code> otherwise
+     * @return <code>true</code> if the port was opened successfully, <code>false</code> otherwise
      */
     @Override
     public synchronized boolean openPort() {

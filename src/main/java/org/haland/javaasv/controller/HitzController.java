@@ -3,7 +3,6 @@ package org.haland.javaasv.controller;
 import org.haland.javaasv.config.unit.HitzConfigUnit;
 import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.util.MathUtil;
-import org.haland.javaasv.util.PilotUtil;
 
 public class HitzController implements Controller {
 
@@ -39,6 +38,7 @@ public class HitzController implements Controller {
 
     /**
      * Requires three process variables: cross-track distance, heading error, and throttle
+     *
      * @param processVariables doubles for xtd, heading error, and throttle error. Exactly three doubles must be
      *                         provided, and in the correct order.
      * @return
@@ -53,7 +53,7 @@ public class HitzController implements Controller {
             headingError = processVariables[1];
             throttle = processVariables[2];
         } else {
-            throw  new IllegalArgumentException("Hitz controller requires two parameters");
+            throw new IllegalArgumentException("Hitz controller requires two parameters");
         }
 
         previousError = positionError;
@@ -71,7 +71,7 @@ public class HitzController implements Controller {
 
         double out = (Kph * headingError)
                 + (Math.sin(headingError) / headingError) * (-Kpx * xtd + Kix * totalError * deltaT);
-        return out;
+        return MathUtil.clamp(out, -100, 100);
     }
 
     @Override

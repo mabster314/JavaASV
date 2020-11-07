@@ -42,6 +42,7 @@ public class RouteParser {
 
     /**
      * Makes a two point route from the config
+     *
      * @return a {@link RouteInterface} representing the one-segment route
      */
     private RouteInterface createTwoPointRoute() {

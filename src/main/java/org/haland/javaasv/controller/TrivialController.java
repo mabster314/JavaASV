@@ -20,7 +20,7 @@ package org.haland.javaasv.controller;
 
 import org.haland.javaasv.config.AllConfig;
 
-public class TrivialController implements Controller{
+public class TrivialController implements Controller {
     private double output;
 
     public TrivialController(double output) {
@@ -32,7 +32,8 @@ public class TrivialController implements Controller{
     }
 
     @Override
-    public void start() { }
+    public void start() {
+    }
 
     @Override
     public ControllerType getType() {

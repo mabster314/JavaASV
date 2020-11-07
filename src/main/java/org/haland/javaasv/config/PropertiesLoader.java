@@ -35,9 +35,8 @@ public class PropertiesLoader {
     /**
      * Load the properties from the specified file name.
      *
-     * @param fileName
-     *            The file name, including any desired path (absolute or
-     *            relative).
+     * @param fileName The file name, including any desired path (absolute or
+     *                 relative).
      * @return Properties instance loaded with the properties in the file.
      */
     public Properties loadProperties(String fileName) {
