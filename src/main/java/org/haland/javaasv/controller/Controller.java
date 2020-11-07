@@ -19,7 +19,22 @@
 package org.haland.javaasv.controller;
 
 public interface Controller {
-    double calculateNextOutput(double... processVariable) throws IllegalArgumentException;
+    /**
+     * Function to calculate the next output of a controller
+     * @param processVariables input process variables
+     * @return the result, fenced in to [-100, 100]
+     * @throws IllegalArgumentException if the wrong number of process variables are provided
+     */
+    double calculateNextOutput(double... processVariables) throws IllegalArgumentException;
+
+    /**
+     * Starts a controller
+     */
     void start();
+
+    /**
+     * Gets the type of the controller
+     * @return
+     */
     ControllerType getType();
 }

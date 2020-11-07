@@ -23,13 +23,13 @@ class PilotUtilTest extends TestBase {
     @Test
     void testCalculateDistance() {
         assertEquals(EXPECTED_DISTANCE,
-                PilotUtil.calculateDistance(LAX_LOCATION, JFK_LOCATION, PilotUtil.EARTH_RADIUS_NMI), TOLERANCE);
+                PilotUtil.calculateDistance(LAX_LOCATION, JFK_LOCATION, EarthRadius.NMI), TOLERANCE);
     }
 
     @Test
     void testCalculateCrossTrackDistance() {
         assertEquals(EXPECTED_CROSS_TRACK_ERROR, PilotUtil.calculateCrossTrackDistance(LAX_LOCATION, JFK_LOCATION,
-                CURRENT_LOCATION, PilotUtil.EARTH_RADIUS_NMI), TOLERANCE);
+                CURRENT_LOCATION, EarthRadius.NMI), TOLERANCE);
     }
 
     @Test

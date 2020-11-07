@@ -5,6 +5,7 @@ import org.haland.javaasv.message.*;
 import org.haland.javaasv.route.RouteInterface;
 import org.haland.javaasv.controller.Controller;
 import org.haland.javaasv.controller.PIDController;
+import org.haland.javaasv.util.EarthRadius;
 import org.haland.javaasv.util.PilotUtil;
 import org.tinylog.Logger;
 
@@ -114,9 +115,14 @@ public class SimplePilot implements MessengerClientInterface {
      * @return The XTD in nmi
      */
 
-    public double calculateCrossTrackDistance() {
+    public double calculateCrossTrackDistance(EarthRadius earthRadius) {
         return PilotUtil.calculateCrossTrackDistance(currentRoute.getPreviousWaypoint().getCoordinates(),
-                currentRoute.getNextWaypoint().getCoordinates(), gps.getCoordinates(), PilotUtil.EARTH_RADIUS_M);
+                currentRoute.getNextWaypoint().getCoordinates(), gps.getCoordinates(), earthRadius);
+    }
+
+    private double calculateHeadingError() {
+        return PilotUtil.calculateInitialBearingRadians(gps.getCoordinates(),
+                currentRoute.getNextWaypoint().getCoordinates()) - gps.getHeading();
     }
 
     /**
@@ -195,13 +201,23 @@ public class SimplePilot implements MessengerClientInterface {
             while (isRunning) {
                 try {
                     // Calculate the XTD
-                    double xtd = calculateCrossTrackDistance();
+                    double xtd = calculateCrossTrackDistance(EarthRadius.METERS);
+                    double headingError = calculateHeadingError();
+
+                    double out = 0;
+                    switch (throttleController.getType()) {
+                        case HITZ:
+                            out = throttleController.calculateNextOutput(xtd, headingError);
+                            break;
+                        case PID:
+                            out = throttleController.calculateNextOutput(xtd);
+                            break;
+                    }
 
                     // Now dispatch the new helm instructions
                     MessageInterface message = null;
                     try {
-                        message = messageFactory.createMessage(throttleController.calculateNextOutput(xtd),
-                                rudderController.calculateNextOutput(xtd));
+                        message = messageFactory.createMessage(throttleController.calculateNextOutput(), out / 100);
                     } catch (MessageTypeException e) {
                         e.printStackTrace();
                     }

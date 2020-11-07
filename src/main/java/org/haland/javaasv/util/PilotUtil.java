@@ -3,25 +3,6 @@ package org.haland.javaasv.util;
 import static java.lang.Math.*;
 
 public class PilotUtil {
-    /**
-     * The earth's radius in nmi
-     */
-    public static final double EARTH_RADIUS_NMI = 3440.07;
-
-    /**
-     * The earth's radius in mi
-     */
-    public static final double EARTH_RADIUS_MI = 3958.761;
-
-    /**
-     * The earth's radius in km
-     */
-    public static final double EARTH_RADIUS_KM = 6371.009;
-
-    /**
-     * The earth's radius in m
-     */
-    public static final double EARTH_RADIUS_M = EARTH_RADIUS_KM * 1000;
 
     private PilotUtil() {
         throw new AssertionError("utility class");
@@ -90,8 +71,8 @@ public class PilotUtil {
      * @param earthRadius Radius of the earth in desired units
      * @return Great circle distance between the points in units of earthRadius
      */
-    public static double calculateDistance(double[] firstPoint, double[] secondPoint, double earthRadius) {
-        return calculateAngularDistance(firstPoint, secondPoint) * earthRadius;
+    public static double calculateDistance(double[] firstPoint, double[] secondPoint, EarthRadius earthRadius) {
+        return calculateAngularDistance(firstPoint, secondPoint) * earthRadius.getValue();
     }
 
     /**
@@ -102,7 +83,7 @@ public class PilotUtil {
      * @return Great circle distance between the points in units of nmi
      */
     public static double calculateDistance(double[] firstPoint, double[] secondPoint) {
-        return calculateAngularDistance(firstPoint, secondPoint) * EARTH_RADIUS_NMI;
+        return calculateAngularDistance(firstPoint, secondPoint) * EarthRadius.NMI.getValue();
     }
 
     /**
@@ -115,7 +96,7 @@ public class PilotUtil {
      * @return the cross-track distance in nmi
      */
     public static double calculateCrossTrackDistance(double[] prevWaypoint, double[] nextWaypoint, double[] position) {
-        return calculateCrossTrackDistance(prevWaypoint, nextWaypoint, position, EARTH_RADIUS_NMI);
+        return calculateCrossTrackDistance(prevWaypoint, nextWaypoint, position, EarthRadius.NMI);
     }
 
     /**
@@ -128,11 +109,11 @@ public class PilotUtil {
      * @return the cross-track distance in units of earthRadius
      */
     public static double calculateCrossTrackDistance(double[] prevWaypoint, double[] nextWaypoint, double[] position,
-                                                     double earthRadius) {
+                                                     EarthRadius earthRadius) {
         double dist_13 = calculateAngularDistance(prevWaypoint, position);
         double bear_13 = calculateInitialBearingRadians(prevWaypoint, position);
         double bear_12 = calculateInitialBearingRadians(prevWaypoint, nextWaypoint);
-        return asin(sin(dist_13) * sin(bear_13 - bear_12)) * earthRadius;
+        return asin(sin(dist_13) * sin(bear_13 - bear_12)) * earthRadius.getValue();
     }
 
     /**
