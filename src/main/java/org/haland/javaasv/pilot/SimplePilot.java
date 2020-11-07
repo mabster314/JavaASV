@@ -1,6 +1,7 @@
 package org.haland.javaasv.pilot;
 
 import org.haland.javaasv.controller.Controller;
+import org.haland.javaasv.controller.ControllerType;
 import org.haland.javaasv.controller.PIDController;
 import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.*;
@@ -205,7 +206,8 @@ public class SimplePilot implements MessengerClientInterface {
                     double headingError = calculateHeadingError();
 
                     double out = 0;
-                    switch (throttleController.getType()) {
+                    ControllerType type = throttleController.getType();
+                    switch (type) {
                         case HITZ:
                             out = throttleController.calculateNextOutput(xtd, headingError);
                             break;
