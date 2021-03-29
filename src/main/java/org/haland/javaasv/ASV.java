@@ -36,6 +36,7 @@ import org.tinylog.Logger;
  * Our entry point
  */
 public class ASV {
+    // Load the configuration
     private final AllConfig config = new AllConfig();
 
     private MessengerServer server;
@@ -59,21 +60,28 @@ public class ASV {
     private ASV() {
         Logger.info("Starting ASV configuration");
 
+        // Get server and client data from config
         this.serverPeriod = config.getAsvConfig().getServerPeriod();
         this.pilotPeriod = config.getAsvConfig().getPilotPeriod();
 
+        // Get the server instance
         this.server = MessengerServer.getInstance();
 
+        // Construct a new HelmArduino and ArduinoHelm
         this.helmArduino = new HelmArduino(config);
         this.helm = new ArduinoHelm(server, helmArduino, HELM_ID);
 
+        // Construct a new GPS
         this.gps = new GPSHatParser(config);
 
+        // Create the throttle and rudder controllers
         this.throttleController = new TrivialController(config);
         this.rudderController = new PIDController(config.getControllerConfig().getRudderPIDConfig());
 
+        // Get a simple route from the config
         this.route = new RouteParser(config).getRoute();
 
+        // Construct the pilot and assign the route
         this.pilot = new SimplePilot(PILOT_ID, server, helm, throttleController, rudderController, gps);
         pilot.setCurrentRoute(route);
     }
