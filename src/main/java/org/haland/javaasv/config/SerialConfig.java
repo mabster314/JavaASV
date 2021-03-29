@@ -20,6 +20,9 @@ package org.haland.javaasv.config;
 
 import java.util.Properties;
 
+/**
+ * {@link BaseConfig} implementation for serial configuration data
+ */
 public class SerialConfig extends BaseConfig {
     private static final String PROPERTY_FILE_NAME = "serial.properties";
 

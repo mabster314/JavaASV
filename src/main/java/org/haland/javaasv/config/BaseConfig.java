@@ -57,11 +57,21 @@ public abstract class BaseConfig {
     protected abstract String getPropertyFileName();
 
     /**
+     * This method configures a BaseConfig implementation. The implementation should use this to populate fields from
+     * the {@link Properties} instance.
+     *
      * @param properties The properties to use for configuration, loaded from the
      *                   specified property file.
      */
     protected abstract void configure(Properties properties);
 
+    /**
+     * Parses an String from a {@link Properties} instance.
+     *
+     * @param propertyName The name of the property to parse
+     * @param props The properties instance to parse from
+     * @return a String containing the property value
+     */
     protected String getStringPropertyValue(String propertyName,
                                             Properties props) {
         final String value = props.getProperty(propertyName);
@@ -73,6 +83,13 @@ public abstract class BaseConfig {
         return value;
     }
 
+    /**
+     * Parses an int array from a {@link Properties} instance.
+     *
+     * @param propertyName The name of the property to parse
+     * @param props The properties instance to parse from
+     * @return an int[] containing the property values
+     */
     protected int[] getIntArrayPropertyValue(String propertyName,
                                              Properties props) {
 
@@ -90,6 +107,13 @@ public abstract class BaseConfig {
         return returnValues;
     }
 
+    /**
+     * Parses an double array from a {@link Properties} instance.
+     *
+     * @param propertyName The name of the property to parse
+     * @param props The properties instance to parse from
+     * @return an double[] containing the property values
+     */
     protected double[] getDoubleArrayPropertyValue(String propertyName,
                                                    Properties props) {
 
@@ -107,6 +131,13 @@ public abstract class BaseConfig {
         return returnValues;
     }
 
+    /**
+     * Parses an double value from a {@link Properties} instance.
+     *
+     * @param propertyName The name of the property to parse
+     * @param props The properties instance to parse from
+     * @return a double representing the property value
+     */
     protected double getDoublePropertyValue(String propertyName,
                                             Properties props) {
         final String propertyValue =
@@ -114,18 +145,39 @@ public abstract class BaseConfig {
         return Double.parseDouble(propertyValue);
     }
 
+    /**
+     * Parses an int value from a {@link Properties} instance.
+     *
+     * @param propertyName The name of the property to parse
+     * @param props The properties instance to parse from
+     * @return an int representing the property value
+     */
     protected int getIntPropertyValue(String propertyName, Properties props) {
         final String propertyValue =
                 getStringPropertyValue(propertyName, props);
         return Integer.parseInt(propertyValue);
     }
 
+    /**
+     * Parses a long int from a {@link Properties} instance.
+     *
+     * @param propertyName The name of the property to parse
+     * @param props The properties instance to parse from
+     * @return a long representing the property value
+     */
     protected long getLongPropertyValue(String propertyName, Properties props) {
         final String propertyValue =
                 getStringPropertyValue(propertyName, props);
         return Long.parseLong(propertyValue);
     }
 
+    /**
+     * Parses a boolean from a {@link Properties} instance.
+     *
+     * @param propertyName The name of the property to parse
+     * @param props The properties instance to parse from
+     * @return a boolean representing the property value
+     */
     protected boolean getBooleanPropertyValue(String propertyName,
                                               Properties props) {
         final String propertyValue =
@@ -141,6 +193,10 @@ public abstract class BaseConfig {
         return propertyFileDir;
     }
 
+    /**
+     * Used to set a property value directory for unit testing
+     * @param propertyFileDirectory The test properties directory
+     */
     public static void setPropertyFileDir(String propertyFileDirectory) {
         propertyFileDir = propertyFileDirectory;
     }

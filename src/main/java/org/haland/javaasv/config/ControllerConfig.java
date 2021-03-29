@@ -23,6 +23,9 @@ import org.haland.javaasv.config.unit.PIDConfigUnit;
 
 import java.util.Properties;
 
+/**
+ * {@link BaseConfig} implementation for ASV controller configuration
+ */
 public class ControllerConfig extends BaseConfig {
     private static final String PROPERTY_FILE_NAME = "controllers.properties";
 

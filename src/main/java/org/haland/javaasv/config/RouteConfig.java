@@ -22,6 +22,9 @@ import org.haland.javaasv.route.RouteType;
 
 import java.util.Properties;
 
+/**
+ * {@link BaseConfig} implementation to read route data from a properties file
+ */
 public class RouteConfig extends BaseConfig {
     private static String propertyFileName = "route.properties";
 

@@ -20,6 +20,9 @@ package org.haland.javaasv.config;
 
 import java.util.Properties;
 
+/**
+ * {@link BaseConfig} implementation for high-level ASV configuration
+ */
 public class ASVConfig extends BaseConfig {
     private static final String PROPERTY_FILE_NAME = "asv.properties";
 
