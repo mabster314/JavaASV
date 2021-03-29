@@ -1,6 +1,6 @@
 /*
  * This file is part of JavaASV, an open-source ASV navigation controller.
- * Copyright (C) 2020  Max Haland
+ * Copyright (C) 2021  Max Haland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,33 +18,23 @@
 
 package org.haland.javaasv.config;
 
-import java.util.Properties;
+import org.haland.javaasv.TestBase;
+import org.junit.jupiter.api.Test;
 
-/**
- * {@link BaseConfig} implementation for high-level ASV configuration
- */
-public class ASVConfig extends BaseConfig {
-    private static final String PROPERTY_FILE_NAME = "asv.properties";
-
-    private long serverPeriod;
-    private long pilotPeriod;
-
-    @Override
-    protected String getPropertyFileName() {
-        return PROPERTY_FILE_NAME;
+class SerialConfigTest extends TestBase {
+    @Test
+    public void testSerialConfig_Test() throws IllegalAccessException {
+        BaseConfig.setPropertyFileDir(PROPERTY_FILE_DIR_SRC_TESTS);
+        SerialConfig sut = new SerialConfig();
+        assertInstanceVariablesNotNull(sut);
+        assertArraysNotZeroLength(sut);
     }
 
-    @Override
-    protected void configure(Properties properties) {
-        this.serverPeriod = getLongPropertyValue("server.period", properties);
-        this.pilotPeriod = getLongPropertyValue("pilot.period", properties);
-    }
-
-    public long getServerPeriod() {
-        return serverPeriod;
-    }
-
-    public long getPilotPeriod() {
-        return pilotPeriod;
+    @Test
+    public void testSerialConfig_Runtime() throws IllegalAccessException {
+        BaseConfig.setPropertyFileDir(PROPERTY_FILE_DIR_SRC_RUN);
+        SerialConfig sut = new SerialConfig();
+        assertInstanceVariablesNotNull(sut);
+        assertArraysNotZeroLength(sut);
     }
 }

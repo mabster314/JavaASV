@@ -54,18 +54,10 @@ public class RouteConfig extends BaseConfig {
     protected void configure(Properties properties) {
         String routeTypeStr = getStringPropertyValue("route.type", properties);
         this.routeType = RouteType.valueOf(routeTypeStr);
-        switch (routeType) {
-            case FILE:
-                this.routeFileName = getStringPropertyValue("route.filename", properties);
-                break;
-
-            case TWO_POINT:
-                this.twoPointRouteStart = getDoubleArrayPropertyValue("route.two_point.start", properties);
-                this.twoPointRouteEnd = getDoubleArrayPropertyValue("route.two_point.end", properties);
-                this.twoPointRouteTolerance = getDoublePropertyValue("route.two_point.tolerance",
-                        properties);
-                break;
-        }
+        this.routeFileName = getStringPropertyValue("route.filename", properties);
+        this.twoPointRouteStart = getDoubleArrayPropertyValue("route.two_point.start", properties);
+        this.twoPointRouteEnd = getDoubleArrayPropertyValue("route.two_point.end", properties);
+        this.twoPointRouteTolerance = getDoublePropertyValue("route.two_point.tolerance", properties);
     }
 
     public String getRouteFileName() {

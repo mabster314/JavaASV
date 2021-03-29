@@ -34,9 +34,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class TestBase {
-
+    /**
+     * The properties directory to use while configuring runtime
+     */
     public static final String PROPERTY_FILE_DIR_SRC_RUN =
             "src/main/resources/properties/";
+
+    /**
+     * The properties directory to use while configuring tests
+     */
     public static final String PROPERTY_FILE_DIR_SRC_TESTS =
             "src/test/resources/properties/";
 
@@ -44,6 +50,7 @@ public abstract class TestBase {
         BaseConfig.setPropertyFileDir(PROPERTY_FILE_DIR_SRC_TESTS);
     }
 
+    // Log test info before and after each test
     @BeforeEach
     public void processTestStarting(TestInfo testInfo) {
         Logger.info("Test starting: " + testInfo.getDisplayName());
@@ -64,6 +71,7 @@ public abstract class TestBase {
             if (!type.isPrimitive()) {
                 String assertMessage =
                         "Field " + field.getName() + " was null.";
+
                 assertNotNull(field.get(sut), assertMessage);
             }
         }
