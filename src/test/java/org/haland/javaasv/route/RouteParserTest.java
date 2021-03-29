@@ -20,6 +20,7 @@ package org.haland.javaasv.route;
 
 import org.haland.javaasv.TestBase;
 import org.haland.javaasv.config.AllConfig;
+import org.haland.javaasv.config.BaseConfig;
 import org.haland.javaasv.config.RouteConfig;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RouteParserTest extends TestBase {
     private static final String TWO_POINT_FILENAME = "route.properties";
-    private static final double[] START_COORDINATES = {44.9187, -92.8435};
+    public static final double[] START_COORDINATES = {44.9187, -92.8435};
     private static final double[] END_COORDINATES = {44.9187, -92.8439};
 
 
@@ -39,7 +40,8 @@ class RouteParserTest extends TestBase {
 
     @Test
     void testTwoPointRouteParser() {
-        RouteConfig.setPropertyFileName(TWO_POINT_FILENAME);
+        BaseConfig.setPropertyFileDir(PROPERTY_FILE_DIR_SRC_TESTS);
+        String foo = RouteConfig.getPropertyFileDir();
         AllConfig config = new AllConfig();
         sut = new RouteParser(config);
         RouteInterface parsedRoute = sut.getRoute();
