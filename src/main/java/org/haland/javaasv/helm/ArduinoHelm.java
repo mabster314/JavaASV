@@ -102,16 +102,17 @@ public class ArduinoHelm implements HelmInterface {
      */
     @Override
     public void dispatch(MessageInterface message) {
+        String data = null;
+        try {
+            data = message.getMessageContents().getHelmMessage();
+        } catch (MessageTypeException e) {
+            e.printStackTrace();
+        }
         if (message.getType() == getClientType()) {
-            try {
-                String data = message.getMessageContents().getHelmMessage();
-                Logger.trace("Helm command sent: " + data);
-                helmArduino.sendSerialData(data.getBytes(StandardCharsets.US_ASCII));
-            } catch (MessageTypeException e) {
-                e.printStackTrace();
-            }
+            Logger.trace("Helm command sent: " + data);
+            helmArduino.sendSerialData(data.getBytes(StandardCharsets.US_ASCII));
         } else {
-            // TODO do something
+            Logger.error("Helm message type not matching: " + data);
         }
     }
 
