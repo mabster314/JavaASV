@@ -21,10 +21,17 @@ package org.haland.javaasv.route;
 import org.haland.javaasv.config.AllConfig;
 import org.haland.javaasv.config.RouteConfig;
 
+/**
+ * Parses {@link RouteInterface}s from a {@link RouteConfig} instance
+ */
 public class RouteParser {
     private RouteConfig config;
     private RouteInterface route;
 
+    /**
+     * Constructs a new RouteParser with the specified config
+     * @param allConfig {@link RouteConfig} to load route from
+     */
     public RouteParser(AllConfig allConfig) {
         this.config = allConfig.getRouteConfig();
         switch (this.config.getRouteType()) {
@@ -66,6 +73,10 @@ public class RouteParser {
         };
     }
 
+    /**
+     * Provides the parsed route
+     * @return a {@link RouteInterface} representing the parsed route
+     */
     public RouteInterface getRoute() {
         return route;
     }

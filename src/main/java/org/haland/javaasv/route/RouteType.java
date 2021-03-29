@@ -18,6 +18,9 @@
 
 package org.haland.javaasv.route;
 
+/**
+ * Defines different types of routes that may be loaded
+ */
 public enum RouteType {
     FILE,
     TWO_POINT

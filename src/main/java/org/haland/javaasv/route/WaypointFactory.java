@@ -18,6 +18,9 @@
 
 package org.haland.javaasv.route;
 
+/**
+ * A class to repeatedly generate waypoints.
+ */
 public class WaypointFactory {
     public WaypointInterface createWaypoint(double latitude, double longitude, double tolerance) {
         return new WaypointInterface() {

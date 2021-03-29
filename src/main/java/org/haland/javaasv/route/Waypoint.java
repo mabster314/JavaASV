@@ -1,5 +1,8 @@
 package org.haland.javaasv.route;
 
+/**
+ * Reference implementation of {@link WaypointInterface}
+ */
 public class Waypoint implements WaypointInterface {
     private double latitude;
     private double longitude;
