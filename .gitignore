@@ -119,3 +119,6 @@ Temporary Items
 .apdisk
 
 tinylog-dev.properties
+
+#javadoc
+/doc/
