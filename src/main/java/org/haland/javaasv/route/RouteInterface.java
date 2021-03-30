@@ -1,5 +1,8 @@
 package org.haland.javaasv.route;
 
+/**
+ * An interface for route providers.
+ */
 public interface RouteInterface {
     /**
      * This method returns the previous waypoint for the current straight-line segment

@@ -2,6 +2,9 @@ package org.haland.javaasv.util;
 
 import static java.lang.Math.*;
 
+/**
+ * Provides utility functions for navigational calculations
+ */
 public class PilotUtil {
 
     private PilotUtil() {

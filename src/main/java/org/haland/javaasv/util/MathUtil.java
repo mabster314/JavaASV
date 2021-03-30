@@ -18,6 +18,9 @@
 
 package org.haland.javaasv.util;
 
+/**
+ * Provides math utility functions
+ */
 public final class MathUtil {
     private MathUtil() {
         throw new AssertionError("utility class");

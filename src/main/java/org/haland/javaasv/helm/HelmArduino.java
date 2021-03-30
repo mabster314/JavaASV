@@ -39,6 +39,11 @@ public class HelmArduino implements SerialDeviceInterface<String> {
         this(new SerialArduino(port));
     }
 
+    /**
+     * Constructs a new {@link HelmArduino} with a new {@link SerialArduino} on a port specified in an {@link AllConfig}
+     * instance
+     * @param config The {@link AllConfig} instance to use
+     */
     public HelmArduino(AllConfig config) {
         this(new SerialArduino(config.getSerialConfig().getArduinoPort()));
     }

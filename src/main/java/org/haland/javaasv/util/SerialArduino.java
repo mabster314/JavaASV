@@ -109,7 +109,7 @@ public class SerialArduino implements SerialDeviceInterface<byte[]> {
     }
 
     /**
-     * Sends an array of bytes over the serial connection
+     * Sends an array of bytes over the serial connection by writing to the {@link SerialPort} object
      *
      * @param serialData <code>byte[]</code> array containing data to send
      * @return the number of bytes actually sent (-1 if no bytes sent)
