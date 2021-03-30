@@ -8,8 +8,7 @@ import org.tinylog.Logger;
 /**
  * Creates messages to send between a {@link org.haland.javaasv.pilot.PilotInterface} and a helm.
  * <p>
- * Messages sent to a helm contain new setpoints for the throttle and rudder. The helm will then return a message
- * containing the actual throttle and rudder position
+ * Messages sent to a helm contain new setpoints for the throttle and rudder.
  */
 public class ArduinoHelmMessageFactory {
     private final String originID;

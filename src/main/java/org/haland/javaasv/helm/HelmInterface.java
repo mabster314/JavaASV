@@ -4,6 +4,7 @@ import org.haland.javaasv.message.MessageInterface;
 import org.haland.javaasv.message.MessengerClientInterface;
 
 /**
+ * Defines the requirements of a Helm.
  * Helms should receive messages of type {@link org.haland.javaasv.message.MessageInterface.MessageType#HELM}.
  */
 public interface HelmInterface extends MessengerClientInterface {

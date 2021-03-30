@@ -100,6 +100,6 @@ public class HelmArduino implements SerialDeviceInterface<String> {
 
     @Override
     public String getLastMessage() throws IOException {
-        return new String();
+        return "";
     }
 }
