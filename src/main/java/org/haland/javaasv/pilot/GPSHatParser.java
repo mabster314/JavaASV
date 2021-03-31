@@ -30,7 +30,7 @@ import org.haland.javaasv.config.AllConfig;
 import org.tinylog.Logger;
 
 /**
- * A class to parse incoming data from the serial GPS hat
+ * A class to parse incoming data from the serial GPS hat. Implementation of {@link GPSProviderInterface}
  */
 public class GPSHatParser implements GPSProviderInterface {
     private GPSHat gpsHat;
@@ -42,6 +42,10 @@ public class GPSHatParser implements GPSProviderInterface {
     private volatile Time updateTime;
     private volatile double heading;
 
+    /**
+     * Configures and starts the GPS parser
+     * @param gpsHat the {@link GPSHat} instance to use
+     */
     public GPSHatParser(GPSHat gpsHat) {
         Logger.info("Attempting to start GPSHatParser");
         this.gpsHat = gpsHat;
@@ -51,19 +55,35 @@ public class GPSHatParser implements GPSProviderInterface {
         reader.start();
     }
 
+    /**
+     * Configures and starts the GPS parser with a new {@link GPSHat} on the specified port name
+     * @param portName The port to start the {@link GPSHat} on
+     */
     public GPSHatParser(String portName) {
         this(new GPSHat(portName));
     }
 
+    /**
+     * Configures and starts the GPS parser with a new {@link GPSHat} with a port name specified in the provided
+     * {@link AllConfig} instance
+     * @param config The instance of {@link AllConfig} to use
+     */
     public GPSHatParser(AllConfig config) {
         this(new GPSHat(config.getSerialConfig().getGpsPort()));
     }
 
+    /**
+     * Configures and starts the GPS parser with a new {@link GPSHat} on the default port
+     */
     public GPSHatParser() {
         this(new GPSHat());
     }
 
-    public void startGPS() throws InterruptedException {
+    /**
+     * Starts the GPS hat
+     * @throws InterruptedException
+     */
+    public void startGPS() {
         gpsHat.setGPSPower(true);
         gpsHat.setGPSDataReporting(true);
     }
@@ -110,6 +130,9 @@ public class GPSHatParser implements GPSProviderInterface {
         this.heading = heading;
     }
 
+    /**
+     * Provides a {@link SentenceListener} that handles the serial event data
+     */
     private class RMCListener implements SentenceListener {
 
         @Override

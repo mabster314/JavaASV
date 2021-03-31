@@ -28,8 +28,10 @@ import java.util.Properties;
 public class RouteConfig extends BaseConfig {
     private static String propertyFileName = "route.properties";
 
+
     private RouteType routeType;
 
+    private String routeFileDir;
     private String routeFileName;
 
     private double[] twoPointRouteStart;
@@ -54,6 +56,7 @@ public class RouteConfig extends BaseConfig {
     protected void configure(Properties properties) {
         String routeTypeStr = getStringPropertyValue("route.type", properties);
         this.routeType = RouteType.valueOf(routeTypeStr);
+        this.routeFileDir = getStringPropertyValue("route.file_dir", properties);
         this.routeFileName = getStringPropertyValue("route.filename", properties);
         this.twoPointRouteStart = getDoubleArrayPropertyValue("route.two_point.start", properties);
         this.twoPointRouteEnd = getDoubleArrayPropertyValue("route.two_point.end", properties);
@@ -64,8 +67,20 @@ public class RouteConfig extends BaseConfig {
         return routeFileName;
     }
 
+    public String getRouteFileDir() {
+        return routeFileDir;
+    }
+
     public RouteType getRouteType() {
         return routeType;
+    }
+
+    /**
+     * Sets the route type. This should only be called for tests.
+     * @param type the new route type
+     */
+    public void setRouteType(RouteType type) {
+        this.routeType = type;
     }
 
     public double[] getTwoPointRouteStart() {

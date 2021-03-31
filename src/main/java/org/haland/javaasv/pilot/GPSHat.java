@@ -29,7 +29,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 /**
- * A GPSProvider that uses the Raspberry Pi GPS hat to provide GPS data
+ * An implementation of {@link SerialDeviceInterface} that communicates with the Raspberry Pi GPS hat to provide GPS
+ * data
  */
 public class GPSHat implements SerialDeviceInterface<String> {
     /**
@@ -68,6 +69,10 @@ public class GPSHat implements SerialDeviceInterface<String> {
     private InputStreamReader inReader;
     private BufferedReader bufferedReader;
 
+    /**
+     * Instantiates and configures a GPS hat
+     * @param portName Port name for the GPS
+     */
     public GPSHat(String portName) {
         Logger.info("Attempting to configure GPS on port " + portName);
         this.portName = portName;

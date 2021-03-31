@@ -44,7 +44,7 @@ public class Waypoint implements WaypointInterface {
     }
 
     @Override
-    public WaypointBehavior atDestination() {
+    public WaypointBehavior getDestinationBehavior() {
         return this.behavior;
     }
 }

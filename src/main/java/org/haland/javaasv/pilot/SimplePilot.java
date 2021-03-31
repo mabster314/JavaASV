@@ -5,13 +5,18 @@ import org.haland.javaasv.controller.ControllerType;
 import org.haland.javaasv.controller.PIDController;
 import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.*;
+import org.haland.javaasv.route.RouteEndException;
 import org.haland.javaasv.route.RouteInterface;
+import org.haland.javaasv.route.WaypointInterface;
 import org.haland.javaasv.util.EarthRadius;
 import org.haland.javaasv.util.PilotUtil;
 import org.tinylog.Logger;
 
 import static java.lang.Thread.sleep;
 
+/**
+ *
+ */
 public class SimplePilot implements MessengerClientInterface {
     private static final String DEFAULT_CLIENT_ID = "simplePilot";
 
@@ -65,11 +70,19 @@ public class SimplePilot implements MessengerClientInterface {
         this(DEFAULT_CLIENT_ID, server, helm, throttleController, rudderController, gps);
     }
 
+    /**
+     * Starts the attached {@link Controller}s
+     */
     public void startControllers() {
         throttleController.start();
         rudderController.start();
     }
 
+    /**
+     * Tells the pilot to begin running
+     *
+     * @param period Loop period in milliseconds
+     */
     public void startPilot(long period) {
         if (gps.getFixStatus()) {
             Logger.info("GPS ready, Starting SimplePilot");
@@ -93,6 +106,9 @@ public class SimplePilot implements MessengerClientInterface {
         }
     }
 
+    /**
+     * Tells the pilot to cease running
+     */
     public void stopPilot() {
         Logger.info("Stopping SimplePilot");
         if (worker != null) {
@@ -111,19 +127,27 @@ public class SimplePilot implements MessengerClientInterface {
     }
 
     /**
-     * Calculates the cross-track distance using the current route segment
+     * Calculates the cross-track distance from the current route segment
      *
      * @return The XTD in nmi
      */
-
-    public double calculateCrossTrackDistance(EarthRadius earthRadius) {
+    public double calculateCrossTrackDistance(EarthRadius earthRadius) throws RouteEndException {
         return PilotUtil.calculateCrossTrackDistance(currentRoute.getPreviousWaypoint().getCoordinates(),
                 currentRoute.getNextWaypoint().getCoordinates(), gps.getCoordinates(), earthRadius);
     }
 
+    /**
+     * Calculates the heading error from the current route segement
+     *
+     * @return the heading error in degrees
+     */
     private double calculateHeadingError() {
-        return PilotUtil.calculateInitialBearingRadians(gps.getCoordinates(),
+        return PilotUtil.calculateInitialBearing(gps.getCoordinates(),
                 currentRoute.getNextWaypoint().getCoordinates()) - gps.getHeading();
+    }
+
+    private double calculateDistanceFromNextWaypoint() {
+        return PilotUtil.calculateDistance(gps.getCoordinates(), currentRoute.getNextWaypoint().getCoordinates());
     }
 
     /**
@@ -140,10 +164,14 @@ public class SimplePilot implements MessengerClientInterface {
         this.currentRoute = newRoute;
     }
 
+    public RouteInterface getCurrentRoute() {
+        return currentRoute;
+    }
+
     /**
      * Returns the type of messages the client can handle
      *
-     * @return
+     * @return {@link MessageInterface.MessageType#HELM}
      */
     @Override
     public MessageInterface.MessageType getClientType() {
@@ -154,6 +182,9 @@ public class SimplePilot implements MessengerClientInterface {
         return gps.getCoordinates();
     }
 
+    /**
+     * Class to repeatedly produce {@link HelmMessage}s
+     */
     private class PilotMessageFactory {
         private final String originID;
         private final String destinationID;
@@ -164,9 +195,9 @@ public class SimplePilot implements MessengerClientInterface {
         }
 
         /**
-         * Creates a new message with origin <code>originID</code>, destination <code>arduinoHelmID</code>, message priority
-         * <code>NORMAL</code>, the current system time, and a <code>String</code> message content containing data for the
-         * Arduino helm.
+         * Creates a new message with origin <code>originID</code>, destination <code>arduinoHelmID</code>, message
+         * priority <code>NORMAL</code>, the current system time, and a <code>String</code> message content containing
+         * data for the Arduino helm.
          *
          * @param throttleSetpoint the new throttle setpoint to use
          * @param rudderSetpoint   the new rudder setpoint to use
@@ -177,6 +208,36 @@ public class SimplePilot implements MessengerClientInterface {
             return new HelmMessage(originID, destinationID, System.currentTimeMillis(),
                     MessageInterface.MessagePriority.NORMAL, throttleSetpoint, rudderSetpoint);
         }
+    }
+
+    /**
+     * @return True if the current route is complete
+     */
+    public boolean checkWaypointAdvance() throws RouteEndException {
+        boolean routeComplete = false;
+        boolean atWaypoint = calculateDistanceFromNextWaypoint() <= currentRoute.getNextWaypoint().getTolerance();
+        // Check if we're currently at a waypoint
+        if (atWaypoint) {
+            // Decide what to do based on waypoint end behavior
+            WaypointInterface.WaypointBehavior behavior =
+                    currentRoute.getNextWaypoint().getDestinationBehavior();
+            switch (behavior) {
+                case NEXT_WAYPOINT:
+                    boolean complete = currentRoute.isComplete();
+                    if (currentRoute.isComplete()) {
+                        routeComplete = true;
+                    } else {
+                        // Advance if the route isn't over
+                        currentRoute.advanceWaypoint();
+                        routeComplete = false;
+                    }
+                    break;
+                case LOITER:
+                    routeComplete = true;
+                    break;
+            }
+        }
+        return routeComplete;
     }
 
     /**
@@ -199,9 +260,13 @@ public class SimplePilot implements MessengerClientInterface {
         @Override
         public void run() {
             Logger.info("Starting pilot worker");
+            pilotLoop:
             while (isRunning) {
                 try {
-                    // Calculate the XTD
+                    // Advance the route and stop running if it's complete
+                    isRunning = !checkWaypointAdvance();
+
+                    // Calculate the XTD and heading error
                     double xtd = calculateCrossTrackDistance(EarthRadius.METERS);
                     double headingError = calculateHeadingError();
 

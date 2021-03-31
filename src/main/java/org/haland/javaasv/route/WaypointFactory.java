@@ -46,7 +46,7 @@ public class WaypointFactory {
 
             // Currently not used
             @Override
-            public WaypointBehavior atDestination() {
+            public WaypointBehavior getDestinationBehavior() {
                 return null;
             }
         };

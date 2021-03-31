@@ -16,15 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv.config;
+package org.haland.javaasv.route;
 
-import org.haland.javaasv.TestBase;
-import org.junit.jupiter.api.Test;
-
-class AllConfigTest extends TestBase {
-
-    @Test
-    void testAllConfig() {
-        AllConfig config = new AllConfig();
-    }
+public class RouteEndException extends Exception {
 }

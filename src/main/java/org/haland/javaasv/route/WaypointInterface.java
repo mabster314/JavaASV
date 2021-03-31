@@ -8,31 +8,47 @@ public interface WaypointInterface {
      *
      * @return latitude of the waypoint
      */
-    double getLatitude();
+    abstract double getLatitude();
 
     /**
      *
      * @return longitude of the waypoint
      */
-    double getLongitude();
+    abstract double getLongitude();
 
     /**
      *
      * @return double[] containing {latitude, longitude} coordinates
      */
-    double[] getCoordinates();
+    abstract double[] getCoordinates();
 
     /**
      *
      * @return absolute tolerance to recognize having reached the destination
      */
-    double getTolerance();
+    abstract double getTolerance();
 
     /**
      *
      * @return {@link WaypointBehavior} enum representing behavior to engage in after reaching waypoint
      */
-    WaypointBehavior atDestination();
+    abstract WaypointBehavior getDestinationBehavior();
+
+    /**
+     * Determines whether two {@link WaypointInterface} objects are equal.
+     * <p>
+     * Two {@link WaypointInterface} objects are equal if they share the same latitide, longitude, tolerance, and
+     * destination behavior
+     * @param waypointA The first waypoint to compare
+     * @param waypointB The second waypoint to compare
+     * @return True if the two waypoints are equal, false otherwise
+     */
+    static boolean equals(WaypointInterface waypointA, WaypointInterface waypointB) {
+        return (waypointA.getLatitude() == waypointB.getLatitude()) &&
+                (waypointA.getLongitude() == waypointB.getLongitude()) &&
+                (waypointA.getTolerance() == waypointB.getTolerance()) &&
+                (waypointA.getDestinationBehavior() == waypointB.getDestinationBehavior());
+    }
 
     /**
      * Defines behavior modes for at checkpoints
@@ -43,7 +59,7 @@ public interface WaypointInterface {
      * LOITER: keep station at the waypoint
      * </p>
      */
-    enum WaypointBehavior {
+    public enum WaypointBehavior {
         NEXT_WAYPOINT, LOITER
     }
 }

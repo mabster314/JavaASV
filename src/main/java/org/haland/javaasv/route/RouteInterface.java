@@ -18,7 +18,14 @@ public interface RouteInterface {
 
     /**
      * Indicates whether the current route in complete
-     * @return True if the rout is complete, false otherwise
+     * @return True if the route is complete, false otherwise
      */
     boolean isComplete();
+
+    /**
+     * Advances between segments in a route.
+     * @throws RouteEndException if called when {@link #isComplete()} returns true
+     */
+    void advanceWaypoint() throws RouteEndException;
+
 }

@@ -22,6 +22,8 @@ import org.haland.javaasv.TestBase;
 import org.haland.javaasv.config.AllConfig;
 import org.haland.javaasv.config.BaseConfig;
 import org.haland.javaasv.config.RouteConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -29,26 +31,50 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RouteParserTest extends TestBase {
-    private static final String TWO_POINT_FILENAME = "route.properties";
     public static final double[] START_COORDINATES = {44.9187, -92.8435};
     private static final double[] END_COORDINATES = {44.9187, -92.8439};
 
-
-    private static final String FILE_FILENAME = "route_file.properties";
-
     private RouteParser sut;
+
+    private AllConfig config;
+
+    @BeforeEach
+    void setupTests() {
+        BaseConfig.setPropertyFileDir(PROPERTY_FILE_DIR_SRC_TESTS);
+    }
+
+    @AfterEach
+    void teardownTests() {
+        config = null;
+        sut = null;
+    }
 
     @Test
     void testTwoPointRouteParser() {
-        BaseConfig.setPropertyFileDir(PROPERTY_FILE_DIR_SRC_TESTS);
-        String foo = RouteConfig.getPropertyFileDir();
-        AllConfig config = new AllConfig();
+        RouteConfig routeConfig = new RouteConfig();
+        routeConfig.setRouteType(RouteType.TWO_POINT);
+        config = new AllConfig(routeConfig);
         sut = new RouteParser(config);
         RouteInterface parsedRoute = sut.getRoute();
         double[] parsedStartCoordinates = parsedRoute.getPreviousWaypoint().getCoordinates();
-        double[] parsedEndCoordinates = parsedRoute.getNextWaypoint().getCoordinates();
+        double[] parsedEndCoordinates = new double[0];
+        parsedEndCoordinates = parsedRoute.getNextWaypoint().getCoordinates();
         assertTrue(Arrays.equals(START_COORDINATES, parsedStartCoordinates));
         assertTrue(Arrays.equals(END_COORDINATES, parsedEndCoordinates));
     }
 
+    @Test
+    void testCreateFileRoute() {
+        RouteConfig routeConfig = new RouteConfig();
+        routeConfig.setRouteType(RouteType.FILE);
+        config = new AllConfig(routeConfig);
+        sut = new RouteParser(config);
+        RouteInterface parsedRoute = sut.getRoute();
+        int foo;
+        double[] parsedStartCoordinates = parsedRoute.getPreviousWaypoint().getCoordinates();
+        double[] parsedEndCoordinates = new double[0];
+        parsedEndCoordinates = parsedRoute.getNextWaypoint().getCoordinates();
+        assertTrue(Arrays.equals(START_COORDINATES, parsedStartCoordinates));
+        assertTrue(Arrays.equals(END_COORDINATES, parsedEndCoordinates));
+    }
 }

@@ -16,15 +16,26 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.haland.javaasv.config;
+package org.haland.javaasv.route;
 
 import org.haland.javaasv.TestBase;
 import org.junit.jupiter.api.Test;
 
-class AllConfigTest extends TestBase {
+import static org.junit.jupiter.api.Assertions.*;
+
+class WaypointInterfaceTest extends TestBase {
+    static WaypointInterface waypointA = new Waypoint(45,93, .001,
+            WaypointInterface.WaypointBehavior.NEXT_WAYPOINT);
+    static WaypointInterface waypointB = new Waypoint(45,90, .001,
+            WaypointInterface.WaypointBehavior.NEXT_WAYPOINT);
 
     @Test
-    void testAllConfig() {
-        AllConfig config = new AllConfig();
+    void testEqual() {
+        assertTrue(WaypointInterface.equals(waypointA, waypointA));
+    }
+
+    @Test
+    void testNotEqual() {
+        assertFalse(WaypointInterface.equals(waypointA, waypointB));
     }
 }

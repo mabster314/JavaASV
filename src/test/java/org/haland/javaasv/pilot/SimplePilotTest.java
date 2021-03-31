@@ -2,16 +2,18 @@ package org.haland.javaasv.pilot;
 
 import net.sf.marineapi.nmea.util.Time;
 import org.haland.javaasv.TestBase;
+import org.haland.javaasv.config.AllConfig;
+import org.haland.javaasv.config.BaseConfig;
+import org.haland.javaasv.config.RouteConfig;
 import org.haland.javaasv.controller.Controller;
 import org.haland.javaasv.controller.TrivialController;
 import org.haland.javaasv.helm.HelmInterface;
 import org.haland.javaasv.message.HelmMessage;
 import org.haland.javaasv.message.MessageTypeException;
 import org.haland.javaasv.message.MessengerServerInterface;
-import org.haland.javaasv.route.RouteInterface;
-import org.haland.javaasv.route.WaypointFactory;
-import org.haland.javaasv.route.WaypointInterface;
+import org.haland.javaasv.route.*;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -20,6 +22,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.tinylog.Logger;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,7 +31,7 @@ class SimplePilotTest extends TestBase {
     private static final String PILOT_ID = "testSimplePilot";
     private static final double THROTTLE_VALUE = 0.75;
     private static final double RUDDER_VALUE = 15.5;
-    private static final double[] GPS_POSITION = {40.884, -73.644};
+    private static final double[] GPS_POSITION = {44.9187, -92.8435};
 
     private SimplePilot testPilot;
 
@@ -39,11 +42,19 @@ class SimplePilotTest extends TestBase {
     @Mock
     private HelmInterface mockHelm;
     private GPSProviderInterface mockGPSProvider;
-    private MockRoute mockRoute = new MockRoute();
+    private SegmentedRoute route;
 
+    @BeforeEach
     void setupPilot() {
         // Mock helm should give a client ID
         when(mockHelm.getClientID()).thenReturn(HELM_ID);
+
+        BaseConfig.setPropertyFileDir(PROPERTY_FILE_DIR_SRC_TESTS);
+        RouteConfig routeConfig = new RouteConfig();
+        routeConfig.setRouteType(RouteType.FILE);
+        AllConfig allConfig = new AllConfig(routeConfig);
+        RouteParser parser = new RouteParser(allConfig);
+        route = (SegmentedRoute) parser.getRoute();
 
         mockGPSProvider = new GPSProviderInterface() {
             @Override
@@ -58,17 +69,17 @@ class SimplePilotTest extends TestBase {
 
             @Override
             public double getLatitude() {
-                return GPS_POSITION[0];
+                return route.getNextWaypoint().getLatitude();
             }
 
             @Override
             public double getLongitude() {
-                return GPS_POSITION[1];
+                return route.getNextWaypoint().getLongitude();
             }
 
             @Override
             public double[] getCoordinates() {
-                return GPS_POSITION;
+                return route.getNextWaypoint().getCoordinates();
             }
 
             @Override
@@ -79,7 +90,7 @@ class SimplePilotTest extends TestBase {
 
         testPilot =
                 new SimplePilot(PILOT_ID, mockServer, mockHelm, controller, controller, mockGPSProvider);
-        testPilot.setCurrentRoute(mockRoute);
+        testPilot.setCurrentRoute(new SegmentedRoute((SegmentedRoute) route));
     }
 
     @AfterEach
@@ -89,9 +100,6 @@ class SimplePilotTest extends TestBase {
 
     @Test
     void testRun() throws MessageTypeException {
-        // Set up the test
-        setupPilot();
-
         // should dispatch return message
         Logger.debug("Starting pilot for test");
         testPilot.startPilot(10);
@@ -102,25 +110,22 @@ class SimplePilotTest extends TestBase {
         testPilot.stopPilot();
     }
 
-    protected class MockRoute implements RouteInterface {
-        WaypointFactory factory = new WaypointFactory();
+    @Test
+    void testAdvanceWaypoint() throws RouteEndException {
+        // Make sure we start at the same point
+        assertTrue(WaypointInterface.equals(testPilot.getCurrentRoute().getPreviousWaypoint(),
+                route.getPreviousWaypoint()));
 
-        WaypointInterface previousWaypoint = factory.createWaypoint(45, -93, 0);
-        WaypointInterface nextWaypoint = factory.createWaypoint(46.7, -92, 0);
-
-        @Override
-        public WaypointInterface getPreviousWaypoint() {
-            return previousWaypoint;
+        // Advance the route to completion
+        while (!testPilot.checkWaypointAdvance()) {
+            route.advanceWaypoint();
+            continue;
         }
 
-        @Override
-        public WaypointInterface getNextWaypoint() {
-            return nextWaypoint;
-        }
+        // Make sure we end on the final waypoint
+        assertTrue(WaypointInterface.equals(testPilot.getCurrentRoute().getNextWaypoint(),
+                route.getWaypoint(route.getRouteLength() - 1)));
 
-        @Override
-        public boolean isComplete() {
-            return false;
-        }
+
     }
 }

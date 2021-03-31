@@ -21,10 +21,18 @@ package org.haland.javaasv.route;
 import org.haland.javaasv.config.AllConfig;
 import org.haland.javaasv.config.RouteConfig;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Scanner;
+import org.tinylog.Logger;
+
 /**
  * Parses {@link RouteInterface}s from a {@link RouteConfig} instance
  */
 public class RouteParser {
+    private static final String FILE_DELIMITER = ",";
+
     private RouteConfig config;
     private RouteInterface route;
 
@@ -43,8 +51,36 @@ public class RouteParser {
         }
     }
 
+    /**
+     * Parses a route from a file input
+     * @return a {@link RouteInterface} representing the route
+     */
     private RouteInterface createFileRoute() {
-        return null;
+        SegmentedRoute route = new SegmentedRoute();
+
+        // Get the filename from the config
+        String fileDir = config.getRouteFileDir();
+        String filename = config.getRouteFileName();
+
+        // Try to open the route file
+        try (Scanner scanner = new Scanner(new File(fileDir + filename));) {
+            // Iterate over the lines in the route file
+            while (scanner.hasNextLine()) {
+                // Split the line along delimiters
+                String[] values = scanner.nextLine().strip().split(FILE_DELIMITER);
+
+                // Strip whitespace
+                Arrays.parallelSetAll(values, (i) -> values[i].strip());
+
+                // Add a waypoint to the route for each line
+                route.addWaypoint(new Waypoint(Double.parseDouble(values[0]),Double.parseDouble(values[1]),
+                        Double.parseDouble(values[2]), WaypointInterface.WaypointBehavior.valueOf(values[3])));
+            }
+        } catch (FileNotFoundException e) {
+            Logger.error(e);
+        }
+
+        return route;
     }
 
     /**
@@ -68,7 +104,12 @@ public class RouteParser {
 
             @Override
             public boolean isComplete() {
-                return false;
+                return true;
+            }
+
+            @Override
+            public void advanceWaypoint() {
+                Logger.error(new RouteEndException());
             }
         };
     }

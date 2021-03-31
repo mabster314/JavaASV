@@ -19,8 +19,6 @@
 package org.haland.javaasv;
 
 import org.haland.javaasv.config.AllConfig;
-import org.haland.javaasv.config.unit.PIDConfigUnit;
-import org.haland.javaasv.controller.HitzController;
 import org.haland.javaasv.controller.PIDController;
 import org.haland.javaasv.controller.TrivialController;
 import org.haland.javaasv.helm.ArduinoHelm;
