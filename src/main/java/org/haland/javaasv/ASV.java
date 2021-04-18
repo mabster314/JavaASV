@@ -50,7 +50,7 @@ public class ASV {
     private long pilotPeriod;
 
     private TrivialController throttleController;
-    private HitzController rudderController;
+    private PIDController rudderController;
 
     private GPSHatParser gps;
 
@@ -75,7 +75,7 @@ public class ASV {
 
         // Create th*/`e throttle and rudder controllers
         this.throttleController = new TrivialController(config);
-        this.rudderController = new HitzController(config.getControllerConfig().getRudderHitzConfig());
+        this.rudderController = new PIDController(config.getControllerConfig().getRudderPIDConfig());
 
         // Get a simple route from the config
         this.route = new RouteParser(config).getRoute();
