@@ -48,6 +48,7 @@ public class MessengerServer implements MessengerServerInterface {
 
     /**
      * Creates a new instance of the server
+	 * This method is private to ensure only one may be created
      */
     private MessengerServer(ScheduledExecutorService executor) {
         clients = new HashMap<String, MessengerClientInterface>();
@@ -57,8 +58,9 @@ public class MessengerServer implements MessengerServerInterface {
     }
 
     /**
-     * Gets the current instance of the server
-     *
+     * Gets the current instance of the server or creates a new instance if one does not exist
+	 * This prevents duplicate messenger servers from being implemented
+     * 
      * @return the current MessengerServer instance
      */
     public static MessengerServer getInstance() {
