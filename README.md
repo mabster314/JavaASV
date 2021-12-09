@@ -17,6 +17,18 @@ Code outputs:
         - Rudder position
         - Motor power
 
+# Raspberry PI Setup
+
+From a clean install of Raspbian...
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install apache 2
+sudo apt install php -y
+sudo apt-get install php libapache2-mod-php -y
+git clone https://github.com/mabster314/javaASV
+sudo apt install minicom -y
+ ** ADD IN WEBPAGE INSTALL AND SETUP
 
 
 # Mechanical and Electrical Design
