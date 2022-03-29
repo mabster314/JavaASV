@@ -49,9 +49,12 @@ public final class MathUtil {
     }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> parent of 1d17e00 (Kalman filter - init)
 =======
 >>>>>>> parent of 1d17e00 (Kalman filter - init)
