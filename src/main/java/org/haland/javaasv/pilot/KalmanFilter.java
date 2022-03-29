@@ -109,7 +109,22 @@ public class KalmanFilter {
 
     }
     private double determinant (double [][]a){
+        int n = a.length;
 
+        int determinant = 0;
+        if (n == 1) {
+            return matrix[0][0];
+        }
+        if (n == 2) {
+            return (matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]);
+        }
+        int temp[N][N], sign = 1;
+        for (int i = 0; i < n; i++) {
+            subMatrix(matrix, temp, 0, i, n);
+            determinant += sign * matrix[0][i] * determinantOfMatrix(temp, n - 1);
+            sign = -sign;
+        }
+        return determinant;
     }
 
     public double [] getState (){
