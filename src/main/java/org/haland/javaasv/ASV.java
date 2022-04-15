@@ -19,6 +19,7 @@
 package org.haland.javaasv;
 
 import org.haland.javaasv.config.AllConfig;
+import org.haland.javaasv.controller.HitzController;
 import org.haland.javaasv.controller.PIDController;
 import org.haland.javaasv.controller.TrivialController;
 import org.haland.javaasv.helm.ArduinoHelm;
@@ -72,7 +73,7 @@ public class ASV {
         // Construct a new GPS
         this.gps = new GPSHatParser(config);
 
-        // Create the throttle and rudder controllers
+        // Create th*/`e throttle and rudder controllers
         this.throttleController = new TrivialController(config);
         this.rudderController = new PIDController(config.getControllerConfig().getRudderPIDConfig());
 
