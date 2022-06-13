@@ -48,16 +48,3 @@ public final class MathUtil {
         return Math.max(low, Math.min(value, high));
     }
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> parent of 1d17e00 (Kalman filter - init)
-=======
->>>>>>> parent of 1d17e00 (Kalman filter - init)
-=======
->>>>>>> parent of 1d17e00 (Kalman filter - init)
