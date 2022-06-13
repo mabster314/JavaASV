@@ -29,33 +29,3 @@ This project is a continuation of multiple student's theses. In 2016 the project
 In  2018 this project was continued by (name) who re-wrote the code for path following.
 
 In  2020 and 2021, @mabster314 added an arduino for the main computer to allow for more advanced algorithms and improved connectivity. The arduino is still utilized to provide real time response to control the hardware.
-
-## What does this code do
-
-Inputs: User input GPS waypoints
-        GPS signal
-
-Code outputs:
-        Rudder position
-        Motor power
-
-
-*Add a diagram here*
- 
- 
- TO ADD TO OTHER THINGS:
- 
- Config: Where are the actual config text files?
- Controller: Message format
- Helm: 
- Message: Only one server may be created
- Pilot:
- 
- - SimplePilot.java:
-	- Using current gps coords, it calculates xtd and heading error
-	- Using xtd and heading error it calculates the next rudder and throttle position
-
-Util: Due to the low frequency of ASV theses (max 1 per year, often less), reducing reliance on external libraries reduces the likelyhood that out-of-date libraries would stop the program from functioning.
-
- 
-
