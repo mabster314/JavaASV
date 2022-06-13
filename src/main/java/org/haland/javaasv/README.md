@@ -54,7 +54,6 @@ Code outputs:
  - SimplePilot.java:
 	- Using current gps coords, it calculates xtd and heading error
 	- Using xtd and heading error it calculates the next rudder and throttle position
-	- ADD: IF NOT ACTIVE, SET BOTH TO 0
 
 Util: Due to the low frequency of ASV theses (max 1 per year, often less), reducing reliance on external libraries reduces the likelyhood that out-of-date libraries would stop the program from functioning.
 
