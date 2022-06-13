@@ -17,8 +17,3 @@ Code outputs:
         - Rudder position
         - Motor power
 
-
-
-# Mechanical and Electrical Design
-
-* Add info on where to access the mechanical and electrical design of the ASV*
